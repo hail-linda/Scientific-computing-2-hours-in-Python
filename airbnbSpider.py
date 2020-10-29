@@ -6,6 +6,7 @@ import requests,json,chardet
 import time
 from requests.adapters import HTTPAdapter
 import threading
+from threading import Thread, Semaphore
 import scrapy,re
 from lxml import etree
 import lxml
@@ -26,9 +27,10 @@ def getAirbnb(locate,offset=0):
     url = url.strip()
     if not offset == 0:
       url += "&items_offset="+str(offset)
-    print(url)
+
     r = gethtml(url)
-    
+
+      
     logFile = open('logFile.html', 'w',encoding='utf-8')  
     logFile.write(r.text)
     logFile.close()
@@ -36,10 +38,10 @@ def getAirbnb(locate,offset=0):
     try:
       res = json.loads(r.content)
     except Exception:
-      print(Exception)
+      print(Exception,time.asctime( time.localtime(time.time()) ))
       print(count,offset)
       if(count-offset>50):
-        time.sleep(1)
+        #ime.sleep(1)
         getAirbnb(locate,offset+50)
       return
 
@@ -51,13 +53,14 @@ def getAirbnb(locate,offset=0):
     for section in sections:
       if 'listings' in section:
         listings = section['listings']
+        print("获取到房源数量："+str(len(listings)),time.asctime( time.localtime(time.time()) ))
         for listing in listings:
           try:
             price = listing['pricing_quote']['price_string']
             description = listing['listing']['name']
             description= description.replace("'","''")
             description= description.replace('"','""')
-            print(price,description)
+            #print(price,description)
             sql = 'SELECT * FROM housing WHERE price = "'+price+'" AND description = "'+description+'"'
             cur.execute(sql)
             conn.commit()
@@ -73,15 +76,15 @@ def getAirbnb(locate,offset=0):
 
     print(count,offset)
     if(count-offset>50):
-      time.sleep(1)
+      #time.sleep(1)
       getAirbnb(locate,offset+50)
             
 
 
-
+sem = threading.Semaphore(1)
 conn = sqlite3.connect("./airbnbSpider.db")
 cur=conn.cursor()
-flag = 0
+flag = 1
 sql = 'SELECT * FROM administrativeDivision WHERE level = 3'
 cur_locate_3=conn.cursor()
 cur_locate_3.execute(sql)
@@ -101,8 +104,14 @@ for row3 in cur_locate_3:
     if(name == "浙江省舟山市"):
       flag = 1
     if(flag == 1):
-      getAirbnb(name)
-      time.sleep(2)
+      
+      sem.acquire()
+      thread_run = threading.Thread(target=getAirbnb , args=(name,))
+      thread_run.start()
+      print("锁数量："+str(sem._value))
+      sem.release()
+      #getAirbnb(name)
+      time.sleep(1)
 
 
 
