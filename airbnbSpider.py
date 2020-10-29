@@ -48,12 +48,15 @@ def getAirbnb(locate,offset=0):
  
     if 'home_tab_metadata' in res['explore_tabs'][0]:
       count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
-    print(count)
+
     sections = res['explore_tabs'][0]['sections']
     for section in sections:
+      exist = 0
+      insert = 0
       if 'listings' in section:
         listings = section['listings']
-        print("获取到房源数量："+str(len(listings)),time.asctime( time.localtime(time.time()) ))
+        print("数量："+str(len(listings)),time.asctime( time.localtime(time.time()) ))
+
         for listing in listings:
           try:
             price = listing['pricing_quote']['price_string']
@@ -68,20 +71,26 @@ def getAirbnb(locate,offset=0):
                 sql = ("INSERT INTO housing VALUES (NULL ,'%s','%s','%s')")%(locate,price,description)
                 cur.execute(sql)
                 conn.commit()
-                print("     -------INSERT-------")
+                #print("     -------INSERT-------")
+                insert += 1
+            else:
+              exist += 1
           except Exception:
+            print(Exception,time.asctime( time.localtime(time.time()) ))
             pass
+        
+        print("共{}个，其中重复{}，新增{},{}".format(str(len(listings)),exist,insert,exist*"$"+insert*"-"))
 
 
 
     print(count,offset)
     if(count-offset>50):
-      #time.sleep(1)
+      ##time.sleep(1)
       getAirbnb(locate,offset+50)
             
 
 
-sem = threading.Semaphore(1)
+sem = threading.Semaphore(3)
 conn = sqlite3.connect("./airbnbSpider.db")
 cur=conn.cursor()
 flag = 1
@@ -98,20 +107,20 @@ for row3 in cur_locate_3:
   conn.commit()
   for row2 in cur_locate_2 :
 
-    name = "浙江省"+row2[2]+name
+    name = "上海市"+row2[2]+name
     name = name.replace("市辖区","")
     print(name)
-    if(name == "浙江省舟山市"):
-      flag = 1
+    #if(name == "浙江省舟山市"):
+    #  flag = 1
     if(flag == 1):
-      
+      #getAirbnb(name)
       sem.acquire()
       thread_run = threading.Thread(target=getAirbnb , args=(name,))
       thread_run.start()
       print("锁数量："+str(sem._value))
       sem.release()
       #getAirbnb(name)
-      time.sleep(1)
+      #time.sleep(2)
 
 
 

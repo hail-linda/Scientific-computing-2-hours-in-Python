@@ -54,7 +54,7 @@ def getAdministrativeDivision(code,level):
 conn = sqlite3.connect("./airbnbSpider.db")
 cur=conn.cursor()
 
-getAdministrativeDivision(330000000000,4)
+getAdministrativeDivision(310000000000,4)
 
 for level in range(4,3,-1):
     sql = 'SELECT code FROM administrativeDivision WHERE level = '+str(level)
