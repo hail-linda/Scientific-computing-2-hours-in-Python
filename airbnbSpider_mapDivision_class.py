@@ -21,6 +21,7 @@ class mapSpider:
         self.lat_upp=0.0
         self.lon_low=0.0
         self.lon_upp=0.0
+        self.id = 0
         self.num=-1
         self.db = pymysql.connect("localhost","root","delta=b2-4ac","spideairbnb" )
         self.cursor = self.db.cursor()
@@ -33,6 +34,28 @@ class mapSpider:
 
     def __del__(self):
         self.db.close()
+
+    def run(self):
+        self.getTask()
+
+    def dbUpdateStates(self,state):
+        sql = "UPDATE `spideairbnb`.`numofhousesavailable` SET `state`='{}' WHERE `id`='{}'".format(state,self.id)
+        self.cursor.execute(sql)
+        self.db.commit()
+
+    def dbUpdateNum(self,num):
+        sql = "UPDATE `spideairbnb`.`numofhousesavailable` SET `num`='{}' WHERE `id`='{}'".format(num,self.id)
+        self.cursor.execute(sql)
+        self.db.commit()
+
+    def dbInsert(self,location):
+        sql = "INSERT INTO `spideairbnb`.`numofhousesavailable` \
+            (`lat_low`, `lat_upp`, `lon_low`, `lon_upp`, `num`,`state`)\
+            VALUES ('{}', '{}', '{}', '{}', '-1','todo')\
+            ".format(location[0],location[1],location[2],location[3])
+        self.cursor.execute(sql)
+        print(sql)
+        self.db.commit()
 
     def getTask(self):
         # 调取一条todo数据
@@ -48,21 +71,19 @@ class mapSpider:
         self.lat_upp=row[2]
         self.lon_low=row[3]
         self.lon_upp=row[4]
-        id = row[0]
+        self.id = row[0]
         # 锁住该条数据
-        sql = "UPDATE `spideairbnb`.`numofhousesavailable` SET `state`='processing' WHERE `id`='{}'".format(id)
-        print(sql)
-        self.cursor.execute(sql)
-        #self.db.commit()
+        self.dbUpdateStates("processing")
         self.fetch()
 
     def fetch(self):
-        url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&checkin=2020-11-07&checkout=2020-11-08&client_session_id=e13eeb33-daca-4e0a-b2ae-3655e6086002&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=20&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=10"
+        url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=d0c77d93-3a9a-43df-82fb-568ac0d5a566&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=20&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=9"
         url += "&sw_lat={}".format(self.lat_low)
         url += "&sw_lng={}".format(self.lon_low)
         url += "&ne_lat={}".format(self.lat_upp)
         url += "&ne_lng={}".format(self.lon_upp) 
         self.url = url
+        print(url)
         self.gethtml()
         self.log()
         self.jsonDecode()
@@ -84,7 +105,6 @@ class mapSpider:
                     logFile.write(html.text)
                     logFile.close()
                 self.json = json.loads(html.content)
-                print("1")
                 self.html = html
                 return
             except Exception:
@@ -109,12 +129,28 @@ class mapSpider:
 
         if 'home_tab_metadata' in res['explore_tabs'][0]:
             count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
+            print(count)
+            self.dbUpdateStates("done")
+            self.dbUpdateNum(str(count))
             if(count > 300):
-                #TODO:四分法
-                #TODO:state更改
+                self.quadrateDivision()
+                
         else:
             print("房源总数未知")
-            #TODO:state更改
+            self.dbUpdateStates("todo")
+            
+    def quadrateDivision(self):
+        self.lat_mid = (self.lat_low+self.lat_upp)/2
+        self.lon_mid = (self.lon_low+self.lon_upp)/2
+        locationList=[]
+        locationList.append((self.lat_low,self.lat_mid,self.lon_low,self.lon_mid))
+        locationList.append((self.lat_mid,self.lat_upp,self.lon_low,self.lon_mid))
+        locationList.append((self.lat_low,self.lat_mid,self.lon_mid,self.lon_upp))
+        locationList.append((self.lat_mid,self.lat_upp,self.lon_mid,self.lon_upp))
+        for location in locationList :
+            self.dbInsert(location)
+
+
 
 def getAirbnb(locate, offset=0,price_max=-1,price_min=-1):
     url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=8865391a-6117-4615-a0d3-b0cc83adc28a&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=20&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&map_toggle=true&metadata_only=false&place_id=ChIJMzz1sUBwsjURoWTDI5QSlQI&query_understanding_enabled=true&refinement_paths[]=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&query=" + str(locate)
@@ -218,7 +254,6 @@ def getAirbnb(locate, offset=0,price_max=-1,price_min=-1):
         # time.sleep(1)
         getAirbnb(locate, offset+50)
 
-
 def main1():
     sem = threading.Semaphore(3)
     conn = sqlite3.connect("./airbnbSpider.db")
@@ -253,13 +288,22 @@ def main1():
         getAirbnb(locate)
 
 def main():
-    sql = "INSERT INTO `spideairbnb`.`numofhousesavailable` (`lat_low`, `lat_upp`, `lon_low`, `lon_upp`, `num`, `state`) \
-            VALUES ('30.85560614', '31.42449944', '121.0209988', '121.93286408', '-1', 'todo')"
+    sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state != 'done'"
     db = pymysql.connect("localhost","root","delta=b2-4ac","spideairbnb" )
     cursor = db.cursor()
-    
-    spider = mapSpider()
-    spider.getTask()
+    while(1):
+        time.sleep(1)
+        spider = mapSpider()
+        spider.run()
+        sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state != 'done'"
+        cursor.execute(sql)
+        db.commit()
+        results = cursor.fetchall()
+        print(len(results))
+        if len(results) == 0:
+            break
+
+
 
 
 '''
