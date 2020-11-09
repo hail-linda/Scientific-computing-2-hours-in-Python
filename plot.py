@@ -34,12 +34,12 @@ results = cursor.fetchall()
 fig,ax = plt.subplots()
 for row in results:
     xy = np.array([row[3],row[1]])
-    rect = mpathes.Rectangle(  xy = xy,
-                                    width = row[4]-row[3],
-                                    height = row[2]-row[1],
-                                    edgecolor='blue',
-                                    fill = False,
-                                    linewidth=1)
+    rect = mpathes.Rectangle(   xy = xy,
+                                width = row[4]-row[3],
+                                height = row[2]-row[1],
+                                edgecolor='blue',
+                                fill = False,
+                                linewidth=1)
     ax.add_patch(rect)
     if(row[5]<300):
         ax.text((row[4]+row[3])/2,(row[2]+row[1])/2,row[5])
