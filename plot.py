@@ -41,7 +41,7 @@ for row in results:
                                 fill = False,
                                 linewidth=1)
     ax.add_patch(rect)
-    if(row[5]<300):
+    if(row[5]<50):
         ax.text((row[4]+row[3])/2,(row[2]+row[1])/2,row[5])
 
 plt.axis('equal')

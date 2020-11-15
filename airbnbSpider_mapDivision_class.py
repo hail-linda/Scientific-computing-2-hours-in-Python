@@ -6,6 +6,7 @@ import sqlite3
 import pymysql
 import threading
 import time
+import random
 from threading import Semaphore, Thread
 
 import chardet
@@ -14,6 +15,71 @@ import requests
 import scrapy
 from lxml import etree
 from requests.adapters import HTTPAdapter
+
+class proxyPool:
+    def __init__(self):
+        self.proxyId = 0
+        self.ip=""
+        self.table = "`spideairbnb`.`proxypool`"
+        self.db = pymysql.connect(
+            "localhost", "root", "delta=b2-4ac", "spideairbnb")
+        self.cursor = self.db.cursor()
+
+    def dbInsert(self,proxy):
+        sql = "INSERT INTO "+self.table+" (`ip`, `numused`, `state`) VALUES ('{}', '0', 'new')".format(proxy)
+        self.cursor.execute(sql)
+        self.db.commit()
+
+    def IP(self):
+        sql = "SELECT * from "+self.table+"WHERE `state` != 'del'"
+        self.cursor.execute(sql)
+        self.db.commit()
+        results = self.cursor.fetchall()
+        if(len(results)<5):
+            self.get()
+            return self.IP()
+        rand = random.randint(0,len(results)-1)
+        #print(results[rand])
+        self.ip = results[rand][1]
+        self.proxyId = results[rand][0]
+        return self.IP
+
+    def proxies(self):
+        self.IP()
+        self.proxies = {
+            "http": " http://{}".format(self.ip),
+            "https": "https://{}".format(self.ip),
+        }
+        return self.proxies
+
+    def get(self,num=5):
+        url = "http://dps.kdlapi.com/api/getdps/?orderid=910542824747856&num={}&pt=1&format=json&sep=1".format(num)
+        html = requests.get(url, timeout=5)
+        #print(url)
+        #print(html)
+        res = json.loads(html.content)
+        print("get proxy ",time.asctime(
+                time.localtime(time.time())))
+        if 'data' in res:
+            res = res['data']
+        else :
+            print("get proxy err in data")
+        count = res['count']
+
+        if 'proxy_list' in res:
+            proxys = res['proxy_list']
+        else :
+            print("get proxy err in proxy_list")
+
+        for proxy in proxys :
+            self.dbInsert(proxy)
+
+    def delete(self):
+        sql = "DELETE FROM "+self.table+" WHERE `id`='{}'".format(self.proxyId)
+        self.cursor.execute(sql)
+        self.db.commit()
+
+
 
 
 class mapSpider:
@@ -63,7 +129,8 @@ class mapSpider:
 
     def getTask(self):
         # 调取一条todo数据
-        sql = "SELECT * FROM "+self.table+"  WHERE `state` = 'todo' LIMIT 1 "
+        sql = "SELECT * FROM "+self.table+"  WHERE `state` = 'todo' OR `state` = 'processing' LIMIT 1 "
+        print(sql)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
         if not len(results) == 1:
@@ -87,33 +154,37 @@ class mapSpider:
         url += "&ne_lat={}".format(self.lat_upp)
         url += "&ne_lng={}".format(self.lon_upp)
         self.url = url
-        print(url)
+        #print(url)
+        print(str(self.lat_low)+"----"+str(self.lat_upp)+"----"+str(self.lon_low)+"----"+str(self.lon_upp))
         self.gethtml()
         self.log()
         self.jsonDecode()
 
     def gethtml(self):
         url = self.url
-        proxies = {
-            "http": " http://58.220.95.42:10174",
-            "https": "https://58.220.95.42:10174",
-        }
+        proxypool = proxyPool()
+        proxies = proxypool.proxies()
         i = 0
-        while i < 7:
+        while i < 3:
             try:
-                #html = requests.get(url, timeout=5, proxies=proxies)
-                html = requests.get(url, timeout=5)
+                html = requests.get(url, timeout=5, proxies=proxies)
+                #html = requests.get(url, timeout=5)
                 if("429 Too Many Requests" in html.text):
                     print("429 error")
                     logFile = open('logFile.html', 'w', encoding='utf-8')
                     logFile.write(html.text)
                     logFile.close()
                 self.json = json.loads(html.content)
-                self.html = html
+                self.html = html              
                 return
-            except Exception:
+            except Exception as e:
                 i += 1
-                print(str(Exception))
+                print("connect error and retry   :    "+str(e)[-70:])
+                if 'Cannot connect to proxy' in str(e):
+                    i = 6
+        proxypool.delete()
+        print("delete proxy : "+str(proxypool.ip))
+        self.gethtml()
 
     def log(self):
         logFile = open('logFile.html', 'w', encoding='utf-8')
@@ -136,7 +207,7 @@ class mapSpider:
             print(count)
             self.dbUpdateStates("done")
             self.dbUpdateNum(str(count))
-            if(count > 300):
+            if(count > 50):
                 self.quadrateDivision()
 
         else:
@@ -192,7 +263,7 @@ class listSpider(mapSpider):
         self.db.commit()
 
     def getTask(self):
-        sql = "SELECT * FROM "+self.mapTable+"  WHERE `state` = 'done' AND `num` < 300 AND `num` > 0"
+        sql = "SELECT * FROM "+self.mapTable+"  WHERE (`state` = 'done' OR `state` = 'listing') AND `num` < 50 AND `num` > 0"
         self.cursor.execute(sql)
         mapResults = self.cursor.fetchall()
 
@@ -274,11 +345,11 @@ class listSpider(mapSpider):
         description = description.replace('"', '""')
         if(self.dbHouseExist(house_id)):
             self.dbHouseInsert(price,description,house_id)
-            self.insert += 1
+            self.exist += 1
             self.inDB += "-"
         else:
             self.dbHouseInsert(price,description,house_id)
-            self.exist += 1
+            self.insert += 1
             self.inDB += "&"
 
 
@@ -385,41 +456,49 @@ def getAirbnb(locate, offset=0, price_max=-1, price_min=-1):
         # time.sleep(1)
         getAirbnb(locate, offset+50)
 
+def runListSpider():
+    print(threading.currentThread().getName())
+    sm.acquire()
+   
+    spider = listSpider()
+    spider.run()
+    sm.release()
+
 
 def run_mapSpiser():
-    '''
-    sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state != 'done'"
+    
+    sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE `state` = 'todo' OR `state` = 'processing' "
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
     cursor = db.cursor()
     while(1):
-        time.sleep(1)
         spider = mapSpider()
         spider.run()
-        sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state != 'done'"
+        sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state = 'too' OR `state` = 'processing' "
         cursor.execute(sql)
         db.commit()
         results = cursor.fetchall()
+        print(len(results))
         if len(results) == 0:
             break
-    '''
+
+
+    sm=threading.Semaphore(3)
     while(1):
-        time.sleep(1)
-        spider = listSpider()
-        spider.run()
+        time.sleep(0.2)
+        threading.Thread(target=runListSpider,args=())
+
 
 
 def run_listSpider():
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
     cursor = db.cursor()
 
-'''
-    print(locate)
-    sem.acquire()
-    thread_run = threading.Thread(target=getAirbnb , args=(name,))
-    thread_run.start()
-    print("锁数量："+str(sem._value))
-    sem.release()
-'''
+
+
+def run_test():
+    pro = proxyPool()
+    print(pro.IP())
 
 if __name__ == "__main__":
     run_mapSpiser()
+    #run_test()
