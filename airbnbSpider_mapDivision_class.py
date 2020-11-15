@@ -236,6 +236,7 @@ class listSpider(mapSpider):
         self.mapTable = "`spideairbnb`.`numofhousesavailable`"
         self.listTable = "`spideairbnb`.`houselist`"
         self.offset = 0
+        self.lock = threading.RLock()
 
     def __del__(self):
         self.db.close()
@@ -263,6 +264,8 @@ class listSpider(mapSpider):
         self.db.commit()
 
     def getTask(self):
+        self.lock.acquire()
+
         sql = "SELECT * FROM "+self.mapTable+"  WHERE (`state` = 'done' OR `state` = 'listing') AND `num` < 50 AND `num` > 0"
         self.cursor.execute(sql)
         mapResults = self.cursor.fetchall()
@@ -287,7 +290,10 @@ class listSpider(mapSpider):
                 print("num:{}\t itemPerPage:{}\t numOfPages:{}  ".format(mapRow[5],20,int(mapRow[5]/20)))
                 for self.page in range(int(mapRow[5]/20)+1):
                     self.fetch(offset = self.page*20)
-                
+        self.lock.release()
+        print(self.id)
+
+
     def fetch(self,offset = 0):
         url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=d0c77d93-3a9a-43df-82fb-568ac0d5a566&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=50&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=9"
         url += "&sw_lat={}".format(self.lat_low)
@@ -465,8 +471,7 @@ def runListSpider():
     sm.release()
 
 
-def run_mapSpiser():
-    
+def run_mapSpiser(): 
     sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE `state` = 'todo' OR `state` = 'processing' "
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
     cursor = db.cursor()
@@ -482,12 +487,11 @@ def run_mapSpiser():
             break
 
 
-    sm=threading.Semaphore(3)
+    
     while(1):
-        time.sleep(0.2)
-        threading.Thread(target=runListSpider,args=())
-
-
+        time.sleep(1)
+        th = threading.Thread(target=runListSpider,args=())
+        th.start()
 
 def run_listSpider():
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
@@ -499,6 +503,8 @@ def run_test():
     pro = proxyPool()
     print(pro.IP())
 
+
+sm=threading.Semaphore(3)
 if __name__ == "__main__":
     run_mapSpiser()
     #run_test()
