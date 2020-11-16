@@ -53,7 +53,7 @@ class proxyPool:
         return self.proxies
 
     def get(self,num=5):
-        url = "http://dps.kdlapi.com/api/getdps/?orderid=910542824747856&num={}&pt=1&format=json&sep=1".format(num)
+        url = "http://dps.kdlapi.com/api/getdps/?orderid=910553946536422&num={}&pt=1&format=json&sep=1".format(num)
         html = requests.get(url, timeout=5)
         #print(url)
         #print(html)
@@ -78,9 +78,6 @@ class proxyPool:
         sql = "DELETE FROM "+self.table+" WHERE `id`='{}'".format(self.proxyId)
         self.cursor.execute(sql)
         self.db.commit()
-
-
-
 
 class mapSpider:
     def __init__(self):
@@ -229,14 +226,12 @@ class mapSpider:
         for location in locationList:
             self.dbInsert(location)
 
-
 class listSpider(mapSpider):
     def __init__(self):
         super().__init__()
         self.mapTable = "`spideairbnb`.`numofhousesavailable`"
         self.listTable = "`spideairbnb`.`houselist`"
         self.offset = 0
-        self.lock = threading.RLock()
 
     def __del__(self):
         self.db.close()
@@ -264,9 +259,9 @@ class listSpider(mapSpider):
         self.db.commit()
 
     def getTask(self):
-        self.lock.acquire()
+        mapLock.acquire()
 
-        sql = "SELECT * FROM "+self.mapTable+"  WHERE (`state` = 'done' OR `state` = 'listing') AND `num` < 50 AND `num` > 0"
+        sql = "SELECT * FROM "+self.mapTable+"  WHERE `state` = 'done' AND `num` < 50 AND `num` > 0"
         self.cursor.execute(sql)
         mapResults = self.cursor.fetchall()
 
@@ -275,24 +270,19 @@ class listSpider(mapSpider):
             print(self.errInfo)
             return -1
         
-        for mapRow in mapResults:
-            sql = "SELECT * FROM {} WHERE `map_id` = {}\
-                ".format(self.listTable,mapRow[0])
-            self.cursor.execute(sql)
-            listResult = self.cursor.fetchall()
-            if len(listResult) == 0 or mapRow[5]-len(listResult) > 30 :
-                self.lat_low = mapRow[1]
-                self.lat_upp = mapRow[2]
-                self.lon_low = mapRow[3]
-                self.lon_upp = mapRow[4]
-                self.id =      mapRow[0]
-                self.dbMapUpdateStates("listing")
-                print("num:{}\t itemPerPage:{}\t numOfPages:{}  ".format(mapRow[5],20,int(mapRow[5]/20)))
-                for self.page in range(int(mapRow[5]/20)+1):
-                    self.fetch(offset = self.page*20)
-        self.lock.release()
+        mapRow = mapResults[0]
+        self.lat_low = mapRow[1]
+        self.lat_upp = mapRow[2]
+        self.lon_low = mapRow[3]
+        self.lon_upp = mapRow[4]
+        self.id =      mapRow[0]
+        self.dbMapUpdateStates("listing")
+        mapLock.release()
+        print("num:{}\t itemPerPage:{}\t numOfPages:{}  ".format(mapRow[5],40,int(mapRow[5]/20)))
+        for self.page in range(int(mapRow[5]/40)+1):
+            self.fetch(offset = self.page*40)
+        
         print(self.id)
-
 
     def fetch(self,offset = 0):
         url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=d0c77d93-3a9a-43df-82fb-568ac0d5a566&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=50&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=9"
@@ -335,11 +325,11 @@ class listSpider(mapSpider):
                         except Exception as e:
                             print(str(e), "for listing", time.asctime(time.localtime(time.time())))
                     
-                    print("map_id:{}\tpage:{}\tcount;{}\t共{}个，其中重复{}，新增{},{}".format(
-                        self.id,self.page,count,str(len(listings)), self.exist, self.insert, self.inDB))
-
+                    print("{}   map_id:{}\tpage:{}\tcount;{}   共{}个，其中重复{}，新增{},{}".format(
+                        threading.currentThread().getName(),self.id,self.page,count,str(len(listings)), self.exist, self.insert, self.inDB))
+                    #print(threading.currentThread().getName())
         else:
-            print("房源总数未知异常")
+            print("房源list解码异常")
             self.dbUpdateStates("done")
 
     def decodeListing(self,listing):
@@ -350,7 +340,7 @@ class listSpider(mapSpider):
         description = description.replace("'", "''")
         description = description.replace('"', '""')
         if(self.dbHouseExist(house_id)):
-            self.dbHouseInsert(price,description,house_id)
+            #self.dbHouseInsert(price,description,house_id)
             self.exist += 1
             self.inDB += "-"
         else:
@@ -358,119 +348,72 @@ class listSpider(mapSpider):
             self.insert += 1
             self.inDB += "&"
 
+class calendarSpider(mapSpider):
+    def __init__(self):
+        super().__init__()
+        self.mapTable = "`spideairbnb`.`numofhousesavailable`"
+        self.listTable = "`spideairbnb`.`houselist`"
+        self.calendartable = "`spiderairbnb`.`calendar`"
+        self.offset = 0
+        localtime = time.localtime(time.time())
+        self.mouth = localtime[1]
+        self.year = localtime[0]
+        self.day = localtime[2]
+        self.count = 3
+        self.dtToday = "{}-{}-{}".format(self.year,self.mouth,self.day)
 
-def getAirbnb(locate, offset=0, price_max=-1, price_min=-1):
-    url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=8865391a-6117-4615-a0d3-b0cc83adc28a&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=20&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&map_toggle=true&metadata_only=false&place_id=ChIJMzz1sUBwsjURoWTDI5QSlQI&query_understanding_enabled=true&refinement_paths[]=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&query=" + \
-        str(locate)
+    def dateCompare(self,dt1,dt2):
+        dt1 = time.mktime(time.strptime(dt1,'%Y-%m-%d'))
+        dt2 = time.mktime(time.strptime(dt2,'%Y-%m-%d'))
+        return dt1-dt2
 
-    url = url.strip()
-    time.sleep(0.5)
-    if not offset == 0:
-        url += "&items_offset="+str(offset)
+    def fetch(self,house_id,map_id):
+        self.house_id = house_id
+        self.map_id = map_id
+        url = "https://www.airbnb.cn/api/v2/homes_pdp_availability_calendar?currency=CNY&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh"
+        url += "&listing_id={}".format(str(house_id))
+        url += "&month={}".format(str(self.mouth))
+        url += "&year={}".format(str(self.year))
+        url += "&count={}".format(str(self.count))
+        #print(url)
+        self.url = url
+        self.gethtml()
+        self.log()
+        self.jsonDecode()
 
-    if not price_max == -1 and not price_min == -1:
-        url += "&price_max="+str(price_max)
-        url += "&price_min="+str(price_min)
-        print("价格区间："+str(price_min)+" -- "+str(price_max))
-
-    # print(url)
-    r = gethtml(url)
-
-    logFile = open('logFile.html', 'w', encoding='utf-8')
-    while(r == None):
-        print("None")
-        r = gethtml(url)
-    logFile.write(r.text)
-    logFile.close()
-    count = 1000
-    try:
-        res = json.loads(r.content)
-    except Exception:
-        print(Exception, "getHTML", time.asctime(time.localtime(time.time())))
-        print(count, offset)
-        getAirbnb(locate, offset)
-        if(count-offset > 50):
-            # ime.sleep(1)
-            getAirbnb(locate, offset+50)
-        return
-
-    if 'home_tab_metadata' in res['explore_tabs'][0]:
-        count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
-        if(count > 300):
-            if(price_max == -1 or price_min == -1):
-                print("房源数："+str(count)+"  min:0  max:5000")
-                getAirbnb(locate, price_max=5000, price_min=0)
-            else:
-                print("房源数："+str(count)+"  min:" +
-                      str(price_min)+"  max:"+str(price_max))
-                midd = int(0.5*(price_max+price_min))
-                getAirbnb(locate, price_max=midd, price_min=price_min)
-                getAirbnb(locate, price_max=price_max, price_min=midd)
-
+    def jsonDecode(self):
+        #print(self.html.text)
+        try:
+            res = self.json
+        except Exception:
+            print(Exception, "getHTML", time.asctime(
+                time.localtime(time.time())))
             return
-    else:
-        print("房源总数未知")
 
-    sections = res['explore_tabs'][0]['sections']
-    conn_temp = sqlite3.connect("./airbnbSpider.db")
-    cur_temp = conn_temp.cursor()
-    for section in sections:
-        exist = 0
-        insert = 0
-        if 'listings' in section:
-            listings = section['listings']
+        dt1 = self.dtToday
+        if 'metadata' in res:
+            if not 'first_bookable_day' in res['metadata']:
+                return
+        if 'calendar_months' in res:
+            for month in res['calendar_months']:
+                for day in month['days']:
+                    dt2 = day['date']
+                    if( self.dateCompare(dt1,dt2) < 0 and day['available']==False ):
+                        print(self.map_id,self.house_id,dt1,dt2)
+                        self.dbInsert(day)
 
-            inDB = ""
-            for listing in listings:
-                try:
-                    price = listing['pricing_quote']['price_string']
-                    description = listing['listing']['name']
-                    house_id = listing['listing']['id']
-                    # print(house_id)
-                    description = description.replace("'", "''")
-                    description = description.replace('"', '""')
-                    # print(price,description)
-                    sql = 'SELECT * FROM housing WHERE house_id = ' + \
-                        str(house_id)
-                    # print(sql)
-                    cur_temp.execute(sql)
-                    conn_temp.commit()
-                    if not cur_temp.fetchone():
-                        sql = ("INSERT INTO housing VALUES (NULL ,'%s','%s','%s','%s')") % (
-                            locate, price, description, house_id)
-                        cur_temp.execute(sql)
-                        conn_temp.commit()
-                        #print("     -------INSERT-------")
-                        insert += 1
-                        inDB += "-"
-                    else:
-                        exist += 1
-                        inDB += "$"
-                except Exception as e:
-                    print(str(e), "for listing", time.asctime(
-                        time.localtime(time.time())))
-                    getAirbnb(locate, offset)
-                    pass
-            print("数量："+str(len(listings)),
-                  time.asctime(time.localtime(time.time())))
-            print("共{}个，其中重复{}，新增{},{}".format(
-                str(len(listings)), exist, insert, inDB))
-    conn_temp.close()
-
-    print(count, offset, locate)
-    if(count-offset > 50):
-        # time.sleep(1)
-        getAirbnb(locate, offset+50)
+    def dbInsert(self,day):
+        sql = "INSERT INTO `spideairbnb`.`calendar` (`house_id`, `map_id`, `fetch_date`, `reserved`) VALUES ('{}', '{}', '{}', '{}')".format(self.house_id,self.map_id,self.dtToday,day['date'])
+        #print(sql)
+        self.cursor.execute(sql)
+        self.db.commit()
+        pass
 
 def runListSpider():
     print(threading.currentThread().getName())
-    sm.acquire()
-   
     spider = listSpider()
     spider.run()
-    sm.release()
-
-
+    
 def run_mapSpiser(): 
     sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE `state` = 'todo' OR `state` = 'processing' "
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
@@ -486,25 +429,46 @@ def run_mapSpiser():
         if len(results) == 0:
             break
 
-
-    
     while(1):
-        time.sleep(1)
+        sm.acquire()
+        time.sleep(0.2)
         th = threading.Thread(target=runListSpider,args=())
         th.start()
+        sm.release()
 
 def run_listSpider():
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
     cursor = db.cursor()
 
+def runCalendarspider(house_id,map_id):
+    calendar = calendarSpider()
+    calendar.fetch(house_id,map_id)
 
-
-def run_test():
+def run_test_ip():
     pro = proxyPool()
     print(pro.IP())
+    
+def run_test_calendar():
+    calendar = calendarSpider()
+
+    db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
+    cursor = db.cursor()
+    sql = "SELECT * FROM spideairbnb.houselist"
+    cursor.execute(sql)
+    db.commit()
+    results = cursor.fetchall()
+    for row in results:
+        sm.acquire()
+        time.sleep(0.1)
+        th = threading.Thread(target=runCalendarspider,args=(row[3],row[4]))
+        th.start()
+        sm.release()
 
 
-sm=threading.Semaphore(3)
+
+mapLock = threading.Lock()
+calendarLock = threading.Lock()
+sm=threading.Semaphore(20)
 if __name__ == "__main__":
-    run_mapSpiser()
-    #run_test()
+    #run_mapSpiser()
+    run_test_calendar()
