@@ -36,13 +36,19 @@ class proxyPool:
         self.db.commit()
         results = self.cursor.fetchall()
         if(len(results)<5):
-            self.get()
+            pass
+            #self.get()
+            time.sleep(2)
             return self.IP()
         rand = random.randint(0,len(results)-1)
         #print(results[rand])
         self.ip = results[rand][1]
         self.proxyId = results[rand][0]
+
         sql = "UPDATE "+self.table+" SET `numused` = `numused` + 1 WHERE `id` = "+str(results[rand][0])
+        self.cursor.execute(sql)
+        self.db.commit()
+
         return self.IP
 
     def proxies(self):
@@ -77,8 +83,11 @@ class proxyPool:
         for proxy in proxys :
             self.dbInsert(proxy)
 
-    def delete(self):
+    def delete(self,delReason):
         sql = "UPDATE "+self.table+" SET `state` = 'del' WHERE `id`='{}'".format(self.proxyId)
+        self.cursor.execute(sql)
+        self.db.commit()
+        sql = "UPDATE "+self.table+" SET `delreason` = '{}' WHERE `id`='{}'".format(delReason,self.proxyId)
         self.cursor.execute(sql)
         self.db.commit()
 
@@ -166,6 +175,7 @@ class mapSpider:
 
     def gethtml(self):
         url = self.url
+        delReason = "timeout"
         proxypool = proxyPool()
         proxies = proxypool.proxies()
         i = 0
@@ -178,6 +188,7 @@ class mapSpider:
                     logFile = open('logFile.html', 'w', encoding='utf-8')
                     logFile.write(html.text)
                     logFile.close()
+                    delReason = "429"
                 self.json = json.loads(html.content)
                 self.html = html              
                 return
@@ -185,8 +196,10 @@ class mapSpider:
                 i += 1
                 print("connect error and retry   :    "+str(e)[-70:])
                 if 'Cannot connect to proxy' in str(e):
-                    i = 6
-        proxypool.delete()
+                    i += 1
+                    delReason = "cannot conn to proxy"
+                    
+        proxypool.delete(delReason)
         print("delete proxy : "+str(proxypool.ip))
         self.gethtml()
 
@@ -243,6 +256,9 @@ class listSpider(mapSpider):
 
     def __del__(self):
         self.db.close()
+
+    def run(self):
+        self.getTask()
 
     def dbMapUpdateStates(self,state):
         sql =   "UPDATE "+self.mapTable + \
@@ -370,6 +386,9 @@ class calendarSpider(mapSpider):
         self.count = 3
         self.dtToday = "{}-{}-{}".format(self.year,self.mouth,self.day)
 
+    def run(self):
+        self.getTask()
+
     def dateCompare(self,dt1,dt2):
         dt1 = time.mktime(time.strptime(dt1,'%Y-%m-%d'))
         dt2 = time.mktime(time.strptime(dt2,'%Y-%m-%d'))
@@ -423,12 +442,11 @@ class calendarSpider(mapSpider):
 
 
 
-
-
 def runListSpider():
     print(threading.currentThread().getName())
     spider = listSpider()
     spider.run()
+    sm.release()
 
 def runMapSpider(map_id): 
     spider = mapSpider()
@@ -438,6 +456,7 @@ def runCalendarspider(house_id,map_id):
     print(threading.currentThread().getName())
     calendar = calendarSpider()
     calendar.fetch(house_id,map_id)
+    sm.release()
 
 def Map(): 
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
@@ -466,30 +485,66 @@ def Map():
             if length<=1:
                 break
 
+def List():
+    while(1):
+        sm.acquire()
+        time.sleep(0.05)
+        th = threading.Thread(target=runListSpider,args=())
+        th.start()
+
+def getIp():
+    while(1):
+        print("test ip pool")
+        time.sleep(0.5)
+        db = pymysql.connect(
+            "localhost", "root", "delta=b2-4ac", "spideairbnb")
+        cursor = db.cursor()
+        sql = "SELECT * from `spideairbnb`.`proxypool` WHERE `state` != 'del'"
+        cursor.execute(sql)
+        db.commit()
+        results = cursor.fetchall()
+        if(len(results)<10):
+            proxypool = proxyPool()
+            proxies = proxypool.get(num=10)
+
 def run_test_ip():
     pro = proxyPool()
     print(pro.IP())
     
-def run_test_calendar():
-    calendar = calendarSpider()
-
+def Calendar():
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
     cursor = db.cursor()
     sql = "SELECT * FROM spideairbnb.houselist"
     cursor.execute(sql)
     db.commit()
     results = cursor.fetchall()
+
+    sql = " SELECT MAX(map_id) FROM spideairbnb.calendar"
+    cursor.execute(sql)
+    db.commit()
+    temp_result = cursor.fetchall()
+    print(temp_result[0][0])
+    if(temp_result[0][0]==None):
+        map_start = 0
+    else :
+        map_start = temp_result[0][0]
+
     for row in results:   
+        if(row[4]<map_start):
+            continue
         sm.acquire()
-        time.sleep(0.02)
         th = threading.Thread(target=runCalendarspider,args=(row[3],row[4]))
         th.start()
-        sm.release()
+        
 
 
 mapLock = threading.Lock()
 calendarLock = threading.Lock()
-sm=threading.Semaphore(20)
+sm=threading.Semaphore(200)
 if __name__ == "__main__":
-    Map()
+    th = threading.Thread(target=getIp,args=())
+    th.start()
+    #Map()
+    #List()
+    Calendar()
     #run_test_calendar()
