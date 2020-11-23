@@ -24,3 +24,13 @@ https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib
 
 
 
+
+
+https://www.airbnb.cn/api/v2/homes_pdp_availability_calendar?currency=CNY&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&listing_id=46365329&month=11&year=2020&count=12
+
+
+
+https://www.airbnb.cn/api/v2/homes_pdp_availability_calendar?currency=CNY&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&listing_id=41469137&month=11&year=2020&count=12
+
+
+

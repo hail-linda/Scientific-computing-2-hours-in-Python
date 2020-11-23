@@ -42,6 +42,7 @@ class proxyPool:
         #print(results[rand])
         self.ip = results[rand][1]
         self.proxyId = results[rand][0]
+        sql = "UPDATE "+self.table+" SET `numused` = `numused` + 1 WHERE `id` = "+str(results[rand][0])
         return self.IP
 
     def proxies(self):
@@ -52,10 +53,12 @@ class proxyPool:
         }
         return self.proxies
 
-    def get(self,num=5):
-        url = "http://dps.kdlapi.com/api/getdps/?orderid=910553946536422&num={}&pt=1&format=json&sep=1".format(num)
-        html = requests.get(url, timeout=5)
-        #print(url)
+    def get(self,num=20):
+        url = "http://dps.kdlapi.com/api/getdps/?orderid=950613094874363&num={}&pt=1&format=json&sep=1&dedup=1".format(str(num))
+        print(url)
+        proxies = {"http":None,"https":None}
+        html = requests.get(url, timeout=5,proxies = proxies)
+        
         #print(html)
         res = json.loads(html.content)
         print("get proxy ",time.asctime(
@@ -75,7 +78,7 @@ class proxyPool:
             self.dbInsert(proxy)
 
     def delete(self):
-        sql = "DELETE FROM "+self.table+" WHERE `id`='{}'".format(self.proxyId)
+        sql = "UPDATE "+self.table+" SET `state` = 'del' WHERE `id`='{}'".format(self.proxyId)
         self.cursor.execute(sql)
         self.db.commit()
 
@@ -90,6 +93,7 @@ class mapSpider:
         self.db = pymysql.connect(
             "localhost", "root", "delta=b2-4ac", "spideairbnb")
         self.cursor = self.db.cursor()
+        self.area = ""
 
         self.errInfo = ""
         self.url = ""
@@ -100,9 +104,10 @@ class mapSpider:
     def __del__(self):
         self.db.close()
 
-    def run(self):
+    def run(self,map_id):
+        self.id = map_id
         self.getTask()
-
+        
     def dbUpdateStates(self, state):
         sql = "UPDATE "+self.table + \
             " SET `state`='{}' WHERE `id`='{}'".format(state, self.id)
@@ -117,17 +122,18 @@ class mapSpider:
 
     def dbInsert(self, location):
         sql = "INSERT INTO `spideairbnb`.`numofhousesavailable` \
-            (`lat_low`, `lat_upp`, `lon_low`, `lon_upp`, `num`,`state`)\
-            VALUES ('{}', '{}', '{}', '{}', '-1','todo')\
-            ".format(location[0], location[1], location[2], location[3])
+            (`lat_low`, `lat_upp`, `lon_low`, `lon_upp`, `num`,`state`,`area`)\
+            VALUES ('{}', '{}', '{}', '{}', '-1','todo','{}')\
+            ".format(location[0], location[1], location[2], location[3],self.area)
         self.cursor.execute(sql)
-        print(sql)
+        #print(sql)
         self.db.commit()
 
     def getTask(self):
         # 调取一条todo数据
-        sql = "SELECT * FROM "+self.table+"  WHERE `state` = 'todo' OR `state` = 'processing' LIMIT 1 "
-        print(sql)
+        sql = "SELECT * FROM "+self.table+"  WHERE `state` = 'todo' OR `state` = 'processing' and `id` = '"+str(self.id)+"'LIMIT 1 "
+        #print(sql)
+
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
         if not len(results) == 1:
@@ -139,6 +145,7 @@ class mapSpider:
         self.lat_upp = row[2]
         self.lon_low = row[3]
         self.lon_upp = row[4]
+        self.area = row[7]
         self.id = row[0]
         # 锁住该条数据
         self.dbUpdateStates("processing")
@@ -225,6 +232,7 @@ class mapSpider:
                              self.lon_mid, self.lon_upp))
         for location in locationList:
             self.dbInsert(location)
+        print("Insert 4 map area")
 
 class listSpider(mapSpider):
     def __init__(self):
@@ -394,13 +402,17 @@ class calendarSpider(mapSpider):
         if 'metadata' in res:
             if not 'first_bookable_day' in res['metadata']:
                 return
+        num=0
         if 'calendar_months' in res:
             for month in res['calendar_months']:
                 for day in month['days']:
                     dt2 = day['date']
+                    
                     if( self.dateCompare(dt1,dt2) < 0 and day['available']==False ):
-                        print(self.map_id,self.house_id,dt1,dt2)
+                        num += 1
+                        
                         self.dbInsert(day)
+        print(self.map_id,self.house_id,dt1,dt2,num)
 
     def dbInsert(self,day):
         sql = "INSERT INTO `spideairbnb`.`calendar` (`house_id`, `map_id`, `fetch_date`, `reserved`) VALUES ('{}', '{}', '{}', '{}')".format(self.house_id,self.map_id,self.dtToday,day['date'])
@@ -409,40 +421,50 @@ class calendarSpider(mapSpider):
         self.db.commit()
         pass
 
+
+
+
+
 def runListSpider():
     print(threading.currentThread().getName())
     spider = listSpider()
     spider.run()
-    
-def run_mapSpiser(): 
-    sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE `state` = 'todo' OR `state` = 'processing' "
+
+def runMapSpider(map_id): 
+    spider = mapSpider()
+    spider.run(map_id)
+
+def runCalendarspider(house_id,map_id):
+    print(threading.currentThread().getName())
+    calendar = calendarSpider()
+    calendar.fetch(house_id,map_id)
+
+def Map(): 
     db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
     cursor = db.cursor()
     while(1):
-        spider = mapSpider()
-        spider.run()
-        sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state = 'too' OR `state` = 'processing' "
+        sql = "SELECT * FROM `spideairbnb`.`numofhousesavailable` WHERE state = 'todo' OR `state` = 'processing' "
         cursor.execute(sql)
         db.commit()
         results = cursor.fetchall()
         print(len(results))
         if len(results) == 0:
             break
-
-    while(1):
-        sm.acquire()
-        time.sleep(0.2)
-        th = threading.Thread(target=runListSpider,args=())
-        th.start()
-        sm.release()
-
-def run_listSpider():
-    db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
-    cursor = db.cursor()
-
-def runCalendarspider(house_id,map_id):
-    calendar = calendarSpider()
-    calendar.fetch(house_id,map_id)
+        else :
+            print(str(len(results))+"  todos")
+            for row in results:
+                sm.acquire()
+                time.sleep(0.05)
+                print(row[0])
+                th = threading.Thread(target=runMapSpider,args=(row[0],))
+                th.start()
+                sm.release()
+        while(1):
+            time.sleep(1)
+            length = len(threading.enumerate())
+            print('当前运行的spider线程数为：%d'%(length-1))
+            if length<=1:
+                break
 
 def run_test_ip():
     pro = proxyPool()
@@ -457,18 +479,17 @@ def run_test_calendar():
     cursor.execute(sql)
     db.commit()
     results = cursor.fetchall()
-    for row in results:
+    for row in results:   
         sm.acquire()
-        time.sleep(0.1)
+        time.sleep(0.02)
         th = threading.Thread(target=runCalendarspider,args=(row[3],row[4]))
         th.start()
         sm.release()
-
 
 
 mapLock = threading.Lock()
 calendarLock = threading.Lock()
 sm=threading.Semaphore(20)
 if __name__ == "__main__":
-    #run_mapSpiser()
-    run_test_calendar()
+    Map()
+    #run_test_calendar()
