@@ -1,0 +1,136 @@
+CREATE DATABASE  IF NOT EXISTS `ctrip_scrapy` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `ctrip_scrapy`;
+-- MySQL dump 10.13  Distrib 5.6.17, for osx10.6 (i386)
+--
+-- Host: localhost    Database: ctrip_scrapy
+-- ------------------------------------------------------
+-- Server version	5.6.20
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `house_calendar_response`
+--
+
+DROP TABLE IF EXISTS `house_calendar_response`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `house_calendar_response` (
+  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
+  `response` longtext,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `house_id` varchar(45) DEFAULT NULL,
+  `status` int(2) DEFAULT '0',
+  `parse_status` int(2) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=673 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `house_cals`
+--
+
+DROP TABLE IF EXISTS `house_cals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `house_cals` (
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `house_date_key` varchar(45) NOT NULL,
+  `house_id` varchar(45) DEFAULT NULL,
+  `cal_date` date DEFAULT NULL,
+  `price` float DEFAULT NULL,
+  `booked` tinyint(4) DEFAULT NULL,
+  `price_update_time` timestamp NULL DEFAULT NULL,
+  `booked_update_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`,`house_date_key`),
+  UNIQUE KEY `house_year_month_UNIQUE` (`house_date_key`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=253639 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `house_detail_response`
+--
+
+DROP TABLE IF EXISTS `house_detail_response`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `house_detail_response` (
+  `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
+  `response` longtext,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `house_id` varchar(45) DEFAULT NULL,
+  `status` int(2) DEFAULT '0',
+  `parse_status` varchar(45) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `house_id_UNIQUE` (`house_id`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=3105 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `house_list_response`
+--
+
+DROP TABLE IF EXISTS `house_list_response`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `house_list_response` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'crawled houses based on price cutoffs',
+  `response` longtext,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `city_id` varchar(45) DEFAULT NULL,
+  `page_index` int(4) DEFAULT NULL,
+  `page_size` int(4) DEFAULT NULL,
+  `status` int(2) DEFAULT '0',
+  `price_range` varchar(45) DEFAULT NULL,
+  `parse_status` int(2) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `status` (`status`,`parse_status`)
+) ENGINE=InnoDB AUTO_INCREMENT=355 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `houses`
+--
+
+DROP TABLE IF EXISTS `houses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `houses` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `house_id` varchar(45) DEFAULT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `house_name` varchar(512) DEFAULT NULL,
+  `product_price` int(11) DEFAULT NULL,
+  `city_id` varchar(45) DEFAULT NULL,
+  `city_name` varchar(45) DEFAULT NULL,
+  `detail_crawled` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `house_id_UNIQUE` (`house_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12405 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-11-24 11:51:35

@@ -1,0 +1,1 @@
+docker run --rm -it -e REDIS_1_HOST=r-2zesb09yovvbwc4tw0.redis.rds.aliyuncs.com -e REDIS_1_NAME=MyRedis -e REDIS_1_AUTH='Daduosu@)@)' -p 80:80 erikdubbelboer/phpredisadmin

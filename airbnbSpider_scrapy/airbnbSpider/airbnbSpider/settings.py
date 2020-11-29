@@ -7,6 +7,22 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+
+from airbnbSpider import const
+
+if const.ENV_DEVELOP == ENV:
+    # local mysql server
+    MYSQL_CONFIG = {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "delta=b2-4ac",
+        "port": 3306,
+        "db": "airbnbspider"
+    }
+
+
+
+
 BOT_NAME = 'airbnbSpider'
 
 SPIDER_MODULES = ['airbnbSpider.spiders']
@@ -17,7 +33,7 @@ NEWSPIDER_MODULE = 'airbnbSpider.spiders'
 #USER_AGENT = 'airbnbSpider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
