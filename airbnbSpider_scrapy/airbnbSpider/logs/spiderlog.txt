@@ -1,0 +1,54 @@
+INFO 2020-12-08 02:14:52 [scrapy.utils.log:log:log_scrapy_info:144] [None] Scrapy 2.4.0 started (bot: airbnbSpider)
+INFO 2020-12-08 02:14:52 [scrapy.utils.log:log:log_scrapy_info:150] [None] Versions: lxml 4.6.1.0, libxml2 2.9.5, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 20.3.0, Python 3.7.5 (tags/v3.7.5:5c02a39a0b, Oct 15 2019, 00:11:34) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1h  22 Sep 2020), cryptography 3.1.1, Platform Windows-10-10.0.18362-SP0
+DEBUG 2020-12-08 02:14:52 [scrapy.utils.log:log:log_scrapy_info:152] [None] Using reactor: twisted.internet.selectreactor.SelectReactor
+INFO 2020-12-08 02:14:52 [scrapy.crawler:crawler:__init__:60] [None] Overridden settings:
+{'BOT_NAME': 'airbnbSpider',
+ 'LOG_FILE': 'logs/spiderlog.txt',
+ 'LOG_FORMAT': '%(levelname)s %(asctime)s '
+               '[%(name)s:%(module)s:%(funcName)s:%(lineno)s] [%(exc_info)s] '
+               '%(message)s',
+ 'NEWSPIDER_MODULE': 'airbnbSpider.spiders',
+ 'SPIDER_MODULES': ['airbnbSpider.spiders']}
+INFO 2020-12-08 02:14:52 [scrapy.extensions.telnet:telnet:__init__:55] [None] Telnet Password: 950263a58fdae250
+INFO 2020-12-08 02:14:52 [scrapy.middleware:middleware:from_settings:48] [None] Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.logstats.LogStats']
+INFO 2020-12-08 02:14:54 [scrapy.middleware:middleware:from_settings:48] [None] Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'airbnbSpider.middlewares.proxyMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+INFO 2020-12-08 02:14:54 [scrapy.middleware:middleware:from_settings:48] [None] Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+INFO 2020-12-08 02:14:54 [scrapy.middleware:middleware:from_settings:48] [None] Enabled item pipelines:
+[]
+INFO 2020-12-08 02:14:54 [scrapy.core.engine:engine:open_spider:272] [None] Spider opened
+INFO 2020-12-08 02:14:54 [scrapy.extensions.logstats:logstats:log:48] [None] Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+INFO 2020-12-08 02:14:54 [scrapy.extensions.telnet:telnet:start_listening:69] [None] Telnet console listening on 127.0.0.1:6023
+INFO 2020-12-08 02:14:54 [scrapy.core.engine:engine:close_spider:309] [None] Closing spider (finished)
+INFO 2020-12-08 02:14:54 [scrapy.statscollectors:statscollectors:close_spider:47] [None] Dumping Scrapy stats:
+{'downloader/exception_count': 1,
+ 'downloader/exception_type_count/builtins.NameError': 1,
+ 'elapsed_time_seconds': 0.241921,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2020, 12, 7, 18, 14, 54, 398302),
+ 'log_count/INFO': 10,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'start_time': datetime.datetime(2020, 12, 7, 18, 14, 54, 156381)}
+INFO 2020-12-08 02:14:54 [scrapy.core.engine:engine:<lambda>:340] [None] Spider closed (finished)

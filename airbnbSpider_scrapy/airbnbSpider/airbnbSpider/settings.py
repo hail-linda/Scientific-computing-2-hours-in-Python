@@ -10,6 +10,9 @@
 
 from airbnbSpider import const
 
+ENV = const.ENV_DEVELOP
+
+
 if const.ENV_DEVELOP == ENV:
     # local mysql server
     MYSQL_CONFIG = {
@@ -20,10 +23,25 @@ if const.ENV_DEVELOP == ENV:
         "db": "airbnbspider"
     }
 
+# LOG_FILE = 'logs/spiderlog.txt'
+# LOG_FORMAT = '%(levelname)s %(asctime)s [%(name)s:%(module)s:%(funcName)s:%(lineno)s] [%(exc_info)s] %(message)s'
+LOG_LEVEL = 'ERROR'
+DOWNLOAD_TIMEOUT = 3
+DOWNLOAD_DELAY = 0
+CONCURRENT_REQUESTS = 400
+CONCURRENT_REQUESTS_PER_DOMAIN = 400
+CONCURRENT_REQUESTS_PER_IP = 400
 
+TELNETCONSOLE_PASSWORD = "123"
 
+RETRY_ENABLED = True  #打开重试开关
+RETRY_TIMES = 3  #重试次数
+
+ROBOTSTXT_OBEY = False
 
 BOT_NAME = 'airbnbSpider'
+
+COOKIES_ENABLED = False
 
 SPIDER_MODULES = ['airbnbSpider.spiders']
 NEWSPIDER_MODULE = 'airbnbSpider.spiders'
@@ -66,9 +84,9 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'airbnbSpider.middlewares.AirbnbspiderDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'airbnbSpider.middlewares.proxyMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -78,9 +96,9 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'airbnbSpider.pipelines.AirbnbspiderPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'airbnbSpider.pipelines.AirbnbspiderPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
