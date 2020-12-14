@@ -1,20 +1,26 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+# -*- coding: UTF-8 -*-
 
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-from airbnbSpider.items import listItem,CalendarItem
-import pymysql
+import json
+import random
+import re
+import sqlite3
+import threading
 import time
-import json, math
+from threading import Semaphore, Thread
 
-class AirbnbspiderPipeline:
+import chardet
+import lxml
+import pymysql
+import requests
+import scrapy
+from lxml import etree
+from requests.adapters import HTTPAdapter
+from multiprocessing import Process
+from multiprocess import Pool
 
-    def process_item(self, item, spider):
 
+class mapParse():
+    def __init__(self):
         self.table = "`airbnbspider`.`proxypool`"
         self.db = pymysql.connect(
             "localhost", "root", "delta=b2-4ac", "airbnbspider")
@@ -22,19 +28,22 @@ class AirbnbspiderPipeline:
         self.mapTable = "`airbnbspider`.`map`"
         self.listTable = "`airbnbspider`.`houselist`"
         self.mapresponseTable = "`airbnbspider`.`mapresponse`"
-        self.calendarResponseTable = "`airbnbspider`.`mapresponse`"
 
-        if  item.__class__ == listItem:
-            st = time.time()
-            res = item['response'].replace("'", "''")
-            res = res.replace('"', '""')
-            sql = "INSERT INTO " + self.mapresponseTable + " VALUES (NULL ,'{}')".format(res)
-            self.cursor.execute(sql)
-            self.db.commit()
-            # print("item time:"+str(int(1000*(time.time()-st)))+"ms")
-            return
-
-            res = json.loads(item['response'])
+    def getItem(self,bias):
+        sql = "SELECT * FROM "+ self.mapresponseTable +"WHERE id between {} and {}".format(bias,bias+100)
+        print(sql)
+        self.cursor.execute(sql)
+        self.db.commit()
+        results = self.cursor.fetchall()
+        for row in results:
+            res = row[1].replace("''", "'")
+            res = res.replace('""', '"')
+            try:
+                res = json.loads(res, strict=False)
+            except:
+                print("err in {}".format(row[0]))
+                return
+            print("handleing  {}".format(row[0]))
             if 'home_tab_metadata' in res['explore_tabs'][0]:
                 count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
                 sections = res['explore_tabs'][0]['sections']
@@ -56,15 +65,6 @@ class AirbnbspiderPipeline:
             else:
                 print("房源list解码异常")
                 self.dbUpdateStates("done")
-
-        elif item.__class__ == CalendarItem:
-            sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \
-                  "(NULL,'{}','{}')".format(item['house_id'], item['response'])
-            self.cursor.execute(sql)
-            self.db.commit()
-
-
-        return item
 
     def dbMapUpdateStates(self, state):
         sql = "UPDATE "+self.mapTable + \
@@ -104,5 +104,28 @@ class AirbnbspiderPipeline:
             self.dbHouseInsert(price, description, house_id)
             self.insert += 1
             self.inDB += "&"
-    
+
+sm = threading.Semaphore(40)
+
+def parseStart(bias):
+    parse = mapParse()
+    parse.getItem(bias*100)
+    sm.release()
+
+if __name__ == "__main__":
+
+    # i=range(0,5000)
+    # pool=Pool(40)
+
+    # pool.map(parseStart,i)
+
+    # pool.close()
+    # pooo.join()
+
+    for i in range(0,500):
+        sm.acquire()
+        time.sleep(0.05)
+        th = threading.Thread(target=parseStart, args=(i,))
+        th.start()
+
 

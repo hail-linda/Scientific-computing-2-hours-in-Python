@@ -7,6 +7,7 @@ from scrapy import signals
 import pymysql
 import time
 import random
+from w3lib.http import basic_auth_header
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
@@ -92,11 +93,31 @@ class proxyPool:
 
 
 class proxyMiddleware:
+
+    def __init__(self):
+        self.user_agent_list = [
+            'MSIE (MSIE 6.0; X11; Linux; i686) Opera 7.23',
+            'Opera/9.20 (Macintosh; Intel Mac OS X; U; en)',
+            'Opera/9.0 (Macintosh; PPC Mac OS X; U; en)',
+            'iTunes/9.0.3 (Macintosh; U; Intel Mac OS X 10_6_2; en-ca)',
+            'Mozilla/4.76 [en_jp] (X11; U; SunOS 5.8 sun4u)',
+            'iTunes/4.2 (Macintosh; U; PPC Mac OS X 10.2)',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:5.0) Gecko/20100101 Firefox/5.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0) Gecko/20100101 Firefox/9.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20120813 Firefox/16.0',
+            'Mozilla/4.77 [en] (X11; I; IRIX;64 6.5 IP30)',
+            'Mozilla/4.8 [en] (X11; U; SunOS; 5.7 sun4u)'
+        ]
     def process_request(self,request,spider):
         proxypool = proxyPool()
         proxies = proxypool.proxies()
         request.meta['proxy'] = proxies
-        print("using ip:"+str(proxies))
+        # username = "1282255404"
+        # password = "rb6t23x4"
+        # print(basic_auth_header('${username}', '${password}'))
+        request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
+        request.headers['USER_AGENT']=random.choice(self.user_agent_list)
+        # print("using ip:"+str(proxies))
         del proxypool
 
 

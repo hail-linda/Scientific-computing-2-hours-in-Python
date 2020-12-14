@@ -64,7 +64,7 @@ class proxyPool:
         return self.proxies
 
     def get(self, num=20):
-        url = "http://dps.kdlapi.com/api/getdps/?orderid=970736318449376&num={}&pt=1&format=json&sep=1&dedup=1".format(
+        url = "http://dps.kdlapi.com/api/getdps/?orderid=950785602763286&num={}&pt=1&format=json&sep=1&dedup=1".format(
             str(num))
         print(url)
         proxies = {"http": None, "https": None}
