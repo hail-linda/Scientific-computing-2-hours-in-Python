@@ -64,8 +64,7 @@ class proxyPool:
         return self.proxies
 
     def get(self, num=20):
-        url = "http://dps.kdlapi.com/api/getdps/?orderid=950785602763286&num={}&pt=1&format=json&sep=1&dedup=1".format(
-            str(num))
+        url = "http://dps.kdlapi.com/api/getdps/?orderid=950785602763286&num={}&pt=1&format=json&sep=1&dedup=1".format(str(num))
         print(url)
         proxies = {"http": None, "https": None}
         html = requests.get(url, timeout=5, proxies=proxies)
@@ -101,12 +100,12 @@ class proxyPool:
 
 
 def getIp():
+    db = pymysql.connect(
+        "localhost", "root", "delta=b2-4ac", "spideairbnb")
+    cursor = db.cursor()
     while(1):
         print("test ip pool")
         time.sleep(0.5)
-        db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "spideairbnb")
-        cursor = db.cursor()
         sql = "SELECT * from `airbnbspider`.`proxypool` WHERE `state` != 'del'"
         cursor.execute(sql)
         db.commit()

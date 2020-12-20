@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-from airbnbSpider.items import listItem,CalendarItem
+from airbnbSpider.items import listItem,calendarItem
 import pymysql
 import time
 import json, math

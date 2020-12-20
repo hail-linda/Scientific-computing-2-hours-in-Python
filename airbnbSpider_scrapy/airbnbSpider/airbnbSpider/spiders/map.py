@@ -56,7 +56,6 @@ class mapSpider(Spider):
         self.table = "`airbnbspider`.`map`"
         self.starttime=time.time()
 
-
     def __del__(self):
         self.db.close()
 
@@ -83,26 +82,7 @@ class mapSpider(Spider):
                             errback=self.mapErrback,meta = meta, dont_filter=True)
 
     def re_requests(self): 
-        sql = "SELECT * FROM "+self.table + \
-                "  WHERE (`state` = 'todo' OR `state` = 'processing') " 
-        # print(sql)
-        self.cursor.execute(sql)
-        results = self.cursor.fetchall()
-        if(len(results)==0):
-            return 
-
-        for row in results:
-            # print(row[1])
-            self.lat_low = row[1]
-            self.lat_upp = row[2]
-            self.lon_low = row[3]
-            self.lon_upp = row[4]
-            self.area = row[7]
-            self.id = row[0]
-            # self.dbUpdateStates("processing",self.id)
-            meta = {"location":[row[1],row[2],row[3],row[4]],"map_id":row[0],"area":row[7]}
-            yield Request(  url = self.urlJoint(row),callback = self.mapParse,
-                            errback=self.mapErrback,meta = meta, dont_filter=True)
+        self.start_requests()
   
     def dbUpdateStates(self, state, id):
         sql = "UPDATE "+self.table + \
@@ -138,8 +118,6 @@ class mapSpider(Spider):
         return url
 
     def mapParse(self,response):
-        
-
         # print("mapParse")
         res = json.loads(response.body.decode('utf8'))
         if 'home_tab_metadata' in res['explore_tabs'][0]:

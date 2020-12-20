@@ -42,11 +42,13 @@ class mapParse():
                 res = json.loads(res, strict=False)
             except:
                 print("err in {}".format(row[0]))
-                return
-            print("handleing  {}".format(row[0]))
+                continue
+            
+            self.map_id = row[0]
             if 'home_tab_metadata' in res['explore_tabs'][0]:
                 count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
                 sections = res['explore_tabs'][0]['sections']
+                print("handleing  {}".format(row[0]))
                 for section in sections:
                     self.exist = 0
                     self.insert = 0
@@ -84,7 +86,7 @@ class mapParse():
 
     def dbHouseInsert(self, price, description, house_id):
         sql = "INSERT INTO " + self.listTable + " VALUES (NULL ,'{}','{}','{}','{}')".format(
-            price, description, house_id,123)
+            price, description, house_id,self.map_id)
         # print(sql)
         self.cursor.execute(sql)
         self.db.commit()
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     # pool.close()
     # pooo.join()
 
-    for i in range(0,500):
+    for i in range(0,600):
         sm.acquire()
         time.sleep(0.05)
         th = threading.Thread(target=parseStart, args=(i,))
