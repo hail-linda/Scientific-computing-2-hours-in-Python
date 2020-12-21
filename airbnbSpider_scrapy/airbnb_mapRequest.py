@@ -269,6 +269,10 @@ class mapSpider:
             self.dbUpdateStates("todo")
 
     def quadrateDivision(self):
+        if abs(self.lat_low-self.lat_upp)<0.00001 or abs(self.lon_low-self.lon_upp)<0.00001 :
+            self.dbUpdateStates("done")
+            return
+
         self.lat_mid = (self.lat_low+self.lat_upp)/2
         self.lon_mid = (self.lon_low+self.lon_upp)/2
         locationList = []

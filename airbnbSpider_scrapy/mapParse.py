@@ -48,22 +48,24 @@ class mapParse():
             if 'home_tab_metadata' in res['explore_tabs'][0]:
                 count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
                 sections = res['explore_tabs'][0]['sections']
-                print("handleing  {}".format(row[0]))
+                # print("handleing  {}".format(row[0]))
                 for section in sections:
                     self.exist = 0
                     self.insert = 0
                     if 'listings' in section:
                         self.inDB = ""
                         listings = section['listings']
-                        for listing in listings:
-                            try:
-                                self.decodeListing(listing)
-                            except Exception as e:
-                                print(str(e), "for listing", time.asctime(
-                                    time.localtime(time.time())))
+                        self.batchDecodeListing(listings)
 
-                        print(" count;{}   共{}个，其中重复{}，新增{},{}".format(
-                             count, str(len(listings)), self.exist, self.insert, self.inDB))
+                        # for listing in listings:
+                        #     try:
+                        #         self.decodeListing(listing)
+                        #     except Exception as e:
+                        #         print(str(e), "for listing", time.asctime(
+                        #             time.localtime(time.time())))
+
+                        # print(" count;{}   共{}个，其中重复{}，新增{},{}".format(
+                        #      count, str(len(listings)), self.exist, self.insert, self.inDB))
             else:
                 print("房源list解码异常")
                 self.dbUpdateStates("done")
@@ -91,6 +93,14 @@ class mapParse():
         self.cursor.execute(sql)
         self.db.commit()
 
+    def dbHouseNum(self):
+        sql = "SELECT COUNT(*) FROM" + self.listTable
+        self.cursor.execute(sql)
+        self.db.commit()
+        results = self.cursor.fetchall()
+        # print(("hfuiweq",results[0],result[0][0]))
+        return results[0][0]
+
     def decodeListing(self, listing):
         price = listing['pricing_quote']['price_string']
         description = listing['listing']['name']
@@ -106,6 +116,30 @@ class mapParse():
             self.dbHouseInsert(price, description, house_id)
             self.insert += 1
             self.inDB += "&"
+
+
+    def batchDecodeListing(self,listings):
+        sqls = ""
+        sql = "INSERT INTO " + self.listTable + " VALUES (NULL ,%s,%s,%s,%s);"
+        vals = []
+        for listing in listings:
+            try:
+                price = listing['pricing_quote']['price_string']
+                description = listing['listing']['name']
+                house_id = listing['listing']['id']
+                description = description.replace("'", "''")
+                description = description.replace('"', '""')
+                vals.append((str(price), str(description), str(house_id),str(self.map_id)))
+            except:
+                pass
+        try:
+            self.cursor.executemany(sql,vals)
+            self.db.commit()
+        except:
+            self.db.rollback()
+        # print(len(sqls))
+        # print(numEnding-numStarting)
+        print("{}\t总数:{}\t新增:{}\t重复:{}".format(self.map_id,len(listings),self.cursor.rowcount,len(listings)-self.cursor.rowcount))
 
 sm = threading.Semaphore(40)
 
@@ -124,7 +158,7 @@ if __name__ == "__main__":
     # pool.close()
     # pooo.join()
 
-    for i in range(0,600):
+    for i in range(540,1500):
         sm.acquire()
         time.sleep(0.05)
         th = threading.Thread(target=parseStart, args=(i,))

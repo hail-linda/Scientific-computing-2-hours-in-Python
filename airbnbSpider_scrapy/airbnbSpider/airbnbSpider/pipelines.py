@@ -10,6 +10,23 @@ from airbnbSpider.items import listItem,calendarItem
 import pymysql
 import time
 import json, math
+from threading import Semaphore, Thread
+import threading
+
+
+
+def dbCalendarInsert(house_id,response):
+    calendarResponseTable = "`airbnbspider`.`calendarresponse`"
+    db = pymysql.connect(
+            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+    cursor = db.cursor()
+    sql = "INSERT IGNORE INTO "+ calendarResponseTable+" (id, house_id, response) VALUES " \
+                  "(NULL,'{}','{}')".format(house_id, response)
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+
 
 class AirbnbspiderPipeline:
 
@@ -22,7 +39,7 @@ class AirbnbspiderPipeline:
         self.mapTable = "`airbnbspider`.`map`"
         self.listTable = "`airbnbspider`.`houselist`"
         self.mapresponseTable = "`airbnbspider`.`mapresponse`"
-        self.calendarResponseTable = "`airbnbspider`.`mapresponse`"
+        self.calendarResponseTable = "`airbnbspider`.`calendarresponse`"
 
         if  item.__class__ == listItem:
             st = time.time()
@@ -57,12 +74,15 @@ class AirbnbspiderPipeline:
                 print("房源list解码异常")
                 self.dbUpdateStates("done")
 
-        elif item.__class__ == CalendarItem:
-            sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \
-                  "(NULL,'{}','{}')".format(item['house_id'], item['response'])
-            self.cursor.execute(sql)
-            self.db.commit()
-
+        elif item.__class__ == calendarItem:
+            th = threading.Thread(target=dbCalendarInsert, args=(item['house_id'], item['response']))
+            th.start()
+            print(item['house_id'])
+  
+            # sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \
+            #       "(NULL,'{}','{}')".format(item['house_id'], item['response'])
+            # self.cursor.execute(sql)
+            # self.db.commit()
 
         return item
 

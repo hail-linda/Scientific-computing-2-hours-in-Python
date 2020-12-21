@@ -4,6 +4,7 @@ from airbnbSpider.items import calendarItem
 from scrapy.spiders import Spider
 from scrapy import Request
 from scrapy_redis.spiders import RedisSpider
+from scrapy_redis.utils import bytes_to_str
 
 import base64
 import pymysql
@@ -36,7 +37,7 @@ class proxyPool:
         self.db.commit()
 
 class calenderSpider(RedisSpider):
-    name = "calender"
+    name = "calendar"
     allowed_domains = ['www.airbnb.cn']
     redis_key = 'calendar:start_urls'
 
@@ -57,20 +58,18 @@ class calenderSpider(RedisSpider):
 
     def make_request_from_data(self, data):
         house_id = bytes_to_str(data, self.redis_encoding)
-        meta = {'house_id': house_id}
-        yield Request(  url = self.urlJoint(house_id),callback = self.calendarParse,
-                            errback=self.calendarErrback,meta = meta, dont_filter=True)
+        meta = {'house_id': house_id,"handle_httpstatus_all": True}
+        return Request(  url = self.urlJoint(house_id),callback = self.calendarParse,
+                            errback=self.calendarErrback,meta = meta, dont_filter=True,
+                             headers={('User-Agent', 'Mozilla/5.0')})
 
     def urlJoint(self, house_id):
         url = "https://www.airbnb.cn/api/v2/homes_pdp_availability_calendar?currency=CNY&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh"
-        url += "&listing_id={}".format(str(house_id))
-        url += "&month={}".format(str(self.mouth))
-        url += "&year={}".format(str(self.year))
-        url += "&count={}".format(str(self.count))
+        url += "&listing_id={}&month={}&year={}&count={}".format(str(house_id),str(self.mouth),str(self.year),"3")
         return url
 
     def calendarParse(self,response):
-        item = CalendarItem()
+        item = calendarItem()
         item['house_id'] = response.meta['house_id']
         item['response'] = response.body.decode('utf8')
         yield item
@@ -82,6 +81,7 @@ class calenderSpider(RedisSpider):
         print("Errback:\t"+str(response))
         print(failure.request.meta['proxy'][8:])
 
+        print(failure)
         proxypool = proxyPool()
         proxypool.delete(failure.request.meta['proxy'][8:],str(response))
         print("del proxy:"+str(failure.request.meta['proxy'][8:]))

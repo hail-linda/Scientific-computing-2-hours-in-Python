@@ -13,29 +13,40 @@ from airbnbSpider import const
 ENV = const.ENV_DEVELOP
 
 
-if const.ENV_DEVELOP == ENV:
-    # local mysql server
-    MYSQL_CONFIG = {
-        "host": "127.0.0.1",
-        "user": "root",
-        "password": "delta=b2-4ac",
-        "port": 3306,
-        "db": "airbnbspider"
-    }
+
+MYSQL_CONFIG = {
+    "host": "127.0.0.1",
+    "user": "root",
+    "password": "delta=b2-4ac",
+    "port": 3306,
+    "db": "airbnbspider"
+}
+
+REDIS_URL = 'redis://:{psw}@{host}:{port}/{db}'.format(
+    host='r-2zeryyjl6mne2qqzhdpd.redis.rds.aliyuncs.com',
+    port='6379',
+    psw='Daduosu@)@)',
+    db=0
+)
 
 # LOG_FILE = 'logs/spiderlog.txt'
 # LOG_FORMAT = '%(levelname)s %(asctime)s [%(name)s:%(module)s:%(funcName)s:%(lineno)s] [%(exc_info)s] %(message)s'
 LOG_LEVEL = 'ERROR'
-DOWNLOAD_TIMEOUT = 6
-DOWNLOAD_DELAY = 0
-CONCURRENT_REQUESTS = 80
-CONCURRENT_REQUESTS_PER_DOMAIN = 80
-CONCURRENT_REQUESTS_PER_IP = 80
+DOWNLOAD_TIMEOUT = 3
+
+CONCURRENT_REQUESTS = 150
+CONCURRENT_REQUESTS_PER_DOMAIN = 150
+CONCURRENT_REQUESTS_PER_IP = 150
+DOWNLOAD_DELAY = 1.0/CONCURRENT_REQUESTS
+RANDOMIZE_DOWNLOAD_DELAY = 0
+REACTOR_THREADPOOL_MAXSIZE = 30
+SCRAPER_SLOT_MAX_ACTIVE_SIZE = 50000000
+
 
 TELNETCONSOLE_PASSWORD = "123"
 
 RETRY_ENABLED = True  #打开重试开关
-RETRY_TIMES = 1  #重试次数
+RETRY_TIMES = 2  #重试次数
 
 ROBOTSTXT_OBEY = False
 
