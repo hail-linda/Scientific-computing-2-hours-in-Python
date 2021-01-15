@@ -1,0 +1,5 @@
+
+09wLjYSgWapXXD1f
+
+import dbSettings
+self.db = dbSettings.db_connect()

@@ -11,25 +11,26 @@ from threading import Semaphore, Thread
 import chardet
 import lxml
 import pymysql
+
+import dbSettings
 import requests
 
 
 class watcher():
     def __init__(self):
-        self.table = "`airbnbspider`.`proxypool`"
-        self.db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+        self.table = "`proxypool`"
+        self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.mapTable = "`airbnbspider`.`map`"
-        self.listTable = "`airbnbspider`.`houselist`"
-        self.mapresponseTable = "`airbnbspider`.`mapresponse`"
+        self.mapTable = "`map`"
+        self.listTable = "`houselist`"
+        self.mapresponseTable = "`mapresponse`"
 
     def run(self):
-        sql = "SELECT COUNT(*) FROM airbnbspider.calendarresponse"
+        sql = "SELECT MAX(id) FROM calendarresponse"
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
-        return results[0][0] 
+        return results[0]["MAX(id)"] 
 
    
 

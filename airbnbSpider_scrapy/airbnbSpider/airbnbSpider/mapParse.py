@@ -11,6 +11,8 @@ from threading import Semaphore, Thread
 import chardet
 import lxml
 import pymysql
+
+import dbSettings
 import requests
 import scrapy
 from lxml import etree
@@ -21,13 +23,12 @@ from multiprocess import Pool
 
 class mapParse():
     def __init__(self):
-        self.table = "`airbnbspider`.`proxypool`"
-        self.db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+        self.table = "`proxypool`"
+        self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.mapTable = "`airbnbspider`.`map`"
-        self.listTable = "`airbnbspider`.`houselist`"
-        self.mapresponseTable = "`airbnbspider`.`mapresponse`"
+        self.mapTable = "`map`"
+        self.listTable = "`houselist`"
+        self.mapresponseTable = "`mapresponse`"
 
     def getItem(self,bias):
         sql = "SELECT * FROM "+ self.mapresponseTable +"WHERE id between {} and {}".format(bias,bias+100)

@@ -37,20 +37,21 @@ class proxyPool:
         self.db.commit()
 
 class calenderSpider(RedisSpider):
-    errInfo = ""
-    url = ""
-    json = ""
-    html = ""
-    starttime=time.time()
-
-    localtime = time.localtime(time.time())
-    mouth = localtime[1]
-    year = localtime[0]
-    day = localtime[2]
-
     name = "calendar"
     allowed_domains = ['www.airbnb.cn']
     redis_key = 'calendar:start_urls'
+
+    def __init__(self):
+        self.errInfo = ""
+        self.url = ""
+        self.json = ""
+        self.html = ""
+        self.starttime=time.time()
+
+        localtime = time.localtime(time.time())
+        self.mouth = localtime[1]
+        self.year = localtime[0]
+        self.day = localtime[2]
 
     def __del__(self):
         pass

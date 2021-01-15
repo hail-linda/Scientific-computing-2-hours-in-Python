@@ -16,14 +16,15 @@ import scrapy
 from lxml import etree
 from requests.adapters import HTTPAdapter
 
+import dbSettings
+
 
 class proxyPool:
     def __init__(self):
         self.proxyId = 0
         self.ip = ""
-        self.table = "`airbnbspider`.`proxypool`"
-        self.db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+        self.table = "`proxypool`"
+        self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
 
     def dbInsert(self, proxy):
@@ -115,20 +116,19 @@ class mapSpider:
         self.lon_upp = 0.0
         self.id = 0
         self.num = -1
-        self.db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+        self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.mapTable = "`airbnbspider`.`map`"
-        self.listTable = "`airbnbspider`.`houselist`"
-        self.mapresponseTable = "`airbnbspider`.`mapresponse`"
-        self.calendarResponseTable = "`airbnbspider`.`mapresponse`"
+        self.mapTable = "`map`"
+        self.listTable = "`houselist`"
+        self.mapresponseTable = "`mapresponse`"
+        self.calendarResponseTable = "`mapresponse`"
         self.area = ""
 
         self.errInfo = ""
         self.url = ""
         self.json = ""
         self.html = ""
-        self.table = "`airbnbspider`.`map`"
+        self.table = "`map`"
 
     def __del__(self):
         self.db.close()
@@ -505,10 +505,10 @@ def runCalendarspider(house_id, map_id):
     sm.release()
 
 def Map():
-    db = pymysql.connect("localhost", "root", "delta=b2-4ac", "airbnbspider")
+    db = dbSettings.db_connect()
     cursor = db.cursor()
     while(1):
-        sql = "SELECT * FROM `airbnbspider`.`map` WHERE state = 'todo' OR `state` = 'processing' "
+        sql = "SELECT * FROM `map` WHERE state = 'todo' OR `state` = 'processing' "
         cursor.execute(sql)
         db.commit()
         results = cursor.fetchall()
@@ -542,8 +542,7 @@ def getIp():
     while(1):
         print("test ip pool")
         time.sleep(0.5)
-        db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "spideairbnb")
+        self.db = dbSettings.db_connect()
         cursor = db.cursor()
         sql = "SELECT * from `spideairbnb`.`proxypool` WHERE `state` != 'del'"
         cursor.execute(sql)
@@ -558,7 +557,7 @@ def run_test_ip():
     print(pro.IP())
 
 def Calendar():
-    db = pymysql.connect("localhost", "root", "delta=b2-4ac", "spideairbnb")
+    self.db = dbSettings.db_connect()
     cursor = db.cursor()
     sql = "SELECT * FROM spideairbnb.houselist"
     cursor.execute(sql)

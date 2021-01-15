@@ -1,29 +1,15 @@
-# -*- coding: UTF-8 -*-
-
-import json
-import random
-import re
-import sqlite3
-import threading
-import time
-from threading import Semaphore, Thread
-
-import chardet
-import lxml
 import pymysql
-import requests
-import scrapy
-from lxml import etree
-from requests.adapters import HTTPAdapter
+import time
+import random
 
 
 class proxyPool:
     def __init__(self):
         self.proxyId = 0
         self.ip = ""
-        self.table = "`airbnbspider`.`proxypool`"
+        self.table = "`proxypool`"
         self.db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+            "localhost", "root", "delta=b2-4ac", "spideairbnb")
         self.cursor = self.db.cursor()
 
     def dbInsert(self, proxy):
@@ -57,14 +43,12 @@ class proxyPool:
 
     def proxies(self):
         self.IP()
-        self.proxies = {
-            "http": " http://{}".format(self.ip),
-            "https": "https://{}".format(self.ip),
-        }
+        self.proxies = " http://{}".format(self.ip)
         return self.proxies
 
     def get(self, num=20):
-        url = "http://dps.kdlapi.com/api/getdps/?orderid=950785602763286&num={}&pt=1&format=json&sep=1&dedup=1".format(str(num))
+        url = "http://dps.kdlapi.com/api/getdps/?orderid=970736318449376&num={}&pt=1&format=json&sep=1&dedup=1".format(
+            str(num))
         print(url)
         proxies = {"http": None, "https": None}
         html = requests.get(url, timeout=5, proxies=proxies)
@@ -87,33 +71,13 @@ class proxyPool:
         for proxy in proxys:
             self.dbInsert(proxy)
 
-    def delete(self, delReason):
+    def delete(self, proxy, delReason):
         sql = "UPDATE "+self.table + \
-            " SET `state` = 'del' WHERE `id`='{}'".format(self.proxyId)
+            " SET `state` = 'del' WHERE `proxy`='{}'".format(proxy)
         self.cursor.execute(sql)
         self.db.commit()
         sql = "UPDATE "+self.table + \
-            " SET `delreason` = '{}' WHERE `id`='{}'".format(
-                delReason, self.proxyId)
+            " SET `delreason` = '{}' WHERE `proxy`='{}'".format(
+                delReason, proxy)
         self.cursor.execute(sql)
         self.db.commit()
-
-
-def getIp():
-    db = pymysql.connect(
-        "localhost", "root", "delta=b2-4ac", "spideairbnb")
-    cursor = db.cursor()
-    while(1):
-        print("test ip pool")
-        time.sleep(0.5)
-        sql = "SELECT * from `airbnbspider`.`proxypool` WHERE `state` != 'del'"
-        cursor.execute(sql)
-        db.commit()
-        results = cursor.fetchall()
-        if(len(results) < 10):
-            proxypool = proxyPool()
-            proxies = proxypool.get(num=10)
-
-
-if __name__ == "__main__":
-    getIp()
