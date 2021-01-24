@@ -3,22 +3,15 @@
 import os
 import time
 import random
-
 import json
 import re
-import sqlite3
-import threading
 import time
-from threading import Semaphore, Thread
-
 import pymysql
-
 import dbSettings
-import requests
 import scrapy
-from requests.adapters import HTTPAdapter
-from multiprocessing import Process
-from multiprocess import Pool
+import redis
+from dbSettings import REDIS_URL
+
 
 
 class calendarParse():
@@ -26,6 +19,7 @@ class calendarParse():
         self.table = "`proxypool`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
+        self.redis = redis.Redis.from_url(REDIS_URL)
         self.mapTable = "`map`"
         self.listTable = "`houselist`"
         self.mapresponseTable = "`mapresponse`"
@@ -41,6 +35,7 @@ class calendarParse():
         self.priceList = []
         self.house_id = 0
 
+
     def __del__(self):
         self.db.close()
 
@@ -50,31 +45,39 @@ class calendarParse():
         return dt1-dt2
 
     def getItem(self, bias):
+        self.priceList = []
+        self.orderList = []
+        errIdList = []
+
         sql = "SELECT * FROM " + self.calendarresponseTable + \
-            "WHERE id between {} and {}".format(bias, bias+10)
+            "WHERE id between {} and {}".format(bias, bias+1000)
         print(sql)
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
         for row in results:
-            self.sqlId = row["id"]
-            self.house_id = row["house_id"]
-            res = row["response"].replace("''", "'")
-            res = res.replace('""', '"')
-            if "429 Too Many" in res:
-
-                print("429 err in ", row["id"])
+            try:
+                self.sqlId = row["id"]
+                self.house_id = row["house_id"]
+                res = row["response"].replace("''", "'")
+                res = res.replace('""', '"')
+            except:
+                print("replace err in ", row["id"])
+                errIdList.append(row["id"])
                 continue
-            # print(res)
+
+            if "429 Too Many" in res:
+                self.redis.lpush("calendar:start_urls", row["house_id"])
+                print("429 err in ", row["id"])
+                errIdList.append(row["id"])
+                continue
+
             try:
                 res = json.loads(res, strict=False)
             except Exception as e:
                 print(e)
                 print("json.loads err in {}".format(row["id"]))
-                sql = "INSERT INTO `calendarparselog` ( `type`, `infor`)\
-                 VALUES ('{}','{}');".format(row["id"], "429 err")
-                self.cursor.execute(sql)
-                self.db.commit()
+                errIdList.append(row["id"])
                 continue
 
             # if 'metadata' in res:
@@ -91,35 +94,37 @@ class calendarParse():
                                 if day['available'] == False:
                                     self.orderList.append(day['date'])
                             except:
+                                
                                 continue
 
         self.dbInsert()
         self.priceList = []
         self.orderList = []
+        return errIdList
 
     def dbInsert(self):
         self.vals = []
-        self.sql = "INSERT IGNORE INTO `order` (`house_id`, `fetch_date`, `order_date`, `hash`)\
-                 VALUES (%s,%s,%s,%s);"
+        self.sql = "INSERT IGNORE INTO `order` (`house_id`, `fetch_date`, `order_date`, repeat_flag)\
+                    VALUES (%s,%s,%s,%s);"
         for order in self.orderList:
-            hash = "{}:{}`".format(self.house_id, order)
+            repeat_flag = "{}:{}".format(self.house_id, order)
             # print(self.house_id,self.dtToday,order,hash)
-            self.vals.append((self.house_id, self.dtToday, order, hash))
+            self.vals.append((self.house_id, self.dtToday, order, repeat_flag))
 
         self.cursor.executemany(self.sql, self.vals)
         self.db.commit()
         self.orderAffected = self.cursor.rowcount
 
         self.vals = []
-        self.sql = "INSERT IGNORE INTO `price` (`house_id`, `fetch_date`, `order_date`,`price`, `hash`)\
-                 VALUES (%s,%s,%s,%s,%s);"
+        self.sql = "INSERT IGNORE INTO `price` (`house_id`, `fetch_date`, `order_date`,`price`, repeat_flag)\
+        VALUES (%s,%s,%s,%s,%s);"
 
         for price in self.priceList:
             orderDate = price[0]
             price = price[1]
-            hash = "{}:{}:{}".format(self.house_id, orderDate, price)
+            repeat_flag = "{}:{}:{}".format(self.house_id, order, price)
             self.vals.append(
-                (self.house_id, self.dtToday, orderDate, price, hash))
+                (self.house_id, self.dtToday, orderDate, price, repeat_flag))
 
         self.cursor.executemany(self.sql, self.vals)
         self.db.commit()
@@ -129,40 +134,25 @@ class calendarParse():
         #     ".format(self.sqlId,self.house_id,self.orderAffected,len(self.orderList),self.priceAffected,len(self.priceList)))
 
 
-sm = threading.Semaphore(1)
-
-
 def parseStart(bias):
-    # parse = calendarParse()
-    # parse.getItem(bias*10)
-    # sm.release()
-    # return
     try:
         parse = calendarParse()
-        parse.getItem(bias*10)
+        return parse.getItem(bias)
     except Exception as e:
         print(e)
-        try:
-            parse = calendarParse()
-            parse.getItem(bias*10)
-        except:
-            try:
-                parse = calendarParse()
-                parse.getItem(bias*10)
-            except Exception as e:
-                print(e)
-                print("err in {}".format(bias))
 
-                pass
-
-    sm.release()
+def dbInsertparselog(type,responseId,infor):
+    # 数据库链接
     db = dbSettings.db_connect()
     cursor = db.cursor()
-    sql = "INSERT INTO `calendarparselog` ( `type`, `infor`)\
-            VALUES ('{}','{}');".format("start parse", bias*10)
+
+    sql = "INSERT IGNORE INTO `calendarparselog` (`type`, `response_id`, `infor`)\
+           VALUES ('{}',{},'{}');".format(type,responseId,infor)
     print(sql)
     cursor.execute(sql)
     db.commit()
+
+
 
 def getMaxNumOfCalendarResponse(db,cursor):
     sql = "SELECT MAX(id) FROM `calendarresponse` order by id desc limit 1"
@@ -178,22 +168,53 @@ if __name__ == "__main__":
     db = dbSettings.db_connect()
     cursor = db.cursor()
 
+    # # 起始responseId
+    # startResponseId = 0
+    # sql = "SELECT * FROM `calendarparselog` where type = 'end parse' order by id desc limit 1"
+    # cursor.execute(sql)
+    # db.commit()
+    # # print(int(cursor.fetchall()[0]["response_id"]))
+    # try:
+    #     startResponseId = cursor.fetchall()[0]["response_id"]
+    # except:
+    #     pass
+    startResponseId = 0
+        
+
+    # 结束responseId
+    endResponseId = getMaxNumOfCalendarResponse(db,cursor)
+
+    print("start parse at {}".format(startResponseId))
+
+    errResponseIdList = []
+
+    # start parse
+    dbInsertparselog("start parse",startResponseId,"None")
+
+    for responseId in range(startResponseId, endResponseId,1000):
+        errResponseIdList += parseStart(responseId)
+        print(len(errResponseIdList))
+        if(len(errResponseIdList)>30000):
+            break
+    # end parse
+    dbInsertparselog("end parse",responseId,"None")
+
+    # err report
+    if len(errResponseIdList) > 30000:
+        dbInsertparselog("too much error,break",responseId,json.dumps(errResponseIdList))
+    elif len(errResponseIdList) > 1:
+        dbInsertparselog("err log",responseId,json.dumps(errResponseIdList))
+
+    if len(errResponseIdList) < 30000:
+        sql = "TRUNCATE TABLE `calendarresponse`;"
+        cursor.execute(sql)
+        db.commit()
+        dbInsertparselog("truncate",0,"truncate calendarResponse")
+
+
+
     
 
-    sql = "SELECT * FROM `calendarparselog` order by id desc limit 1"
-    cursor.execute(sql)
-    db.commit()
-    try:
-        start = cursor.fetchall()[0]["infor"]
-    except:
-        start = 25600
+        
+    
 
-    print(int(start)*10)
-
-    print("start parse at ".format(int(start)*10))
-
-    for i in range(round(int(start)/10), round(num/10)+1):
-        sm.acquire()
-        time.sleep(0.05)
-        th = threading.Thread(target=parseStart, args=(i,))
-        th.start()

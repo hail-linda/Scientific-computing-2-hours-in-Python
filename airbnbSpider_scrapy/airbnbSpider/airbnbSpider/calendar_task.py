@@ -20,10 +20,13 @@ class calendarTask():
         results = self.cursor.fetchall()
 
         print(len(results))
+        count = 0
         for row in results:
-            # house_id = row[0]
+            count += 1
             self.redis.lpush("calendar:start_urls", row["house_id"])
-            # print(house_id)
+            if count % 10000 == 0：
+                print(count)
+
 
 
 if __name__ == "__main__":
