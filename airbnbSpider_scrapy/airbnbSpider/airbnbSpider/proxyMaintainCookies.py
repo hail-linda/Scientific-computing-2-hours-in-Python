@@ -27,9 +27,9 @@ class proxyPool:
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
 
-    def dbInsert(self, proxy):
+    def dbInsert(self, proxy,cookies):
         sql = "INSERT INTO "+self.table + \
-            " (`ip`, `numused`, `state`) VALUES ('{}', '0', 'new')".format(proxy)
+            " (`ip`, `numused`, `state`,`cookies`) VALUES ('{}', '0', 'new','{}')".format(proxy,cookies)
         self.cursor.execute(sql)
         self.db.commit()
 
@@ -86,7 +86,22 @@ class proxyPool:
             print("get proxy err in proxy_list")
 
         for proxy in proxys:
-            self.dbInsert(proxy)
+            rootCookies = self.getCookies("https://www.airbnb.cn",proxy)
+            pgPixelCookies = self.getCookies("https://www.airbnb.cn/pg_pixel?r=&diff=16115071061939667863691016617",proxy,rootCookies)
+            self.dbInsert(proxy,pgPixelCookies)
+        
+    def getCookies(self,url,proxy,srcCookies=""):
+        proxies = {"http": " http://{}".format(proxy), "https": "https://{}".format(proxy),}
+        headers = {"cookies" : srcCookies}
+
+        res = requests.get(url,headers = headers)
+        # print(res.cookies)
+        rootCookies = srcCookies
+        for key, value in res.cookies.items():
+            print(key + "=" + value)
+            print()
+            rootCookies += str(key)+"="+str(value)+";"
+        return rootCookies
 
     def delete(self, delReason):
         sql = "UPDATE "+self.table + \

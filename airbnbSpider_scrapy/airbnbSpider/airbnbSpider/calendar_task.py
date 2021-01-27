@@ -24,7 +24,7 @@ class calendarTask():
         for row in results:
             count += 1
             self.redis.lpush("calendar:start_urls", row["house_id"])
-            if count % 10000 == 0：
+            if count % 10000 == 0:
                 print(count)
 
 

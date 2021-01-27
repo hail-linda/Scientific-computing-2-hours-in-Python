@@ -28,7 +28,7 @@ class calendarParse():
         localtime = time.localtime(time.time())
         self.mouth = localtime[1]
         self.year = localtime[0]
-        self.day = localtime[2]-1
+        self.day = localtime[2]
         self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day)
 
         self.orderList = []
