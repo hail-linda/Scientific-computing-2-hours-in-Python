@@ -5,6 +5,7 @@ from scrapy.spiders import Spider
 from scrapy import Request
 from scrapy_redis.spiders import RedisSpider
 from scrapy_redis.utils import bytes_to_str
+import base64
 
 import base64
 import pymysql
@@ -63,9 +64,16 @@ class calenderSpider(RedisSpider):
                              headers={('User-Agent', 'Mozilla/5.0')})
 
     def urlJoint(self, house_id):
-        url = "https://www.airbnb.cn/api/v2/homes_pdp_availability_calendar?currency=CNY&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh"
-        url += "&listing_id={}&month={}&year={}&count={}".format(str(house_id),str(self.mouth),str(self.year),"3")
+        url = "https://www.airbnb.cn/api/v3/StaysPdpSections?operationName=StaysPdpSections"
+        url += "&locale=zh&currency=CNY&_cb=8ak49r1n6bkuj&variables="
+        url += '{"id":"{}",'.format(base64.b64encode('StayListing:'+str(house_id)))
+        url += '"pdpSectionsRequest":{"adults":"1","bypassTargetings":false,"causeId":null,"children":null,"disasterId":null,"discountedGuestFeeVersion":null,"displayExtensions":null,"federatedSearchId":null,"forceBoostPriorityMessageType":null,"infants":null,"interactionType":null,"invitationClaimed":false,"layouts":["SIDEBAR","SINGLE_COLUMN"],"pdpTypeOverride":null,"preview":false,"previousStateCheckIn":null,"previousStateCheckOut":null,"priceDropSource":null,"privateBooking":false,"promotionUuid":null,"searchId":null,"selectedCancellationPolicyId":null,"staysBookingMigrationEnabled":false,"translateUgc":false,"useNewSectionWrapperApi":false,"sectionIds":null,"checkIn":"2021-02-02","checkOut":"2021-02-03"}}'
+        url += '&extensions={"persistedQuery":{"version":1,"sha256Hash":"a4abad83208088c1b2a2df135e9e1f52ca42f170980338f1d12cee01e0584486"}}'
+        print(url)
         return url
+
+
+
 
     def detailParse(self,response):
         item = detailItem()
