@@ -79,15 +79,27 @@ class decodeDetail:
 
 
         StayPDPMetadata = jsonData['data']["presentation"]["stayProductDetailPage"]["sections"]["metadata"]
+        # listingId 经纬度
         if "loggingContext" in StayPDPMetadata:
             if "eventDataLogging" in StayPDPMetadata["loggingContext"]:
                 eventDataLogging = StayPDPMetadata["loggingContext"]["eventDataLogging"]
                 meta["listingId"] = self.ifin(eventDataLogging,"listingId")# 'listingId': '45633636',
                 meta["Lat"] = self.ifin(eventDataLogging,"listingLat")# 'Lat': 30.68359,
                 meta["Lng"] = self.ifin(eventDataLogging,"listingLng")# 'Lng': 104.0718,
+        
+        # 主图
+        if "seoFeatures" in StayPDPMetadata:
+            if "ogTags" in StayPDPMetadata["seoFeatures"]:
+                ogTags = StayPDPMetadata["seoFeatures"]["ogTags"]
+                meta["ogImage"] = ogTags["ogImage"]
+        
+        if "sharingConfig" in StayPDPMetadata:
+            if "propertyType" in StayPDPMetadata["sharingConfig"]:
+                meta["propertyType"] = StayPDPMetadata["sharingConfig"]["propertyType"]
 
 
-        pprint(meta)
+
+        return meta
 
     def dig2layers(self,root,layer1,layer2):
         fruit = []
@@ -123,7 +135,8 @@ if __name__ == "__main__":
 
     jsonData =  json.loads(f_in.read())
 
-    decodeDetail(jsonData)
+    meta = decodeDetail(jsonData)
+    pprint(meta)
 
 
 
