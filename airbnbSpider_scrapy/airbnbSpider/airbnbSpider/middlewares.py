@@ -108,7 +108,7 @@ class proxyPool:
 class proxyMiddleware:
 
     def __init__(self):
-        self.user_a gent_list = [
+        self.user_agent_list = [
             'MSIE (MSIE 6.0; X11; Linux; i686) Opera 7.23',
             'Opera/9.20 (Macintosh; Intel Mac OS X; U; en)',
             'Opera/9.0 (Macintosh; PPC Mac OS X; U; en)',
@@ -121,6 +121,7 @@ class proxyMiddleware:
             'Mozilla/4.77 [en] (X11; I; IRIX;64 6.5 IP30)',
             'Mozilla/4.8 [en] (X11; U; SunOS; 5.7 sun4u)'
         ]
+
     def process_request(self,request,spider):
         proxypool = proxyPool()
         proxies = proxypool.proxies()
@@ -128,7 +129,7 @@ class proxyMiddleware:
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
         request.headers['USER_AGENT']=random.choice(self.user_agent_list)
-        request.headers['Cookies'] = proxypool.cookies() 
+        request.headers['Cookies'] = proxypool.getCookies() 
         # print("using ip:"+str(proxies))
         del proxypool
 

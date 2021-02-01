@@ -46,7 +46,7 @@ BOT_NAME = 'airbnbSpider'
 
 COOKIES_ENABLED = False
 
-SPIDER_MODULES = ['airbnbSpider.spiders']
+SPIDER_MODULES =  ['airbnbSpider.spiders']
 NEWSPIDER_MODULE = 'airbnbSpider.spiders'
 
 
