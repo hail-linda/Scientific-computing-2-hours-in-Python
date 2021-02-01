@@ -19,9 +19,9 @@ class proxyPool:
         self.proxyId = 0
         self.ip = ""
         self.table = "`proxypool`"
-        print("middleline-proxyPool1")
+        # print("middleline-proxyPool1")
         self.db = dbSettings.db_connect()
-        print("middline-proxyPool2")
+        # print("middline-proxyPool2")
         self.cursor = self.db.cursor()
 
     def dbInsert(self, proxy):
@@ -44,7 +44,7 @@ class proxyPool:
             time.sleep(2)
             return self.IP()
         rand = random.randint(0, len(results)-1)
-        print(results[rand])
+        print(results[rand]['id'],results[rand]['ip'])
         self.ip = results[rand]['ip']
         self.cookies = results[rand]['cookies']
         # print("self.ip",self.ip)
@@ -60,7 +60,7 @@ class proxyPool:
 
     def proxies(self):
         self.IP()
-        print("proxy ip:\t\t\t",self.ip)
+        # print("proxy ip:\t\t\t",self.ip)
         self.proxies = " http://{}".format(self.ip)
         return self.proxies
     
@@ -125,7 +125,7 @@ class proxyMiddleware:
     def process_request(self,request,spider):
         proxypool = proxyPool()
         proxies = proxypool.proxies()
-        print("proxy: ",proxies)
+        # print("proxy: ",proxies)
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
         request.headers['USER_AGENT']=random.choice(self.user_agent_list)
