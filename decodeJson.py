@@ -59,6 +59,25 @@ class decodeDetail:
                         meta["reviewSummary"] = self.map2layer(reviewDetails,"reviewSummary","label","localizedRating")# 'reviewSummary': {'位置便利': '5.0','入住便捷': '5.0','如实描述': '5.0','干净卫生': '4.9','沟通顺畅': '5.0','高性价比': '4.9'},
                         meta["reviewTagSummary"] = self.map2layer(reviewDetails,"reviewTagSummary","localized_tag_name","count")# 'reviewTagSummary': {'位置便利': 64,'入住体验好': 68,'全部': 138,'干净卫生': 47,'待改善': 2,'房东热情': 57,'有设计感': 14,'服务周到': 43,'环境安静': 5,'行李寄存': 2,'设施齐全': 32,'靠近地铁': 8,'靠近市场': 13},
 
+            # 周边
+            if "LOCATION_CHINA" in StayPDPSectionsId :
+                if "section" in StayPDPSection:
+                    if "pointsOfInterest" in StayPDPSection["section"]:
+                        pointsOfInterest = StayPDPSection["section"]["pointsOfInterest"]
+                        print("interest exist")
+                        meta["interestGroup"] = []
+                        for landmarkGroup in pointsOfInterest:
+                            if "items" in landmarkGroup:
+                                for item in landmarkGroup["items"]:
+                                    landmark = {}
+                                    landmark["type"] = landmarkGroup["type"]
+                                    landmark["name"] = item["name"]
+                                    landmark["lat"] = item["lat"]
+                                    landmark["lng"] = item["lng"]
+                                    meta["interestGroup"].append(landmark)
+
+
+
         StayPDPMetadata = jsonData['data']["presentation"]["stayProductDetailPage"]["sections"]["metadata"]
         if "loggingContext" in StayPDPMetadata:
             if "eventDataLogging" in StayPDPMetadata["loggingContext"]:
