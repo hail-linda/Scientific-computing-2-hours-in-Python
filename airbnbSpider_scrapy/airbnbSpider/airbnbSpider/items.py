@@ -21,3 +21,7 @@ class calendarItem(scrapy.Item):
     house_id = scrapy.Field()
     response = scrapy.Field()
 
+class detailItem(scrapy.Item):
+    house_id = scrapy.Field()
+    response = scrapy.Field()
+
