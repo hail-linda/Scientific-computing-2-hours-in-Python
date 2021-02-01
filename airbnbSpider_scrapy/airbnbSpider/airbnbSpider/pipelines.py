@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-from airbnbSpider.items import listItem,calendarItem
+from airbnbSpider.items import listItem,calendarItem,detailItem
 import pymysql
 
 from airbnbSpider import dbSettings
@@ -26,6 +26,17 @@ def dbCalendarInsert(house_id,response):
     db = dbSettings.db_connect()
     cursor = db.cursor()
     sql = "INSERT INTO "+ calendarResponseTable+" (id, house_id, response) VALUES " \
+                  "(NULL,'{}','{}')".format(house_id, response)
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def dbDetailInsert(house_id,response):
+    response = response.replace("'", "''").replace('"', '""')
+    detailResponseTable = "`detailresponse`"
+    db = dbSettings.db_connect()
+    cursor = db.cursor()
+    sql = "INSERT INTO "+ detailResponseTable+" (id, house_id, response) VALUES " \
                   "(NULL,'{}','{}')".format(house_id, response)
     cursor.execute(sql)
     db.commit()
@@ -88,6 +99,10 @@ class AirbnbspiderPipeline:
             #       "(NULL,'{}','{}')".format(item['house_id'], item['response'])
             # self.cursor.execute(sql)
             # self.db.commit()
+
+        elif item.__class__ == detailItem:
+            dbDetailInsert(item['house_id'], item['response'])
+            print(item['house_id'])
 
         return item
 
