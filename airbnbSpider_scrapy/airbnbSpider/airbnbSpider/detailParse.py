@@ -9,6 +9,7 @@ import pymysql
 import dbSettings
 import scrapy
 import redis
+import demjson
 from dbSettings import REDIS_URL
 class decodeDetail:
     def __init__(self):
@@ -75,7 +76,6 @@ class decodeDetail:
                 if "section" in StayPDPSection:
                     if "pointsOfInterest" in StayPDPSection["section"]:
                         pointsOfInterest = StayPDPSection["section"]["pointsOfInterest"]
-                        print("interest exist")
                         meta["interestGroup"] = []
                         for landmarkGroup in pointsOfInterest:
                             if "items" in landmarkGroup:
@@ -139,30 +139,55 @@ class detailParse:
     def __init__(self):
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.detailresponseTable = "`detailrresponse`"
+        self.detailresponseTable = "`detailresponse`"
 
-    def getItem(self, bias):
+    def getItem(self,bias,landmark,amenity):
         sql = "SELECT * FROM " + self.detailresponseTable + \
             "WHERE id between {} and {}".format(bias, bias+1000)
         print(sql)
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
+        numOfErr = 0
         for row in results:
             try:
-                res = row["response"].replace("''", "'")
+                res = row["response"]
+                # res = res.replace(':""""', ':"" ""')
                 res = res.replace('""', '"')
+                res = res.replace('\n', '')
+                res = res.replace('\r\n', '')
+                res = res.replace('\r', '')
+                # res = res.replace('" ', '')
+                res = res.replace(' ",', '",')
+                res = res.replace(' "}', '"}')
+                res = res.replace(' "', '')
+                res = res.replace(':""', ':" "')
+                res = res.replace('""', '"')
+                # res = res.replace("'", '')
             except:
                 print("replace err in ", row["id"])
                 errIdList.append(row["id"])
                 continue
+            try:
+                # print(row["id"])
+                decode = decodeDetail()
+                # meta = decode.decode(demjson.decode(res))
+                meta = decode.decode(json.loads(res,strict=False))
+            except Exception as e: 
+                print("json load err in ", row["id"],e)
+                # print(res)
+                # if row['id'] == 890 :
+                #     time.sleep(5)
+                numOfErr += 1
+                continue
+            if 'interestGroup' in meta :
+                for interest in meta['interestGroup']:
+                    landmark.add(str(interest))
+            if 'amenity' in meta :
+                for amt in meta['amenity']:
+                    amenity.add(str(amt))
 
-            decode = decodeDetail()
-            meta = decode.decode(json.loads(res))
-
-            landmark |= set(meta['landmark'])
-            amenity |= set(meta['amenity'])
-        
+        print(numOfErr,"\terrs")
         return landmark,amenity
 
 
@@ -175,7 +200,13 @@ def getMaxNumOfDetailResponse(db,cursor):
     num = cursor.fetchall()[0]["MAX(id)"]
     return num
 
-def detailParse():
+def startParse(bias,landmark,amenity):
+    try:
+        parse = detailParse()
+        return parse.getItem(bias,landmark,amenity)
+    except Exception as e:
+        print(e)
+
 
 
 
@@ -191,25 +222,25 @@ if __name__ == "__main__":
 
     startResponseId = 0
     endResponseId = getMaxNumOfDetailResponse(db,cursor)
+    # endResponseId = 558
 
     landmark = set()
     amenity = set()
 
     for responseId in range(startResponseId, endResponseId+1,1000):
-        landmark,amenity = detailParse(responseId,landmark,amenity)
+        landmark,amenity = startParse(responseId,landmark,amenity)
+        print("landmark length:",len(landmark))
+        print("amenity length:", len(amenity))
 
 
 
-    decode = decodeDetail()
-    meta = decode.decode(jsonData)
+    # decode = decodeDetail()
+    # meta = decode.decode(jsonData)
 
-    landmark |= set(meta['landmark'])
-    amenity |= set(meta['amenity'])
+    # landmark |= set(meta['landmark'])
+    # amenity |= set(meta['amenity'])
 
 
 
     pprint(landmark,amenity)
-
-
-
 
