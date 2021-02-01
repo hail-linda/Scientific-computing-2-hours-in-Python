@@ -49,6 +49,7 @@ def db_connect():
         connection = pymysql.connect(host=MYSQL_CONFIG['host'], user=MYSQL_CONFIG['user'],
                                      password=MYSQL_CONFIG['password'], db=MYSQL_CONFIG['db'],
                                      port=MYSQL_CONFIG['port'],
+                                     charset="utf8mb4",
                                      cursorclass=pymysql.cursors.DictCursor)
     except pymysql.OperationalError as e:
         logging.exception(str(e))

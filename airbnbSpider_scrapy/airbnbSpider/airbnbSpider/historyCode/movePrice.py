@@ -62,3 +62,4 @@ if __name__ == "__main__":
     for batchFrom in range(start,numTotal,batchSize):
         print(batchFrom,batchFrom+batchSize,100*batchFrom/numTotal)
         dbMovePrice(batchFrom,db,cursor)
+

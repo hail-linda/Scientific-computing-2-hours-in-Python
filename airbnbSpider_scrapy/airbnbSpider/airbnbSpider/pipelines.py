@@ -13,15 +13,19 @@ from airbnbSpider import dbSettings
 import time
 import json, math
 from threading import Semaphore, Thread
-import threading
+import threading,re
 
+def filter_str(desstr, restr=''):
+    # 过滤除中英文及数字以外的其他字符
+    res = re.compile(u'[\U00010000-\U0010ffff\uD800-\uDBFF\uDC00-\uDFFF]')
+    return res.sub(restr, desstr)
 
 
 def dbCalendarInsert(house_id,response):
     calendarResponseTable = "`calendarresponse`"
     db = dbSettings.db_connect()
     cursor = db.cursor()
-    sql = "INSERT IGNORE INTO "+ calendarResponseTable+" (id, house_id, response) VALUES " \
+    sql = "INSERT INTO "+ calendarResponseTable+" (id, house_id, response) VALUES " \
                   "(NULL,'{}','{}')".format(house_id, response)
     cursor.execute(sql)
     db.commit()
@@ -75,8 +79,9 @@ class AirbnbspiderPipeline:
                 self.dbUpdateStates("done")
 
         elif item.__class__ == calendarItem:
-            th = threading.Thread(target=dbCalendarInsert, args=(item['house_id'], item['response']))
-            th.start()
+            dbCalendarInsert(item['house_id'], item['response'])
+            # th = threading.Thread(target=dbCalendarInsert, args=(item['house_id'], item['response']))
+            # th.start()
             print(item['house_id'])
   
             # sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \

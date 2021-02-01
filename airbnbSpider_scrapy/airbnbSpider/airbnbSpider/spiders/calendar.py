@@ -65,6 +65,7 @@ class calenderSpider(RedisSpider):
     def urlJoint(self, house_id):
         url = "https://www.airbnb.cn/api/v2/homes_pdp_availability_calendar?currency=CNY&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh"
         url += "&listing_id={}&month={}&year={}&count={}".format(str(house_id),str(self.mouth),str(self.year),"3")
+        print(url)
         return url
 
     def calendarParse(self,response):

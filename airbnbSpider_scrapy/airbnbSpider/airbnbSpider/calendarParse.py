@@ -21,14 +21,14 @@ class calendarParse():
         self.cursor = self.db.cursor()
         self.redis = redis.Redis.from_url(REDIS_URL)
         self.mapTable = "`map`"
-        self.listTable = "`houselist`"
+        self.listTable = "`houselist`"d
         self.mapresponseTable = "`mapresponse`"
         self.calendarresponseTable = "`calendarresponse`"
 
         localtime = time.localtime(time.time())
         self.mouth = localtime[1]
         self.year = localtime[0]
-        self.day = localtime[2]
+        self.day = localtime[2] 
         self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day)
 
         self.orderList = []
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     # start parse
     dbInsertparselog("start parse",startResponseId,"None")
 
-    for responseId in range(startResponseId, endResponseId,1000):
+    for responseId in range(startResponseId, endResponseId+1,1000):
         errResponseIdList += parseStart(responseId)
         print(len(errResponseIdList))
         if(len(errResponseIdList)>30000):
