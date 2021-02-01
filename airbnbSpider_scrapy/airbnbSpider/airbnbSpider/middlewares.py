@@ -46,7 +46,8 @@ class proxyPool:
         rand = random.randint(0, len(results)-1)
         print(results[rand])
         self.ip = results[rand]['ip']
-        print("self.ip",self.ip)
+        self.cookies = results[rand]['cookies']
+        # print("self.ip",self.ip)
         self.proxyId = results[rand]['id']
 
         sql = "UPDATE "+self.table + \
@@ -62,6 +63,10 @@ class proxyPool:
         print("proxy ip:\t\t\t",self.ip)
         self.proxies = " http://{}".format(self.ip)
         return self.proxies
+    
+    def getCookies(self):
+        return self.cookies
+
 
     def get(self, num=20):
         url = "http://dps.kdlapi.com/api/getdps/?orderid=970736318449376&num={}&pt=1&format=json&sep=1&dedup=1".format(
@@ -103,7 +108,7 @@ class proxyPool:
 class proxyMiddleware:
 
     def __init__(self):
-        self.user_agent_list = [
+        self.user_a gent_list = [
             'MSIE (MSIE 6.0; X11; Linux; i686) Opera 7.23',
             'Opera/9.20 (Macintosh; Intel Mac OS X; U; en)',
             'Opera/9.0 (Macintosh; PPC Mac OS X; U; en)',
@@ -123,6 +128,7 @@ class proxyMiddleware:
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
         request.headers['USER_AGENT']=random.choice(self.user_agent_list)
+        request.headers['Cookies'] = proxypool.cookies() 
         # print("using ip:"+str(proxies))
         del proxypool
 
