@@ -232,6 +232,9 @@ if __name__ == "__main__":
         print("landmark length:",len(landmark))
         print("amenity length:", len(amenity))
 
+        if len(amenity) == 97:
+            print(amenity)
+
 
 
     # decode = decodeDetail()
@@ -242,5 +245,5 @@ if __name__ == "__main__":
 
 
 
-    pprint(landmark,amenity)
+    # pprint(landmark,amenity)
 
