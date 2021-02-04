@@ -21,7 +21,7 @@ class calendarParse():
         self.cursor = self.db.cursor()
         self.redis = redis.Redis.from_url(REDIS_URL)
         self.mapTable = "`map`"
-        self.listTable = "`houselist`"d
+        self.listTable = "`houselist`"
         self.mapresponseTable = "`mapresponse`"
         self.calendarresponseTable = "`calendarresponse`"
 
