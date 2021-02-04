@@ -1,15 +1,15 @@
 import json,re,requests
 from pprint import pprint
 
-import os
-import time
-import random
-import time
-import pymysql
-import dbSettings
-import scrapy
-import redis
-from dbSettings import REDIS_URL
+# import os
+# import time
+# import random
+# import time
+# import pymysql
+# import dbSettings
+# import scrapy
+# import redis
+# from dbSettings import REDIS_URL
 class decodeDetail:
     def __init__(self):
         self.meta = {}
@@ -20,36 +20,36 @@ class decodeDetail:
         for StayPDPSection in StayPDPSections:
             StayPDPSectionsId =StayPDPSection["id"]
             #详情
-            # if "TITLE_CHINA" in StayPDPSectionsId :
-            #     if "section" in StayPDPSection:
+            if "TITLE_CHINA" in StayPDPSectionsId :
+                if "section" in StayPDPSection:
 
-            #         #  'chinaTitleDetails': ['2 间卧室', '2 张床', '1 间卫生间', '可住 4 人']
-            #         if "chinaTitleDetails" in StayPDPSection["section"]:
-            #             meta["chinaTitleDetails"] =self.dig2layers(StayPDPSection["section"],"chinaTitleDetails","title")
+                    #  'chinaTitleDetails': ['2 间卧室', '2 张床', '1 间卫生间', '可住 4 人']
+                    if "chinaTitleDetails" in StayPDPSection["section"]:
+                        meta["chinaTitleDetails"] =self.map2layer(StayPDPSection["section"],"chinaTitleDetails","icon","title")
 
-            #         # 'kickers': '爱彼迎优质房源',
-            #         if "kickers" in StayPDPSection["section"]:
-            #             meta["kickers"] = StayPDPSection["section"]["kickers"][0]["content"]
+                    # 'kickers': '爱彼迎优质房源',
+                    if "kickers" in StayPDPSection["section"]:
+                        meta["kickers"] = StayPDPSection["section"]["kickers"][0]["content"]
 
-            #         #  'previewTags': ['4.9分 · 138条评论', '超赞房东', '优质房源', '近地铁站', '可以做饭', '可存行李'],
-            #         if "previewTags" in StayPDPSection["section"]:
-            #             meta["previewTags"] = self.dig2layers(StayPDPSection["section"],"previewTags","name")
+                    #  'previewTags': ['4.9分 · 138条评论', '超赞房东', '优质房源', '近地铁站', '可以做饭', '可存行李'],
+                    if "previewTags" in StayPDPSection["section"]:
+                        meta["previewTags"] = self.dig2layers(StayPDPSection["section"],"previewTags","name")
 
-            #         # 'title': '漫漫|松露 新年特惠/天际观景LOFT/ 免费停车位/8分钟到春熙路/下楼地铁口/可开票'}
-            #         if "chinaListingTitle" in StayPDPSection["section"]:
-            #             meta["title"] = StayPDPSection["section"]["chinaListingTitle"]["original"]
+                    # 'title': '漫漫|松露 新年特惠/天际观景LOFT/ 免费停车位/8分钟到春熙路/下楼地铁口/可开票'}
+                    if "chinaListingTitle" in StayPDPSection["section"]:
+                        meta["title"] = StayPDPSection["section"]["chinaListingTitle"]["original"]
             
-            # # 房东
-            # if "HOST_INTRO_CHINA" in StayPDPSectionsId :
-            #     if "section" in StayPDPSection:
-            #         if "primaryHost" in StayPDPSection["section"]:
-            #             primaryHost = StayPDPSection["section"]["primaryHost"]
-            #             meta["hostAbout"]       = self.ifin(primaryHost,"about")# 'hostAbout': '漫漫设计师民宿每一间都由设计师团队精心打造｡房间配备投影仪､音响高及品质生活用品,注重美学设计,独具特色且宜 居､舒适｡我们欢迎每一位对生活充满美好期待的客人,漫漫人生､漫漫旅途､慢慢相遇｡在对的地方,遇见对的人,让我们用家的温暖让您的旅途成为温暖的回忆｡',
-            #             meta["hostBadges"]      = self.dig2layers(primaryHost,"badges","label")# 'hostBadges': ['超赞房东', '条评价', '已验证'],
-            #             meta["hostIntroTags"]   = self.ifin(primaryHost,"hostIntroTags")# 'hostIntroTags': ['414 条评价', '已验证身份', '超赞房东'],
-            #             meta["hostName"]        = self.ifin(primaryHost,"hostName")# 'Manmanhome',
-            #             meta["hostId"]           = self.ifin(primaryHost,"id") # 'hostId': 121674066,
-            #         # if "descriptions" in StayPDPSection["section"]:
+            # 房东
+            if "HOST_INTRO_CHINA" in StayPDPSectionsId :
+                if "section" in StayPDPSection:
+                    if "primaryHost" in StayPDPSection["section"]:
+                        primaryHost = StayPDPSection["section"]["primaryHost"]
+                        meta["hostAbout"]       = self.ifin(primaryHost,"about")# 'hostAbout': '漫漫设计师民宿每一间都由设计师团队精心打造｡房间配备投影仪､音响高及品质生活用品,注重美学设计,独具特色且宜 居､舒适｡我们欢迎每一位对生活充满美好期待的客人,漫漫人生､漫漫旅途､慢慢相遇｡在对的地方,遇见对的人,让我们用家的温暖让您的旅途成为温暖的回忆｡',
+                        meta["hostBadges"]      = self.dig2layers(primaryHost,"badges","label")# 'hostBadges': ['超赞房东', '条评价', '已验证'],
+                        meta["hostIntroTags"]   = self.ifin(primaryHost,"hostIntroTags")# 'hostIntroTags': ['414 条评价', '已验证身份', '超赞房东'],
+                        meta["hostName"]        = self.ifin(primaryHost,"hostName")# 'Manmanhome',
+                        meta["hostId"]           = self.ifin(primaryHost,"id") # 'hostId': 121674066,
+                    # if "descriptions" in StayPDPSection["section"]:
             
             # 便利设施 
             if "LISTING_DETAIL_CHINA" in StayPDPSectionsId :
@@ -61,52 +61,73 @@ class decodeDetail:
                     meta["amenity"] = self.dig2layers(listingDetail,"listingAmenities","title")
 
             # # 评价
-            # if "REVIEWS_CHINA" in StayPDPSectionsId :
-            #     if "section" in StayPDPSection:
-            #         if "reviewDetails" in StayPDPSection["section"]:
-            #             reviewDetails = StayPDPSection["section"]["reviewDetails"]
-            #             meta["reviewCount"] = self.ifin(reviewDetails,"reviewCount")#  'reviewCount': 138,
-            #             meta["reviewScore"] = self.ifin(reviewDetails,"reviewScore")# 'reviewScore': 98,
-            #             meta["reviewSummary"] = self.map2layer(reviewDetails,"reviewSummary","label","localizedRating")# 'reviewSummary': {'位置便利': '5.0','入住便捷': '5.0','如实描述': '5.0','干净卫生': '4.9','沟通顺畅': '5.0','高性价比': '4.9'},
-            #             meta["reviewTagSummary"] = self.map2layer(reviewDetails,"reviewTagSummary","localized_tag_name","count")# 'reviewTagSummary': {'位置便利': 64,'入住体验好': 68,'全部': 138,'干净卫生': 47,'待改善': 2,'房东热情': 57,'有设计感': 14,'服务周到': 43,'环境安静': 5,'行李寄存': 2,'设施齐全': 32,'靠近地铁': 8,'靠近市场': 13},
+            if "REVIEWS_CHINA" in StayPDPSectionsId :
+                if "section" in StayPDPSection:
+                    if "reviewDetails" in StayPDPSection["section"]:
+                        reviewDetails = StayPDPSection["section"]["reviewDetails"]
+                        meta["reviewCount"] = self.ifin(reviewDetails,"reviewCount")#  'reviewCount': 138,
+                        meta["reviewScore"] = self.ifin(reviewDetails,"reviewScore")# 'reviewScore': 98,
+                        meta["reviewSummary"] = self.map2layer(reviewDetails,"reviewSummary","label","localizedRating")# 'reviewSummary': {'位置便利': '5.0','入住便捷': '5.0','如实描述': '5.0','干净卫生': '4.9','沟通顺畅': '5.0','高性价比': '4.9'},
+                        meta["reviewTagSummary"] = self.map2layer(reviewDetails,"reviewTagSummary","localized_tag_name","count")# 'reviewTagSummary': {'位置便利': 64,'入住体验好': 68,'全部': 138,'干净卫生': 47,'待改善': 2,'房东热情': 57,'有设计感': 14,'服务周到': 43,'环境安静': 5,'行李寄存': 2,'设施齐全': 32,'靠近地铁': 8,'靠近市场': 13},
 
             # 周边
-            if "LOCATION_CHINA" in StayPDPSectionsId :
-                if "section" in StayPDPSection:
-                    if "pointsOfInterest" in StayPDPSection["section"]:
-                        pointsOfInterest = StayPDPSection["section"]["pointsOfInterest"]
-                        print("interest exist")
-                        meta["interestGroup"] = []
-                        for landmarkGroup in pointsOfInterest:
-                            if "items" in landmarkGroup:
-                                for item in landmarkGroup["items"]:
-                                    landmark = {}
-                                    landmark["type"] = landmarkGroup["type"]
-                                    landmark["name"] = item["name"]
-                                    landmark["lat"] = item["lat"]
-                                    landmark["lng"] = item["lng"]
-                                    meta["interestGroup"].append(landmark)
+            # if "LOCATION_CHINA" in StayPDPSectionsId :
+            #     if "section" in StayPDPSection:
+            #         if "pointsOfInterest" in StayPDPSection["section"]:
+            #             pointsOfInterest = StayPDPSection["section"]["pointsOfInterest"]
+            #             print("interest exist")
+            #             meta["interestGroup"] = []
+            #             for landmarkGroup in pointsOfInterest:
+            #                 if "items" in landmarkGroup:
+            #                     for item in landmarkGroup["items"]:
+            #                         landmark = {}
+            #                         landmark["type"] = landmarkGroup["type"]
+            #                         landmark["name"] = item["name"]
+            #                         landmark["lat"] = item["lat"]
+            #                         landmark["lng"] = item["lng"]
+            #                         meta["interestGroup"].append(landmark)
 
 
 
         StayPDPMetadata = jsonData['data']["presentation"]["stayProductDetailPage"]["sections"]["metadata"]
         # listingId 经纬度
-        # if "loggingContext" in StayPDPMetadata:
-        #     if "eventDataLogging" in StayPDPMetadata["loggingContext"]:
-        #         eventDataLogging = StayPDPMetadata["loggingContext"]["eventDataLogging"]
-        #         meta["listingId"] = self.ifin(eventDataLogging,"listingId")# 'listingId': '45633636',
-        #         meta["Lat"] = self.ifin(eventDataLogging,"listingLat")# 'Lat': 30.68359,
-        #         meta["Lng"] = self.ifin(eventDataLogging,"listingLng")# 'Lng': 104.0718,
+        if "loggingContext" in StayPDPMetadata:
+            if "eventDataLogging" in StayPDPMetadata["loggingContext"]:
+                eventDataLogging = StayPDPMetadata["loggingContext"]["eventDataLogging"]
+                meta["listingId"] = self.ifin(eventDataLogging,"listingId")# 'listingId': '45633636',
+                meta["Lat"] = self.ifin(eventDataLogging,"listingLat")# 'Lat': 30.68359,
+                meta["Lng"] = self.ifin(eventDataLogging,"listingLng")# 'Lng': 104.0718,
         
         # 主图
-        # if "seoFeatures" in StayPDPMetadata:
-        #     if "ogTags" in StayPDPMetadata["seoFeatures"]:
-        #         ogTags = StayPDPMetadata["seoFeatures"]["ogTags"]
-        #         meta["ogImage"] = ogTags["ogImage"]
+        if "seoFeatures" in StayPDPMetadata:
+            if "ogTags" in StayPDPMetadata["seoFeatures"]:
+                ogTags = StayPDPMetadata["seoFeatures"]["ogTags"]
+                meta["ogImage"] = ogTags["ogImage"]
         
-        # if "sharingConfig" in StayPDPMetadata:
-        #     if "propertyType" in StayPDPMetadata["sharingConfig"]:
-        #         meta["propertyType"] = StayPDPMetadata["sharingConfig"]["propertyType"]
+        if "sharingConfig" in StayPDPMetadata:
+            if "propertyType" in StayPDPMetadata["sharingConfig"]:
+                meta["propertyType"] = StayPDPMetadata["sharingConfig"]["propertyType"]
+
+
+
+        
+        for k, v in meta['reviewSummary'].items():
+            # print(k,v)
+            meta["reviewSummary"+str(k)]=float(v)
+        del meta['reviewSummary']
+
+        for item in meta['amenity']:
+            # print(item)
+            meta["amenity"+str(item)]=1
+        del meta['amenity']
+
+        # decode python obj to json
+        for item in ['reviewTagSummary','chinaTitleDetails','hostBadges','hostIntroTags']:
+            meta[item] = str(meta[item])
+        
+        meta['hostId'] = str(meta['hostId'])
+
+
         self.meta = meta
         return meta
 
@@ -175,40 +196,57 @@ def getMaxNumOfDetailResponse(db,cursor):
     num = cursor.fetchall()[0]["MAX(id)"]
     return num
 
-def detailParse():
+# def detailParse():
 
 
 
 
 if __name__ == "__main__":
-    # f_in = open( 'src.json', 'r',encoding = 'utf-8' )
-    # f_out = open( 'tgt.json', 'w',encoding = 'utf-8' )
+    f_in = open( 'src.json', 'r',encoding = 'utf-8' )
+    f_out = open( 'tgt.json', 'w',encoding = 'utf-8' )
 
-    # jsonData =  json.loads(f_in.read())
+    jsonData =  json.loads(f_in.read())
 
-    db = dbSettings.db_connect()
-    cursor = db.cursor()
+    # db = dbSettings.db_connect()
+    # cursor = db.cursor()
 
-    startResponseId = 0
-    endResponseId = getMaxNumOfDetailResponse(db,cursor)
+    # startResponseId = 0
+    # endResponseId = getMaxNumOfDetailResponse(db,cursor)
 
-    landmark = set()
-    amenity = set()
+    # landmark = set()
+    # amenity = set()
 
-    for responseId in range(startResponseId, endResponseId+1,1000):
-        landmark,amenity = detailParse(responseId,landmark,amenity)
+    # for responseId in range(startResponseId, endResponseId+1,1000):
+    #     landmark,amenity = detailParse(responseId,landmark,amenity)
 
 
 
     decode = decodeDetail()
     meta = decode.decode(jsonData)
-
-    landmark |= set(meta['landmark'])
-    amenity |= set(meta['amenity'])
+    
 
 
 
-    pprint(landmark,amenity)
+    pprint(meta)
+
+    # for item in ['热水壶', 'Xbox', '狼人杀游戏', '免费停车位', '退房前打扫卫生', '室内壁炉', '洗手液', '微波炉', '付费停车位',
+    #  '窗户护栏', '儿童餐具', '洗衣机', '沐浴露', '独立入口', '熨斗', '临湖', '烟雾报警器', '有线电视', '路边免费停车', '随身无线路由器',
+    #   '卡拉OK机', '专门的工作区域', '温度计', '烤盘', '游戏机', '热水', '三国杀', '沙滩必备用品', '花园或后院', '房东将会迎接您', 
+    #   '带锁的卧室', '基本厨具', '生活必需品', '除菌液', '壁炉护栏', '基本餐具', '一氧化碳报警器', '保安', '早餐', '儿童高脚餐椅', 
+    #   '天然气报警器', '电梯', '儿童玩具', '婴儿尿布台', '保安系统', '炉灶', '行李寄存', '游戏机（Play Station 4）', '投影仪', '任天堂FC', 
+    #   '任天堂Switch', '健身房', '安全卡', '烤箱', '衣架', '婴儿床', '游泳池', '洗发水', '无线网络', '冰箱', '露台或阳台', '婴儿网床/婴儿旅行床',
+    #    '床单', '烘干机', '桌上足球机', '防滑垫', '遮光窗帘', '临时保姆推荐', '灭火器', '靠近雪道', '海滨', '急救包', '婴儿浴盆', '按摩浴缸', 
+    #    '婴儿安全门', '可预订长期住宿', '咖啡机', '网络连接', '保险箱', '吹风机', '插座盖', '烧烤架', '儿童书籍', '厨房', '洗碗机', '自助入住',
+    #     '附近的付费停车位', '一次性手套', '水滨', '电动汽车（EV）充电设备', '额外的枕头和毛毯', '暖气', '桌角防护', '电视', '婴儿监视器', '空调',
+    #      '浴缸']:
+    #     print("`amenity{}`boolean NULL DEFAULT 0,".format(item))
+
+    # landmark |= set(meta['landmark'])
+    # amenity |= set(meta['amenity'])
+
+
+
+    # pprint(landmark,amenity)
 
 
 
