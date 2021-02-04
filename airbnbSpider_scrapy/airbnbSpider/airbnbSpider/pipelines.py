@@ -32,13 +32,13 @@ def dbCalendarInsert(house_id,response):
     db.close()
 
 def dbDetailInsert(house_id,response):
-    response = response.replace("'", "''").replace('"', '""')
+    # response = response.replace("'", "''").replace('"', '""')
     detailResponseTable = "`detailresponse`"
     db = dbSettings.db_connect()
     cursor = db.cursor()
     sql = "INSERT INTO "+ detailResponseTable+" (id, house_id, response) VALUES " \
-                  "(NULL,'{}','{}')".format(house_id, response)
-    cursor.execute(sql)
+                  "(NULL,%s,%s)"
+    cursor.execute(sql,(house_id,response))
     db.commit()
     db.close()
 
