@@ -57,7 +57,7 @@ class calenderSpider(RedisSpider):
 
     def make_request_from_data(self, data):
         house_id = bytes_to_str(data, self.redis_encoding)
-        meta = {'house_id': house_id,"handle_httpstatus_all": True}
+        meta = {'house_id': house_id,'url':self.urlJoint(house_id),"handle_httpstatus_all": True}
         return Request(  url = self.urlJoint(house_id),callback = self.calendarParse,
                             errback=self.calendarErrback,meta = meta, dont_filter=True,
                              headers={('User-Agent', 'Mozilla/5.0')})
