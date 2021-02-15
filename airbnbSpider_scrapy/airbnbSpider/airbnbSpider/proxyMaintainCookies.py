@@ -7,6 +7,7 @@ import sqlite3
 import threading
 import time
 from threading import Semaphore, Thread
+import datetime
 
 import chardet
 import lxml
@@ -33,6 +34,13 @@ class proxyPool:
         self.cursor.execute(sql)
         self.db.commit()
 
+    def dbUpdateCookies(self,row,proxy):
+        # UPDATE runoob_tbl SET runoob_title='学习 C++' WHERE runoob_id=3;
+        sql = "UPDATE "+self.table + "SET cookies = '" + proxy + "' WHERE id = " + str(row['id'])
+        self.cursor.execute(sql)
+        self.db.commit()
+        print("update cookies",row['id'])
+        
     def IP(self):
         sql = "SELECT * from "+self.table+"WHERE `state` != 'del'"
         self.cursor.execute(sql)
@@ -89,7 +97,13 @@ class proxyPool:
             rootCookies = self.getCookies("https://www.airbnb.cn",proxy)
             pgPixelCookies = self.getCookies("https://www.airbnb.cn/pg_pixel?r=&diff=16115071061939667863691016617",proxy,rootCookies)
             self.dbInsert(proxy,pgPixelCookies)
-        
+
+    def updateCookies(self,row):
+        proxy = row['ip']
+        rootCookies = self.getCookies("https://www.airbnb.cn",proxy)
+        pgPixelCookies = self.getCookies("https://www.airbnb.cn/pg_pixel?r=&diff=16115071061939667863691016617",proxy,rootCookies)
+        self.dbUpdateCookies(row,pgPixelCookies)
+
     def getCookies(self,url,proxy,srcCookies=""):
         proxies = {"http": " http://{}".format(proxy), "https": "https://{}".format(proxy),}
         headers = {"cookies" : srcCookies}
@@ -98,8 +112,8 @@ class proxyPool:
         # print(res.cookies)
         rootCookies = srcCookies
         for key, value in res.cookies.items():
-            print(key + "=" + value)
-            print()
+            # print(key + "=" + value)
+            # print()
             rootCookies += str(key)+"="+str(value)+";"
         return rootCookies
 
@@ -118,9 +132,10 @@ class proxyPool:
 def getIp():
     db = dbSettings.db_connect()
     cursor = db.cursor()
+    timeNow = datetime.datetime.now()
     while(1):
         print("test ip pool")
-        time.sleep(0.5)
+        time.sleep(1)
         sql = "SELECT * from `proxypool` WHERE `state` != 'del'"
         cursor.execute(sql)
         db.commit()
@@ -128,6 +143,13 @@ def getIp():
         if(len(results) < 10):
             proxypool = proxyPool()
             proxies = proxypool.get(num=10)
+        for row in results:
+            deltaTime = (timeNow - row['init_time']).seconds
+            # if deltaTime < 600 :
+            #     proxypool = proxyPool()
+            #     proxypool.updateCookies(row)
+
+
 
 
 if __name__ == "__main__":
