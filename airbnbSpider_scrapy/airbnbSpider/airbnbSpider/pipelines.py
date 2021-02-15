@@ -93,7 +93,7 @@ class AirbnbspiderPipeline:
             dbCalendarInsert(item['house_id'], item['response'])
             # th = threading.Thread(target=dbCalendarInsert, args=(item['house_id'], item['response']))
             # th.start()
-            print(item['house_id'])
+            print("house id: ",item['house_id'],"len of response: ",len(item['response']))
   
             # sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \
             #       "(NULL,'{}','{}')".format(item['house_id'], item['response'])

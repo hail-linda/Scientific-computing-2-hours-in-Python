@@ -200,7 +200,7 @@ class detailParse:
                         meta[str(key)] = value.replace("'","''")
 
             except Exception as e: 
-                print("json load err in ", row["id"],e)
+                print("json load err in ", row["id"],e,row['house_id'])
                 # print(res)
                 # if row['id'] == 890 :
                 #     time.sleep(5)
