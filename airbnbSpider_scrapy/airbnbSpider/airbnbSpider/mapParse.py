@@ -27,7 +27,7 @@ class mapParse():
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
         self.mapTable = "`map`"
-        self.listTable = "`houselist`"
+        self.listTable = "`houselist210222`"
         self.mapresponseTable = "`mapresponse`"
 
     def getItem(self,bias):
@@ -37,19 +37,19 @@ class mapParse():
         self.db.commit()
         results = self.cursor.fetchall()
         for row in results:
-            res = row[1].replace("''", "'")
+            res = row['response'].replace("''", "'")
             res = res.replace('""', '"')
             try:
                 res = json.loads(res, strict=False)
             except:
-                print("err in {}".format(row[0]))
+                print("err in {}".format(row['id']))
                 continue
             
-            self.map_id = row[0]
+            self.map_id = row['id']
             if 'home_tab_metadata' in res['explore_tabs'][0]:
                 count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
                 sections = res['explore_tabs'][0]['sections']
-                # print("handleing  {}".format(row[0]))
+                # print("handleing  {}".format(row['id']))
                 for section in sections:
                     self.exist = 0
                     self.insert = 0
@@ -142,7 +142,7 @@ class mapParse():
         # print(numEnding-numStarting)
         print("{}\t总数:{}\t新增:{}\t重复:{}".format(self.map_id,len(listings),self.cursor.rowcount,len(listings)-self.cursor.rowcount))
 
-sm = threading.Semaphore(40)
+sm = threading.Semaphore(8)
 
 def parseStart(bias):
     parse = mapParse()
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     # pool.close()
     # pooo.join()
 
-    for i in range(540,1500):
+    for i in range(0,1500):
         sm.acquire()
         time.sleep(0.05)
         th = threading.Thread(target=parseStart, args=(i,))

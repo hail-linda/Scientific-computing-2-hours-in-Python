@@ -44,8 +44,7 @@ class mapSpider(Spider):
         self.lon_upp = 0.0
         self.id = 0
         self.num = -1
-        self.db = pymysql.connect(
-            "localhost", "root", "delta=b2-4ac", "airbnbspider")
+        self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
         self.area = ""
 
@@ -70,14 +69,14 @@ class mapSpider(Spider):
 
         for row in results:
             # print(row[1])
-            self.lat_low = row[1]
-            self.lat_upp = row[2]
-            self.lon_low = row[3]
-            self.lon_upp = row[4]
-            self.area = row[7]
-            self.id = row[0]
+            self.lat_low = row['lat_low']
+            self.lat_upp = row['lat_upp']
+            self.lon_low = row['lon_low']
+            self.lon_upp = row['lon_upp']
+            self.area = row['area']
+            self.id = row['id']
             # self.dbUpdateStates("processing",self.id)
-            meta = {"location":[row[1],row[2],row[3],row[4]],"map_id":row[0],"area":row[7],"starttime":time.time()}
+            meta = {"location":[row['lat_low'],row['lat_upp'],row['lon_low'],row['lon_upp']],"map_id":row['id'],"area":row['area'],"starttime":time.time()}
             yield Request(  url = self.urlJoint(row),callback = self.mapParse,
                             errback=self.mapErrback,meta = meta, dont_filter=True)
 
@@ -107,7 +106,8 @@ class mapSpider(Spider):
 
     def urlJoint(self, row):
         url = "https://www.airbnb.cn/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=d0c77d93-3a9a-43df-82fb-568ac0d5a566&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=50&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=9"
-        url += "&sw_lat={}&sw_lng={}&ne_lat={}&ne_lng={}".format(row[1],row[3],row[2],row[4])
+        url += "&sw_lat={}&sw_lng={}&ne_lat={}&ne_lng={}".format(row['lat_low'],row['lon_low'],row['lat_upp'],row['lon_upp'])
+        # print(url)
         # url += "&sw_lng={}".format(row[3])
         # url += "&ne_lat={}".format(row[2])
         # url += "&ne_lng={}".format(row[4])
