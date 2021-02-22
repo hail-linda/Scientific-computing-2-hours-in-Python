@@ -1,0 +1,2451 @@
+{
+    "data": {
+        "merlin": {
+            "__typename": "MerlinQuery",
+            "pdpAvailabilityCalendar": {
+                "__typename": "MerlinPdpAvailabilityCalendarResponse",
+                "calendarMonths": [
+                    {
+                        "__typename": "MerlinCalendarMonth",
+                        "month": 2,
+                        "year": 2021,
+                        "days": [
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-01",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-02",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-03",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-04",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-05",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-06",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-07",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-08",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-09",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-10",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-11",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-12",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-13",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-14",
+                                "available": false,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": false,
+                                "availableForCheckout": false,
+                                "bookable": null,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-15",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": false,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,847"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-16",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-17",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-18",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-19",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-20",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-21",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-22",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,293"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-23",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-24",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-25",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-26",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-27",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-02-28",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            }
+                        ],
+                        "conditionRanges": [
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-01",
+                                "endDate": "2021-02-01"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-02",
+                                "endDate": "2021-02-02"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-03",
+                                "endDate": "2021-02-03"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-04",
+                                "endDate": "2021-02-04"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-05",
+                                "endDate": "2021-02-05"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-06",
+                                "endDate": "2021-02-06"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-07",
+                                "endDate": "2021-02-07"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-08",
+                                "endDate": "2021-02-08"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-09",
+                                "endDate": "2021-02-09"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-10",
+                                "endDate": "2021-02-10"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-11",
+                                "endDate": "2021-02-11"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-12",
+                                "endDate": "2021-02-12"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-13",
+                                "endDate": "2021-02-13"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": null,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-14",
+                                "endDate": "2021-02-14"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-15",
+                                "endDate": "2021-02-15"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-16",
+                                "endDate": "2021-02-16"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-17",
+                                "endDate": "2021-02-17"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-18",
+                                "endDate": "2021-02-18"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-19",
+                                "endDate": "2021-02-19"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-20",
+                                "endDate": "2021-02-20"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-21",
+                                "endDate": "2021-02-21"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-22",
+                                "endDate": "2021-02-22"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-23",
+                                "endDate": "2021-02-23"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-24",
+                                "endDate": "2021-02-24"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-25",
+                                "endDate": "2021-02-25"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-26",
+                                "endDate": "2021-02-26"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-27",
+                                "endDate": "2021-02-27"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-02-28",
+                                "endDate": "2021-02-28"
+                            }
+                        ],
+                        "listingId": "139622"
+                    },
+                    {
+                        "__typename": "MerlinCalendarMonth",
+                        "month": 3,
+                        "year": 2021,
+                        "days": [
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-01",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-02",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-03",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-04",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-05",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-06",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-07",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-08",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-09",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-10",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-11",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-12",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-13",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-14",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-15",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-16",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,361"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-17",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-18",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-19",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-20",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-21",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-22",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-23",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-24",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-25",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-26",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-27",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-28",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-29",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-30",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-03-31",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            }
+                        ],
+                        "conditionRanges": [
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-01",
+                                "endDate": "2021-03-01"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-02",
+                                "endDate": "2021-03-02"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-03",
+                                "endDate": "2021-03-03"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-04",
+                                "endDate": "2021-03-04"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-05",
+                                "endDate": "2021-03-05"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-06",
+                                "endDate": "2021-03-06"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-07",
+                                "endDate": "2021-03-07"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-08",
+                                "endDate": "2021-03-08"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-09",
+                                "endDate": "2021-03-09"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-10",
+                                "endDate": "2021-03-10"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-11",
+                                "endDate": "2021-03-11"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-12",
+                                "endDate": "2021-03-12"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-13",
+                                "endDate": "2021-03-13"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-14",
+                                "endDate": "2021-03-14"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-15",
+                                "endDate": "2021-03-15"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-16",
+                                "endDate": "2021-03-16"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-17",
+                                "endDate": "2021-03-17"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-18",
+                                "endDate": "2021-03-18"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-19",
+                                "endDate": "2021-03-19"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-20",
+                                "endDate": "2021-03-20"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-21",
+                                "endDate": "2021-03-21"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-22",
+                                "endDate": "2021-03-22"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-23",
+                                "endDate": "2021-03-23"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-24",
+                                "endDate": "2021-03-24"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-25",
+                                "endDate": "2021-03-25"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-26",
+                                "endDate": "2021-03-26"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-27",
+                                "endDate": "2021-03-27"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-28",
+                                "endDate": "2021-03-28"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-29",
+                                "endDate": "2021-03-29"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-30",
+                                "endDate": "2021-03-30"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-03-31",
+                                "endDate": "2021-03-31"
+                            }
+                        ],
+                        "listingId": "139622"
+                    },
+                    {
+                        "__typename": "MerlinCalendarMonth",
+                        "month": 4,
+                        "year": 2021,
+                        "days": [
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-01",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-02",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-03",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-04",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-05",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-06",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-07",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-08",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-09",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-10",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-11",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-12",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-13",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-14",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-15",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-16",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-17",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-18",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-19",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-20",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-21",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-22",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-23",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-24",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-25",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-26",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-27",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-28",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-29",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            },
+                            {
+                                "__typename": "MerlinCalendarDay",
+                                "calendarDate": "2021-04-30",
+                                "available": true,
+                                "maxNights": 1125,
+                                "minNights": 3,
+                                "availableForCheckin": true,
+                                "availableForCheckout": true,
+                                "bookable": true,
+                                "price": {
+                                    "__typename": "MerlinCalendarDayPrice",
+                                    "localPriceFormatted": "￥1,225"
+                                }
+                            }
+                        ],
+                        "conditionRanges": [
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-01",
+                                "endDate": "2021-04-01"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-02",
+                                "endDate": "2021-04-02"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-03",
+                                "endDate": "2021-04-03"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-04",
+                                "endDate": "2021-04-04"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-05",
+                                "endDate": "2021-04-05"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-06",
+                                "endDate": "2021-04-06"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-07",
+                                "endDate": "2021-04-07"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-08",
+                                "endDate": "2021-04-08"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-09",
+                                "endDate": "2021-04-09"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-10",
+                                "endDate": "2021-04-10"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-11",
+                                "endDate": "2021-04-11"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-12",
+                                "endDate": "2021-04-12"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-13",
+                                "endDate": "2021-04-13"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-14",
+                                "endDate": "2021-04-14"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-15",
+                                "endDate": "2021-04-15"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-16",
+                                "endDate": "2021-04-16"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-17",
+                                "endDate": "2021-04-17"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-18",
+                                "endDate": "2021-04-18"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-19",
+                                "endDate": "2021-04-19"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-20",
+                                "endDate": "2021-04-20"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-21",
+                                "endDate": "2021-04-21"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-22",
+                                "endDate": "2021-04-22"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-23",
+                                "endDate": "2021-04-23"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 6,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-24",
+                                "endDate": "2021-04-24"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 0,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-25",
+                                "endDate": "2021-04-25"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 1,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-26",
+                                "endDate": "2021-04-26"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 2,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-27",
+                                "endDate": "2021-04-27"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 3,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-28",
+                                "endDate": "2021-04-28"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 4,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-29",
+                                "endDate": "2021-04-29"
+                            },
+                            {
+                                "__typename": "MerlinCalendarConditionRange",
+                                "conditions": {
+                                    "__typename": "MerlinCalendarConditions",
+                                    "closedToArrival": false,
+                                    "closedToDeparture": false,
+                                    "endDayOfWeek": 5,
+                                    "maxNights": 1125,
+                                    "minNights": 3
+                                },
+                                "startDate": "2021-04-30",
+                                "endDate": "2021-04-30"
+                            }
+                        ],
+                        "listingId": "139622"
+                    }
+                ],
+                "metadata": {
+                    "__typename": "MerlinCalendarMonthMetadata",
+                    "constantMinNights": 3,
+                    "onlyShowAvailableForCheckinOnDatepicker": false,
+                    "firstBookableDay": "2021-02-15"
+                }
+            }
+        }
+    }
+}
