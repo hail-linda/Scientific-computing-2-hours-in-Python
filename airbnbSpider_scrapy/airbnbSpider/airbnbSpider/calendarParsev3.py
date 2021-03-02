@@ -19,16 +19,15 @@ class calendarParse():
         self.table = "`proxypool`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.redis = redis.Redis.from_url(REDIS_URL)
         self.mapTable = "`map`"
         self.listTable = "`houselist`"
         self.mapresponseTable = "`mapresponse`"
         self.calendarresponseTable = "`calendarresponse`"
 
         localtime = time.localtime(time.time())
-        self.mouth = localtime[1]
+        self.mouth = 2 #localtime[1]
         self.year = localtime[0]
-        self.day = localtime[2] 
+        self.day = 20 #localtime[2] 
         self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day)
 
         self.orderList = []
@@ -98,10 +97,11 @@ class calendarParse():
 
                     if self.dateCompare(self.dtToday, date) < 0:
                         try:
-                            self.priceList.append([date, price])
+                            self.priceList.append([date, price.replace(",","").replace("￥","")])
                             if available == False:
                                 self.orderList.append(date)
                         except:
+                            print("price append err")
                             continue
                   
 
@@ -117,12 +117,18 @@ class calendarParse():
             #                 except:
             #                     continue
 
-        self.dbInsert()
-        self.priceList = []
-        self.orderList = []
+            self.dbInsert()
+            self.priceList = []
+            self.orderList = []
+
         return errIdList
 
     def dbInsert(self):
+
+        # print(self.house_id,self.orderList)
+        # print(self.house_id,self.priceList)
+        # print('\n')
+
         self.vals = []
         self.sql = "INSERT IGNORE INTO `order` (`house_id`, `fetch_date`, `order_date`, repeat_flag)\
                     VALUES (%s,%s,%s,%s);"
@@ -130,7 +136,6 @@ class calendarParse():
             repeat_flag = "{}:{}".format(self.house_id, order)
             # print(self.house_id,self.dtToday,order,hash)
             self.vals.append((self.house_id, self.dtToday, order, repeat_flag))
-
         self.cursor.executemany(self.sql, self.vals)
         self.db.commit()
         self.orderAffected = self.cursor.rowcount
@@ -142,7 +147,7 @@ class calendarParse():
         for price in self.priceList:
             orderDate = price[0]
             price = price[1]
-            repeat_flag = "{}:{}:{}".format(self.house_id, order, price)
+            repeat_flag = "{}:{}:{}".format(self.house_id, orderDate, price)
             self.vals.append(
                 (self.house_id, self.dtToday, orderDate, price, repeat_flag))
 

@@ -18,7 +18,7 @@ class proxyPool:
     def __init__(self):
         self.proxyId = 0
         self.ip = ""
-        self.table = "`proxypool`"
+        self.table = "`proxypool_us`"
         # print("middleline-proxyPool1")
         self.db = dbSettings.db_connect()
         # print("middline-proxyPool2")
@@ -128,8 +128,8 @@ class proxyMiddleware:
         # print("proxy: ",proxies)
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
-        request.headers['USER_AGENT']=random.choice(self.user_agent_list)
-        request.headers['Cookies'] = proxypool.getCookies() 
+        # request.headers['USER_AGENT']=random.choice(self.user_agent_list)
+        # request.headers['Cookies'] = proxypool.getCookies() 
         # print("using ip:"+str(proxies))
         del proxypool
 

@@ -1,0 +1,7 @@
+Host: www.airbnb.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0
+X-Airbnb-GraphQL-Platform: web
+X-Airbnb-API-Key: d306zoyjsyarp7ifhu67rjxn52tv0t20
+X-CSRF-Token: V4$.airbnb.com$opm5kBq-0g0$8lJYwSL1f0shxuWB0W0qspYwHd0v2xVVobVIanuD-AY=
+X-CSRF-Without-Token: 1
+X-Airbnb-GraphQL-Platform-Client: minimalist-niobe

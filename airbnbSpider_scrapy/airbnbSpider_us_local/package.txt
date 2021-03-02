@@ -1,0 +1,1 @@
+scrapyd-deploy -p airbnbSpider --build-egg=airbnbSpider202012281722.egg 

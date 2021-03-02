@@ -24,7 +24,7 @@ REDIS_URL = 'redis://:{psw}@{host}:{port}/{db}'.format(
 # LOG_FILE = 'logs/spiderlog.txt'
 # LOG_FORMAT = '%(levelname)s %(asctime)s [%(name)s:%(module)s:%(funcName)s:%(lineno)s] [%(exc_info)s] %(message)s'
 LOG_LEVEL = 'ERROR'
-DOWNLOAD_TIMEOUT = 3
+DOWNLOAD_TIMEOUT = 7
 
 CONCURRENT_REQUESTS = 200
 CONCURRENT_REQUESTS_PER_DOMAIN = 200

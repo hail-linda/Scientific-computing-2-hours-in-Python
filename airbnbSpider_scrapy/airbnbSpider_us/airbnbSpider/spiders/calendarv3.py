@@ -17,7 +17,7 @@ class proxyPool:
     def __init__(self):
         self.proxyId = 0
         self.ip = ""
-        self.table = "`proxypool`"
+        self.table = "`proxypool_us`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
 
@@ -50,7 +50,7 @@ class calenderSpider(RedisSpider):
 
     name = "calendarv3"
     allowed_domains = ['www.airbnb.cn']
-    redis_key = 'calendar:start_urls'
+    redis_key = 'calendar_us:start_urls'
 
     def __del__(self):
         pass
@@ -59,23 +59,30 @@ class calenderSpider(RedisSpider):
         house_id = bytes_to_str(data, self.redis_encoding)
         meta = {'house_id': house_id,'url':self.urlJoint(house_id),"handle_httpstatus_all": True}
         headers = {
-            ('User-Agent', 'Mozilla/5.0'),
-            ('X-Airbnb-GraphQL-Platform-Client','apollo-niobe'),
-            ('X-CSRF-Token','V4$.airbnb.cn$JSx5MC3fSeY$XWneywabc-zi7HMETr7MBbheCqtpNUyYFce2xMZw8X0='),
+            ('Host', 'www.airbnb.com'),
+            ('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0'),
+            ('X-Airbnb-GraphQL-Platform', 'web'),
+            ('X-CSRF-Without-Token', '1'),
+            ('X-Airbnb-GraphQL-Platform-Client','minimalist-niobe'),
+            ('X-CSRF-Token','V4$.airbnb.com$opm5kBq-0g0$8lJYwSL1f0shxuWB0W0qspYwHd0v2xVVobVIanuD-AY='),
             ('X-Airbnb-API-Key','d306zoyjsyarp7ifhu67rjxn52tv0t20')
+
+
         }
         return Request(  url = self.urlJoint(house_id),callback = self.calendarParse,
                             errback=self.calendarErrback,meta = meta, dont_filter=True,
                              headers=headers)
 
     def urlJoint(self, house_id):
-        url = 'https://www.airbnb.cn/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=zh&currency=CNY&_cb=1itv6xpj49jx8&extensions={"persistedQuery":{"version":1,"sha256Hash":"b94ab2c7e743e30b3d0bc92981a55fff22a05b20bcc9bcc25ca075cc95b42aac"}}'
+        # https://www.airbnb.com/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=en&currency=USDextensions={"persistedQuery":{"version":1,"sha256Hash":"dc360510dba53b5e2a32c7172d10cf31347d3c92263f40b38df331f0b363ec41"}}&_cb=1sm426g16se018
+        url = 'https://www.airbnb.com/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=en&currency=USD&extensions={"persistedQuery":{"version":1,"sha256Hash":"dc360510dba53b5e2a32c7172d10cf31347d3c92263f40b38df331f0b363ec41"}}&_cb=1sm426g16se018'
         url += '&variables={"request":{"count":3,"listingId":"'+str(house_id)+'","month":'+str(self.mouth)+',"year":'+str(self.year)+'}}'
         print(url)
         return url
 
     def calendarParse(self,response):
         item = calendarItem()
+        print('\n',response.request.headers,'\n',response.request.url,'\n',response.request.cookies)
         item['house_id'] = response.meta['house_id']
         item['response'] = response.body.decode('utf8')
         yield item

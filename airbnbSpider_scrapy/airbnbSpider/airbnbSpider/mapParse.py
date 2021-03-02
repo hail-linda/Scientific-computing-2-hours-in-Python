@@ -80,6 +80,7 @@ class mapParse():
     def dbHouseExist(self, house_id):
         sql = "SELECT * FROM "+self.listTable + \
             "WHERE house_id = {}".format(house_id)
+        print(sql)
         self.cursor.execute(sql)
         self.db.commit()
         if(len(self.cursor.fetchall()) >= 1):
@@ -90,7 +91,7 @@ class mapParse():
     def dbHouseInsert(self, price, description, house_id):
         sql = "INSERT INTO " + self.listTable + " VALUES (NULL ,'{}','{}','{}','{}')".format(
             price, description, house_id,self.map_id)
-        # print(sql)
+        print(sql)
         self.cursor.execute(sql)
         self.db.commit()
 
@@ -136,13 +137,14 @@ class mapParse():
         try:
             self.cursor.executemany(sql,vals)
             self.db.commit()
-        except:
+        except Exception as e:
+            print(e)
             self.db.rollback()
         # print(len(sqls))
         # print(numEnding-numStarting)
         print("{}\t总数:{}\t新增:{}\t重复:{}".format(self.map_id,len(listings),self.cursor.rowcount,len(listings)-self.cursor.rowcount))
 
-sm = threading.Semaphore(8)
+sm = threading.Semaphore(4)
 
 def parseStart(bias):
     parse = mapParse()
