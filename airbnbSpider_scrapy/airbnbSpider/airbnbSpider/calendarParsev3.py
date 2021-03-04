@@ -25,9 +25,9 @@ class calendarParse():
         self.calendarresponseTable = "`calendarresponse`"
 
         localtime = time.localtime(time.time())
-        self.mouth = 2 #localtime[1]
+        self.mouth = localtime[1]
         self.year = localtime[0]
-        self.day = 20 #localtime[2] 
+        self.day = localtime[2] 
         self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day)
 
         self.orderList = []
