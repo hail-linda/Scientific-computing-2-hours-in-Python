@@ -56,6 +56,10 @@ class calenderSpider(RedisSpider):
         pass
 
     def make_request_from_data(self, data):
+        localtime = time.localtime(time.time())
+        self.mouth = localtime[1]
+        self.year = localtime[0]
+        self.day = localtime[2]
         house_id = bytes_to_str(data, self.redis_encoding)
         meta = {'house_id': house_id,'url':self.urlJoint(house_id),"handle_httpstatus_all": True}
         headers = {
