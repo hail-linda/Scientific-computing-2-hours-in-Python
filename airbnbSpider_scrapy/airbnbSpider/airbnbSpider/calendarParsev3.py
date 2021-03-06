@@ -67,7 +67,7 @@ class calendarParse():
                 continue
 
             if "429 Too Many" in res:
-                self.redis.lpush("calendar:start_urls", row["house_id"])
+                # self.redis.lpush("calendar:start_urls", row["house_id"])
                 print("429 err in ", row["id"])
                 errIdList.append(row["id"])
                 continue
@@ -101,7 +101,7 @@ class calendarParse():
                             if available == False:
                                 self.orderList.append(date)
                         except:
-                            print("price append err")
+                            # print("price append err")
                             continue
                   
 
