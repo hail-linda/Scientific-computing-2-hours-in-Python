@@ -36,18 +36,24 @@ class watcher():
 
 if __name__ == "__main__":
     w = watcher()
-    sum = 0
+    sum20s = 0
+    sum2min = 0
     index = 0
     while(1):
         index += 1
         num = w.run()
         time.sleep(1)
         n = w.run()-num
-        sum += n
+        sum20s += n
+        sum2min += n
         print(n,'\t','*'*round(n/10))
-        if(index == 20):
-            print("avg:\t",sum/20.0)
-            sum = 0
+        if(index % 20 == 0):
+            print("20s avg:\t",sum20s/20.0)
+            sum20s = 0
+        if(index % 120 == 0):
+            print("2min avg:\t",sum2min/120.0)
+            sum2min = 0
+            sum20s = 0
             index = 0
 
 
