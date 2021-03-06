@@ -50,11 +50,11 @@ class proxyPool:
         # print("self.ip",self.ip)
         self.proxyId = results[rand]['id']
 
-        sql = "UPDATE "+self.table + \
-            " SET `numused` = `numused` + 1 WHERE `id` = " + \
-            str(results[rand]['id'])
-        self.cursor.execute(sql)
-        self.db.commit()
+        # sql = "UPDATE "+self.table + \
+        #     " SET `numused` = `numused` + 1 WHERE `id` = " + \
+        #     str(results[rand]['id'])
+        # self.cursor.execute(sql)
+        # self.db.commit()
 
         return self.IP
 
@@ -108,6 +108,7 @@ class proxyPool:
 class proxyMiddleware:
 
     def __init__(self):
+        
         self.user_agent_list = [
             'MSIE (MSIE 6.0; X11; Linux; i686) Opera 7.23',
             'Opera/9.20 (Macintosh; Intel Mac OS X; U; en)',
@@ -123,15 +124,15 @@ class proxyMiddleware:
         ]
 
     def process_request(self,request,spider):
-        proxypool = proxyPool()
-        proxies = proxypool.proxies()
+        self.proxypool = proxyPool()
+        proxies = self.proxypool.proxies()
         # print("proxy: ",proxies)
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
-        request.headers['USER_AGENT']=random.choice(self.user_agent_list)
-        request.headers['Cookies'] = proxypool.getCookies() 
+        # request.headers['USER_AGENT']=random.choice(self.user_agent_list)
+        request.headers['Cookies'] = self.proxypool.getCookies() 
         # print("using ip:"+str(proxies))
-        del proxypool
+        # del proxypool
 
 
 
