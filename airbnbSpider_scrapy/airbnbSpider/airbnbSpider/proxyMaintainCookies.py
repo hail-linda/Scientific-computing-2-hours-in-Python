@@ -134,13 +134,13 @@ def getIp():
     cursor = db.cursor()
     timeNow = datetime.datetime.now()
     while(1):
-        print("test ip pool")
         time.sleep(1)
         sql = "SELECT * from `proxypool` WHERE `state` != 'del'"
         cursor.execute(sql)
         db.commit()
         results = cursor.fetchall()
-        if(len(results) < 10):
+        print("test ip pool {}".format(len(results)))
+        if(len(results) < 20):
             proxypool = proxyPool()
             proxies = proxypool.get(num=10)
         for row in results:
