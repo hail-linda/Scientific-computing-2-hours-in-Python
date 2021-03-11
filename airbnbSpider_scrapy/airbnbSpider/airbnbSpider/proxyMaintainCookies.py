@@ -19,6 +19,8 @@ import scrapy
 from lxml import etree
 from requests.adapters import HTTPAdapter
 
+from SMTP import SMTP
+
 
 class proxyPool:
     def __init__(self):
@@ -71,6 +73,13 @@ class proxyPool:
             "https": "https://{}".format(self.ip),
         }
         return self.proxies
+
+    def checkBalance(self):
+        url = "http://dps.kdlapi.com/api/getipbalance?orderid=941053123270010&signature=1nr5t7q6n55c6ycb9jh4rxpx1t5r3vvu"
+        proxies = {"http": None, "https": None}
+        html = requests.get(url, timeout=5, proxies=proxies)
+        res = json.loads(html.content)
+        return res['data']['balance']
 
     def get(self, num=20):
         url = "http://dps.kdlapi.com/api/getdps/?orderid=941053123270010&num={}&pt=1&format=json&sep=1&dedup=1".format(str(num))
@@ -133,21 +142,22 @@ def getIp():
     db = dbSettings.db_connect()
     cursor = db.cursor()
     timeNow = datetime.datetime.now()
+    proxypool = proxyPool()
     while(1):
         time.sleep(1)
         sql = "SELECT * from `proxypool` WHERE `state` != 'del'"
         cursor.execute(sql)
         db.commit()
         results = cursor.fetchall()
-        print("test ip pool {}".format(len(results)))
+        n_ip_kuaidaili = proxypool.checkBalance()
+        if n_ip_kuaidaili == 0 :
+            SMTP("1282255404@qq.com","发信内容","快代理ip数耗尽警告","DaduosuMonitor")
+            time.sleep(180)
+        print("test ip pool ,n_ip_proxypool: {} , n_ip_kuaidaili: {}".format(len(results),n_ip_kuaidaili))
         if(len(results) < 20):
-            proxypool = proxyPool()
             proxies = proxypool.get(num=10)
         for row in results:
             deltaTime = (timeNow - row['init_time']).seconds
-            # if deltaTime < 600 :
-            #     proxypool = proxyPool()
-            #     proxypool.updateCookies(row)
 
 
 
