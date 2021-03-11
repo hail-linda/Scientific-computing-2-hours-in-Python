@@ -1,2 +1,6 @@
 airbnbSpider_scrapy/airbnbSpider/airbnbSpider/historyCode/calendarTestResult.pptx
 houselist_us.*
+
+airbnbSpider_scrapy/airbnbSpider/airbnbSpider/historyCode/*.json
+
+airbnbSpider_scrapy/airbnbSpider/airbnbSpider/historyCode/api.json
