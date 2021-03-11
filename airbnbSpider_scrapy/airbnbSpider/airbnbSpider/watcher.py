@@ -51,7 +51,8 @@ if __name__ == "__main__":
         redisLeft = w.checkRedis()
         sum20s += n
         sum2min += n
-        print('redis:',redisLeft,'\t',n,'\t','*'*round(n/10))
+        print('redis:{}\t response:{}  {} {}'.format(redisLeft,num,n,'*'*round(n/10)))
+        # print('redis:',redisLeft,'\t',n,'\t','*'*round(n/10))
         if(index % 20 == 0):
             print("20s avg:\t",sum20s/20.0)
             sum20s = 0
