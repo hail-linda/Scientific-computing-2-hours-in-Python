@@ -21,39 +21,27 @@ import matplotlib.patches as mpathes
 import matplotlib.image as img
 
 import numpy as np
+import dbSettings
 
 from itertools import cycle
 col_gen = cycle('bgrcmk')
 
-db = pymysql.connect("localhost","root","delta=b2-4ac","spideairbnb" )
+db = dbSettings.db_connect()
 cursor = db.cursor()
 
-sql = "SELECT * FROM spideairbnb.numofhousesavailable where num < 50 and num > 0"
+sql = "SELECT * FROM airbnb_scrapy.map_us where num < 50 and num > 0"
 cursor.execute(sql)
 results = cursor.fetchall()
-'''
-fig,ax = plt.subplots()
-for row in results:
-    xy = np.array([row[3],row[1]])
-    rect = mpathes.Rectangle(   xy = xy,
-                                width = row[4]-row[3],
-                                height = row[2]-row[1],
-                                edgecolor='blue',
-                                fill = False,
-                                linewidth=1)
-    ax.add_patch(rect)
-    #if(row[5]<50):
-    #    ax.text((row[4]+row[3])/2,(row[2]+row[1])/2,row[5])
-'''
 X=[]
 Y=[]
 S=[]
 C=[]
 for row in results:
-    X.append((row[4]+row[3])/2)
-    Y.append((row[2]+row[1])/2)
-    S.append(row[5])
-    C.append(((row[5]/50),(row[5]/50),0))
+    X.append((row['lon_upp']+row['lon_low'])/2)
+    Y.append((row['lat_upp']+row['lat_low'])/2)
+    S.append(row['num']/10)
+    # C.append(((row['num']/80),(row['num']/80),0))
+    C.append(row['num']/180.0)
 
 X=np.array(X)
 Y=np.array(Y)
@@ -61,7 +49,7 @@ S=np.array(S)
 C=np.array(C)
 
 
-plt.scatter(X,Y,s=S,c=C,alpha=0.2,linewidths=0)
+plt.scatter(X,Y,s=S,c=C,alpha=0.2,linewidths=0, cmap='summer')
 #plt.figure().figimage(img.imread('./china_map.jpg'))
 
 '''
@@ -76,7 +64,7 @@ for row in results:
 
 plt.axis('equal')
 
-
+plt.savefig('./test.png',dpi=2000)
 plt.show()
 
 
