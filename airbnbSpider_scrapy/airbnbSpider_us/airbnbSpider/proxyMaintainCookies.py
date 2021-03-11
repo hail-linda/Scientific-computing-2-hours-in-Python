@@ -93,8 +93,9 @@ class proxyPool:
             print("get proxy err in proxy_list")
 
         for proxy in proxys:
-            rootCookies = self.getCookies("https://www.airbnb.com",proxy)
-            pgPixelCookies = self.getCookies("	https://www.airbnb.com/pg_pixel?r=&diff=161456879487007765102906913701",proxy,rootCookies)
+            pgPixelCookies = ""
+            # rootCookies = self.getCookies("https://www.airbnb.com",proxy)
+            # pgPixelCookies = self.getCookies("	https://www.airbnb.com/pg_pixel?r=&diff=161456879487007765102906913701",proxy,rootCookies)
             self.dbInsert(proxy,pgPixelCookies)
 
     def updateCookies(self,row):

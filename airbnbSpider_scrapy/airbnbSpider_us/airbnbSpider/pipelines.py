@@ -58,47 +58,16 @@ class AirbnbspiderPipeline:
 
         if  item.__class__ == listItem:
             st = time.time()
-            res = item['response'].replace("'", "''")
-            res = res.replace('"', '""')
-            sql = "INSERT INTO " + self.mapresponseTable + " VALUES (NULL ,'{}')".format(res)
-            self.cursor.execute(sql)
+            res = item['response']
+            sql = "INSERT INTO " + self.mapresponseTable + " VALUES (NULL ,%s)"
+            self.cursor.execute(sql,(res,))
             self.db.commit()
             # print("item time:"+str(int(1000*(time.time()-st)))+"ms")
             return
 
-            res = json.loads(item['response'])
-            if 'home_tab_metadata' in res['explore_tabs'][0]:
-                count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
-                sections = res['explore_tabs'][0]['sections']
-                for section in sections:
-                    self.exist = 0
-                    self.insert = 0
-                    if 'listings' in section:
-                        self.inDB = ""
-                        listings = section['listings']
-                        for listing in listings:
-                            try:
-                                self.decodeListing(listing)
-                            except Exception as e:
-                                print(str(e), "for listing", time.asctime(
-                                    time.localtime(time.time())))
-
-                        print(" count;{}   共{}个，其中重复{}，新增{},{}".format(
-                             count, str(len(listings)), self.exist, self.insert, self.inDB))
-            else:
-                print("房源list解码异常")
-                self.dbUpdateStates("done")
-
         elif item.__class__ == calendarItem:
             dbCalendarInsert(item['house_id'], item['response'])
-            # th = threading.Thread(target=dbCalendarInsert, args=(item['house_id'], item['response']))
-            # th.start()
             print("house id: ",item['house_id'],"len of response: ",len(item['response']))
-  
-            # sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \
-            #       "(NULL,'{}','{}')".format(item['house_id'], item['response'])
-            # self.cursor.execute(sql)
-            # self.db.commit()
 
         elif item.__class__ == detailItem:
             dbDetailInsert(item['house_id'], item['response'])

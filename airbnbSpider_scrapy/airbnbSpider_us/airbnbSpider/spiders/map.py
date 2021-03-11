@@ -14,7 +14,7 @@ class proxyPool:
     def __init__(self):
         self.proxyId = 0
         self.ip = ""
-        self.table = "`proxypool`"
+        self.table = "`proxypool_us`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
 
@@ -97,16 +97,17 @@ class mapSpider(Spider):
         self.db.commit()
 
     def dbInsert(self, location,area):
+        repeat_flag = '{}|{}|{}|{}'.format(str(location[0]),str(location[1]),str(location[2]),str(location[3]))
         sql = "INSERT INTO "+self.table + \
-            "(`lat_low`, `lat_upp`, `lon_low`, `lon_upp`, `num`,`state`,`area`)\
-            VALUES ('{}', '{}', '{}', '{}', '-1','todo','{}')\
-            ".format(location[0], location[1], location[2], location[3], area)
+            "(`lat_low`, `lat_upp`, `lon_low`, `lon_upp`, `num`,`state`,`area`,`repeat_flag`)\
+            VALUES ('{}', '{}', '{}', '{}', '-1','todo','{}','{}')\
+            ".format(location[0], location[1], location[2], location[3], area, repeat_flag)
         self.cursor.execute(sql)
         # print(sql)
         self.db.commit()
 
     def urlJoint(self, row):
-        url = "https://www.airbnb.com/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=d0c77d93-3a9a-43df-82fb-568ac0d5a566&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=50&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=9"
+        url = "https://www.airbnb.com/api/v2/explore_tabs?_format=for_explore_search_web&auto_ib=true&client_session_id=d0c77d93-3a9a-43df-82fb-568ac0d5a566&currency=CNY&current_tab_id=home_tab&experiences_per_grid=20&fetch_filters=true&guidebooks_per_grid=20&has_zero_guest_treatment=true&hide_dates_and_guests_filters=false&is_guided_search=true&is_new_cards_experiment=true&is_standard_search=true&items_per_grid=50&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=zh&metadata_only=false&query=%E4%B8%8A%E6%B5%B7&query_understanding_enabled=true&refinement_paths%5B%5D=%2Fhomes&satori_config_token=EhIiQhIiIjISEjISIiIiUiUAIgA&satori_version=1.1.13&screen_height=425&screen_size=large&screen_width=1472&search_by_map=true&selected_tab_id=home_tab&show_groupings=true&supports_for_you_v3=true&timezone_offset=480&version=1.7.9&zoom=16"
         url += "&sw_lat={}&sw_lng={}&ne_lat={}&ne_lng={}".format(row['lat_low'],row['lon_low'],row['lat_upp'],row['lon_upp'])
         # print(url)
         # url += "&sw_lng={}".format(row[3])
@@ -116,6 +117,7 @@ class mapSpider(Spider):
         # print(str(self)+"----"+str(row[0]))
         # print(str(self)+"----"+str(row[0])+"----"+str(row[1])+"----" +
         #       str(row[2])+"----"+str(row[3])+"----"+str(row[4]))
+        # print(url)
         return url
 
     def mapParse(self,response):
@@ -125,9 +127,10 @@ class mapSpider(Spider):
             count = res['explore_tabs'][0]['home_tab_metadata']['listings_count']
             print("mapParse:\t\t"+str(count))
             if(count > 50):
-                pass
                 self.quadrateDivision(response.meta)
-            if(count<=50):
+            if(count<=50 and count >0) :
+            # if (count != 0):
+            #     print("map block is too small")
                 item = listItem()
                 item['response']=response.body.decode('utf8')
                 print(str(int(1000*(time.time()-self.starttime)))+"ms")
@@ -143,10 +146,12 @@ class mapSpider(Spider):
         response = failure.value
         print("Errback:\t"+str(response))
         print(failure.request.meta['proxy'][8:])
-
-        proxypool = proxyPool()
-        proxypool.delete(failure.request.meta['proxy'][8:],str(response))
-        print("del proxy:"+str(failure.request.meta['proxy'][8:]))
+        if "Bad Gateway" in str(response) or "Service Temporarily" in str(response):
+            pass
+        else:
+            proxypool = proxyPool()
+            proxypool.delete(failure.request.meta['proxy'][8:],str(response))
+            print("del proxy:"+str(failure.request.meta['proxy'][8:]))
         del proxypool
 
         yield failure.request

@@ -31,18 +31,19 @@ class mapParse():
         self.mapresponseTable = "`mapresponse_us`"
 
     def getItem(self,bias):
-        sql = "SELECT * FROM "+ self.mapresponseTable +"WHERE id between {} and {}".format(bias,bias+100)
+        sql = "SELECT * FROM "+ self.mapresponseTable +"WHERE id >= {} limit 100".format(bias)
+
         print(sql)
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
         for row in results:
-            res = row['response'].replace("''", "'")
-            res = res.replace('""', '"')
+            res = row['response']
             try:
                 res = json.loads(res, strict=False)
             except Exception as e:
                 print("err in {},{}".format(row['id'],e))
+                # print("\n\n{}\n\n".format(res))
                 continue
             
             self.map_id = row['id']
@@ -57,16 +58,6 @@ class mapParse():
                         self.inDB = ""
                         listings = section['listings']
                         self.batchDecodeListing(listings)
-
-                        # for listing in listings:
-                        #     try:
-                        #         self.decodeListing(listing)
-                        #     except Exception as e:
-                        #         print(str(e), "for listing", time.asctime(
-                        #             time.localtime(time.time())))
-
-                        # print(" count;{}   共{}个，其中重复{}，新增{},{}".format(
-                        #      count, str(len(listings)), self.exist, self.insert, self.inDB))
             else:
                 print("房源list解码异常")
                 self.dbUpdateStates("done")
@@ -151,15 +142,7 @@ def parseStart(bias):
 
 if __name__ == "__main__":
 
-    # i=range(0,5000)
-    # pool=Pool(40)
-
-    # pool.map(parseStart,i)
-
-    # pool.close()
-    # pooo.join()
-
-    for i in range(0,1500):
+    for i in range(560,1500):
         sm.acquire()
         time.sleep(0.05)
         th = threading.Thread(target=parseStart, args=(i,))
