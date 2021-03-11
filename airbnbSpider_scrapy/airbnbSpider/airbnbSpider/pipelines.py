@@ -13,7 +13,7 @@ from airbnbSpider import dbSettings
 import time
 import json, math
 from threading import Semaphore, Thread
-import threading,re
+import threading,re,logging
 
 def filter_str(desstr, restr=''):
     # 过滤除中英文及数字以外的其他字符
@@ -32,7 +32,7 @@ def dbCalendarInsert(house_id,response):
     db.close()
 
 def dbDetailInsert(house_id,response):
-    # response = response.replace("'", "''").replace('"', '""')
+    response = response.replace('""', '" "')
     detailResponseTable = "`detailresponse`"
     db = dbSettings.db_connect()
     cursor = db.cursor()

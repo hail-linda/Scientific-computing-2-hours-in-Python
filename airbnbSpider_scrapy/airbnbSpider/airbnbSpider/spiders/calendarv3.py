@@ -12,6 +12,7 @@ from airbnbSpider import dbSettings
 import time
 import json
 import random
+import logging
 
 class proxyPool:
     def __init__(self):

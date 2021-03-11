@@ -9,6 +9,7 @@ import pymysql
 from . import dbSettings
 import time
 import random
+import logging
 from w3lib.http import basic_auth_header
 
 # useful for handling different item types with a single interface
