@@ -11,6 +11,7 @@ import scrapy
 import redis
 import demjson
 from dbSettings import REDIS_URL
+from pypinyin import pinyin, lazy_pinyin, Style
 
 
 class decodeDetail:
@@ -19,6 +20,8 @@ class decodeDetail:
 
     def decode(self,jsonData):
         meta = self.meta
+        if 'errors' in jsonData:
+            return meta
         StayPDPSections = jsonData['data']["presentation"]["stayProductDetailPage"]["sections"]["sections"]
         for StayPDPSection in StayPDPSections:
             StayPDPSectionsId =StayPDPSection["id"]
@@ -68,10 +71,16 @@ class decodeDetail:
                 if "section" in StayPDPSection:
                     if "reviewDetails" in StayPDPSection["section"]:
                         reviewDetails = StayPDPSection["section"]["reviewDetails"]
-                        meta["reviewCount"] = self.ifin(reviewDetails,"reviewCount")#  'reviewCount': 138,
-                        meta["reviewScore"] = self.ifin(reviewDetails,"reviewScore")# 'reviewScore': 98,
-                        meta["reviewSummary"] = self.map2layer(reviewDetails,"reviewSummary","label","localizedRating")# 'reviewSummary': {'位置便利': '5.0','入住便捷': '5.0','如实描述': '5.0','干净卫生': '4.9','沟通顺畅': '5.0','高性价比': '4.9'},
-                        meta["reviewTagSummary"] = self.map2layer(reviewDetails,"reviewTagSummary","localized_tag_name","count")# 'reviewTagSummary': {'位置便利': 64,'入住体验好': 68,'全部': 138,'干净卫生': 47,'待改善': 2,'房东热情': 57,'有设计感': 14,'服务周到': 43,'环境安静': 5,'行李寄存': 2,'设施齐全': 32,'靠近地铁': 8,'靠近市场': 13},
+                        if not reviewDetails == None :
+                            # print(reviewDetails['reviewSummary'])
+                            meta["reviewCount"] = self.ifin(reviewDetails,"reviewCount")#  'reviewCount': 138,
+                            meta["reviewScore"] = self.ifin(reviewDetails,"reviewScore")# 'reviewScore': 98,
+                            if not reviewDetails['reviewSummary'] == None :
+                                if not len(reviewDetails['reviewSummary']) == 0 :
+                                    meta["reviewSummary"] = self.map2layer(reviewDetails,"reviewSummary","label","localizedRating")# 'reviewSummary': {'位置便利': '5.0','入住便捷': '5.0','如实描述': '5.0','干净卫生': '4.9','沟通顺畅': '5.0','高性价比': '4.9'},
+                            if not reviewDetails["reviewTagSummary"] == None :
+                                if not len(reviewDetails['reviewTagSummary']) == 0 :
+                                    meta["reviewTagSummary"] = self.map2layer(reviewDetails,"reviewTagSummary","localized_tag_name","count")# 'reviewTagSummary': {'位置便利': 64,'入住体验好': 68,'全部': 138,'干净卫生': 47,'待改善': 2,'房东热情': 57,'有设计感': 14,'服务周到': 43,'环境安静': 5,'行李寄存': 2,'设施齐全': 32,'靠近地铁': 8,'靠近市场': 13},
 
             # 周边
             # if "LOCATION_CHINA" in StayPDPSectionsId :
@@ -111,21 +120,56 @@ class decodeDetail:
             if "propertyType" in StayPDPMetadata["sharingConfig"]:
                 meta["propertyType"] = StayPDPMetadata["sharingConfig"]["propertyType"]
 
-        for k, v in meta['reviewSummary'].items():
-            # print(k,v)
-            meta["reviewSummary"+str(k)]=float(v)
-        del meta['reviewSummary']
+        if 'reviewSummary' in meta:
+            for k, v in meta['reviewSummary'].items():
+                # print(k,v)
+                meta["reviewSummary"+self.pinyin2str(k)]=float(v)
+            del meta['reviewSummary']
 
-        for item in meta['amenity']:
-            # print(item)
-            meta["amenity"+str(item)]=1
-        del meta['amenity']
+        amenityList =   ['健身房','有线电视','电视','可预订长期住宿','暖气','热水','免费停车位','无线网络','网络连接','付费停车位','专门的工作区域','沐浴露','洗衣机',\
+                            '床单','吹风机','一氧化碳报警器','遮光窗帘','附近的付费停车位','空调','窗户护栏','急救包','基本餐具','厨房','保安系统','生活必需品','热水壶','灭火器','独立入口',\
+                            '冰箱','行李寄存','路边免费停车','衣架','保安','洗发水','烟雾报警器','洗手液']
+        if 'amenity' in meta:
+            for item in meta['amenity']:
+                if item in amenityList:
+                    meta["amenity"+self.pinyin2str(item)] = 1
+            del meta['amenity']
+
+        previewTagsList = ['优质房源', '可存行李', '日本特惠', '免费接机', '低价优势', '爱彼迎独享', '新上线', '付费接机', '超赞房东', '华人精选', '近地铁站', '中文房东', '可以做饭', '自助入住', '可开发票']
+
+        # print(meta['previewTags'])
+        if 'previewTags' in meta and not meta['previewTags'] == None:
+            for item in meta['previewTags']:
+                if item in previewTagsList:
+                    meta['previewTags'+self.pinyin2str(item)] = 1
+            del meta['previewTags']
+
+        reviewSummaryList = ['位置便利','入住便捷','如实描述','干净卫生','沟通顺畅','高性价比']
+        if 'reviewTagSummary' in meta:
+            # print(meta['reviewTagSummary'])
+            if not meta['reviewTagSummary'] == None:
+                for item in meta['reviewTagSummary']:
+                    if item in previewTagsList:
+                        meta['reviewTagSummary'+self.pinyin2str(item)] = 1
+                del meta['reviewTagSummary']
+
+        # print(meta['chinaTitleDetails'])
+        chinaTitleDetailsList = ['_BED', '_GUESTS', '_BATH', '_ROOM']
+        if 'chinaTitleDetails' in meta:
+            for k, v in meta['chinaTitleDetails'].items():
+                for details in chinaTitleDetailsList:
+                    if details in k :
+                        meta['chinaTitleDetails'+details] = v
+                        # print(k,'chinaTitleDetails'+self.pinyin2str(details),v)
+
 
         # decode python obj to json
-        for item in ['reviewTagSummary','chinaTitleDetails','hostBadges','hostIntroTags','previewTags']:
-            meta[item] = str(meta[item])
-        
-        meta['hostId'] = str(meta['hostId'])
+        for item in ['chinaTitleDetails','hostBadges','hostIntroTags']:
+            if item in meta:
+                meta[item] = str(meta[item])
+
+        if 'houtId' in meta:
+            meta['hostId'] = str(meta['hostId'])
 
 
         self.meta = meta
@@ -156,6 +200,13 @@ class decodeDetail:
             return None
         return map
 
+    def pinyin2str(self,str):
+        strList = lazy_pinyin(str,style = 0)
+        piny = ""
+        for item in strList:
+            piny  = piny + "_" +item
+        return piny
+
 class detailParse:
     def __init__(self):
         self.db = dbSettings.db_connect()
@@ -173,43 +224,40 @@ class detailParse:
         for row in results:
             try:
                 res = row["response"]
-                # res = res.replace(':""""', ':"" ""')
-                res = res.replace('""', '"')
-                res = res.replace('\n', '')
-                res = res.replace('\r\n', '')
-                res = res.replace('\r', '')
-                # res = res.replace('" ', '')
-                res = res.replace(' ",', '",')
-                res = res.replace(' "}', '"}')
-                res = res.replace(' "', '')
-                res = res.replace(':""', ':" "')
-                res = res.replace('""', '"')
-                # res = res.replace("'", '')
+                # # res = res.replace(':""""', ':"" ""')
+                # res = res.replace('""', '"')
+                # res = res.replace('\n', '')
+                # res = res.replace('\r\n', '')
+                # res = res.replace('\r', '')
+                # # res = res.replace('" ', '')
+                # res = res.replace(' ",', '",')
+                # res = res.replace(' "}', '"}')
+                # res = res.replace(' "', '')
+                # res = res.replace(':""', ':" "')
+                # res = res.replace('""', '"')
+                # # res = res.replace("'", '')
             except:
                 print("replace err in ", row["id"])
                 errIdList.append(row["id"])
                 continue
             try:
-                # print(row["id"])
-                decode = decodeDetail()
-                # meta = decode.decode(demjson.decode(res))
-                meta = decode.decode(json.loads(res,strict=False))
-
-                for key ,value in meta.items():
-                    if isinstance(value,str):
-                        meta[str(key)] = value.replace("'","''")
+                json.loads(res,strict=False)
 
             except Exception as e: 
                 print("json load err in ", row["id"],e,row['house_id'])
-                # print(res)
-                # if row['id'] == 890 :
-                #     time.sleep(5)
                 numOfErr += 1
                 continue
-            
-            
 
+            decode = decodeDetail()
+            print(row['id'],end = '  ')
+            meta = decode.decode(json.loads(res,strict=False))
+            if meta == {}:
+                print("房源不可访问（不存在）")
+                continue
 
+            for key ,value in meta.items():
+                    if isinstance(value,str):
+                        meta[str(key)] = value.replace("'","''")
 
             # pprint(eval(l))
             dt = meta
@@ -218,13 +266,14 @@ class detailParse:
             ls = [(k, v) for k, v in dt.items() if v is not None]
             sentence = 'INSERT IGNORE %s (`' % tb + '`,`'.join([i[0] for i in ls]) +\
                     '`) VALUES (' + ','.join(repr(i[1]) for i in ls) + ');'
-
+            # print(sentence)
             # print(sentence)
             print(meta['listingId'])
             try:
                 cursor.execute(sentence)
                 db.commit()
-            except:
+            except Exception as e:
+                print("[*****err*****]:",e)
                 continue
 
         print(numOfErr,"\terrs")
@@ -241,15 +290,9 @@ def getMaxNumOfDetailResponse(db,cursor):
     return num
 
 def startParse(bias,landmark,amenity):
-    try:
-        parse = detailParse()
-        return parse.getItem(bias,landmark,amenity)
-    except Exception as e:
-        print(e)
 
-
-
-
+    parse = detailParse()
+    return parse.getItem(bias,landmark,amenity)
 
 if __name__ == "__main__":
     # f_in = open( 'src.json', 'r',encoding = 'utf-8' )
