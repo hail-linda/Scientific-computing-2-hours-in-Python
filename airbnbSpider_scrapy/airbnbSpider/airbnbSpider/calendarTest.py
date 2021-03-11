@@ -34,8 +34,8 @@ def getOrder():
     return dbUtils(sql)
 
 def getPrice(listingId,date):
-    sql = "SELECT price FROM `price` WHERE house_id = {} and order_date = {}".format(listingId,date)
-    print(sql)
+    sql = "SELECT price FROM `price` WHERE house_id = '{}' and order_date ='{}'".format(listingId,date)
+    # print(sql)
     return dbUtils(sql)[0]['price']
 
 
@@ -43,4 +43,4 @@ if __name__ == "__main__":
     listingIds = [45917271, 40658820, 44546841, 36491415, 38033861, 14363531, 46983891, 34193677, 47110001, 37866069]
     results = getOrder()
     for row in results:
-        print(row['house_id'],row['fetch_date'],row['order_date'])
+        print(row['house_id'],row['fetch_date'],row['order_date'],getPrice(row['house_id'],row['order_date']))
