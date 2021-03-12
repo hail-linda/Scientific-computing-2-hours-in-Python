@@ -111,7 +111,7 @@ class decodeDetail:
                 meta["Lng"] = self.ifin(eventDataLogging,"listingLng")# 'Lng': 104.0718,
         
         # 主图
-        if "seoFeatures" in StayPDPMetadata:
+        if "seoFeatures" in StayPDPMetadata and StayPDPMetadata["seoFeatures"] is not None:
             if "ogTags" in StayPDPMetadata["seoFeatures"]:
                 ogTags = StayPDPMetadata["seoFeatures"]["ogTags"]
                 meta["ogImage"] = ogTags["ogImage"]
@@ -303,7 +303,7 @@ if __name__ == "__main__":
     db = dbSettings.db_connect()
     cursor = db.cursor()
 
-    startResponseId = 0
+    startResponseId = 196000
     endResponseId = getMaxNumOfDetailResponse(db,cursor)
     # endResponseId = 558
 
