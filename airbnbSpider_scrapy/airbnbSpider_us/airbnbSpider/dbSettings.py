@@ -27,7 +27,7 @@ MYSQL_CONFIG_PRODUCT = {
     "user": "airbnb_spider",
     "password": "09wLjYSgWapXXD1f",
     "port": 3306,
-    "db": "airbnb_scrapy"
+    "db": "airbnb_scrapy_us"
 }
 
 REDIS_URL_PRODUCT = 'redis://:{psw}@{host}:{port}/{db}'.format(
