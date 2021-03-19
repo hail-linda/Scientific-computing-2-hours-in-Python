@@ -11,19 +11,19 @@ import dbSettings
 import scrapy
 import redis
 from dbSettings import REDIS_URL
+from monitor import Monitor
 
 
 
 class calendarParse():
     def __init__(self):
-        self.table = "`proxypool`"
+        self.table = "`proxypool_us`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.redis = redis.Redis.from_url(REDIS_URL)
-        self.mapTable = "`map`"
-        self.listTable = "`houselist`"
-        self.mapresponseTable = "`mapresponse`"
-        self.calendarresponseTable = "`calendarresponse`"
+        self.mapTable = "`map_us`"
+        self.listTable = "`houselist_us`"
+        self.mapresponseTable = "`mapresponse_us`"
+        self.calendarresponseTable = "`calendarresponse_us`"
 
         localtime = time.localtime(time.time())
         self.mouth = localtime[1]
@@ -68,7 +68,7 @@ class calendarParse():
                 continue
 
             if "429 Too Many" in res:
-                self.redis.lpush("calendar:start_urls", row["house_id"])
+                # self.redis.lpush("calendar:start_urls", row["house_id"])
                 print("429 err in ", row["id"])
                 errIdList.append(row["id"])
                 continue
@@ -98,10 +98,13 @@ class calendarParse():
 
                     if self.dateCompare(self.dtToday, date) < 0:
                         try:
-                            self.priceList.append([date, price])
+                            self.priceList.append([date, price.replace(",","").replace("$","")])
+                            # self.priceList.append([date, price])
+                            # print(price)
                             if available == False:
                                 self.orderList.append(date)
                         except:
+                            # print("price append err")
                             continue
                   
 
@@ -117,32 +120,37 @@ class calendarParse():
             #                 except:
             #                     continue
 
-        self.dbInsert()
-        self.priceList = []
-        self.orderList = []
+            self.dbInsert()
+            self.priceList = []
+            self.orderList = []
+
         return errIdList
 
     def dbInsert(self):
+
+        # print(self.house_id,self.orderList)
+        # print(self.house_id,self.priceList)
+        # print('\n')
+
         self.vals = []
-        self.sql = "INSERT IGNORE INTO `order` (`house_id`, `fetch_date`, `order_date`, repeat_flag)\
+        self.sql = "INSERT IGNORE INTO `order_us` (`house_id`, `fetch_date`, `order_date`, repeat_flag)\
                     VALUES (%s,%s,%s,%s);"
         for order in self.orderList:
             repeat_flag = "{}:{}".format(self.house_id, order)
             # print(self.house_id,self.dtToday,order,hash)
             self.vals.append((self.house_id, self.dtToday, order, repeat_flag))
-
         self.cursor.executemany(self.sql, self.vals)
         self.db.commit()
         self.orderAffected = self.cursor.rowcount
 
         self.vals = []
-        self.sql = "INSERT IGNORE INTO `price` (`house_id`, `fetch_date`, `order_date`,`price`, repeat_flag)\
+        self.sql = "INSERT IGNORE INTO `price_us` (`house_id`, `fetch_date`, `order_date`,`price`, repeat_flag)\
         VALUES (%s,%s,%s,%s,%s);"
 
         for price in self.priceList:
             orderDate = price[0]
             price = price[1]
-            repeat_flag = "{}:{}:{}".format(self.house_id, order, price)
+            repeat_flag = "{}:{}:{}".format(self.house_id, orderDate, price)
             self.vals.append(
                 (self.house_id, self.dtToday, orderDate, price, repeat_flag))
 
@@ -166,7 +174,7 @@ def dbInsertparselog(type,responseId,infor):
     db = dbSettings.db_connect()
     cursor = db.cursor()
 
-    sql = "INSERT IGNORE INTO `calendarparselog` (`type`, `response_id`, `infor`)\
+    sql = "INSERT IGNORE INTO `calendarparselog_us` (`type`, `response_id`, `infor`)\
            VALUES ('{}',{},'{}');".format(type,responseId,infor)
     print(sql)
     cursor.execute(sql)
@@ -175,7 +183,7 @@ def dbInsertparselog(type,responseId,infor):
 
 
 def getMaxNumOfCalendarResponse(db,cursor):
-    sql = "SELECT MAX(id) FROM `calendarresponse` order by id desc limit 1"
+    sql = "SELECT MAX(id) FROM `calendarresponse_us` order by id desc limit 1"
     cursor.execute(sql)
     db.commit()
     num = cursor.fetchall()[0]["MAX(id)"]
@@ -184,12 +192,17 @@ def getMaxNumOfCalendarResponse(db,cursor):
 
 
 if __name__ == "__main__":
+    # monitor = Monitor()
+    # if not monitor.innerTask() :
+    #     print("calendarParsev3:do not start Parse")
+    #     quit()
+
+
     # 数据库链接
     db = dbSettings.db_connect()
     cursor = db.cursor()
 
     startResponseId = 0
-        
 
     # 结束responseId
     endResponseId = getMaxNumOfCalendarResponse(db,cursor)
@@ -207,7 +220,7 @@ if __name__ == "__main__":
         if(len(errResponseIdList)>100000):
             break
     # end parse
-    dbInsertparselog("end parse",responseId,"None")
+    dbInsertparselog("end parse",endResponseId,"None")
 
     # err report
     if len(errResponseIdList) > 100000:
@@ -216,7 +229,7 @@ if __name__ == "__main__":
         dbInsertparselog("err log",responseId,json.dumps(errResponseIdList))
 
     if len(errResponseIdList) < 100000:
-        sql = "TRUNCATE TABLE `calendarresponse`;"
+        sql = "TRUNCATE TABLE `calendarresponse_us`;"
         cursor.execute(sql)
         db.commit()
         dbInsertparselog("truncate",0,"truncate calendarResponse")

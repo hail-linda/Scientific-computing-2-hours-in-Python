@@ -7,7 +7,7 @@ class detailTask():
     def __init__(self):
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.listTable = "`houselist`"
+        self.listTable = "`houselist_us`"
         self.redis = redis.Redis.from_url(REDIS_URL)
         print(REDIS_URL)
 
@@ -23,7 +23,7 @@ class detailTask():
         count = 0
         for row in results:
             count += 1
-            self.redis.lpush("detail:start_urls", row["house_id"])
+            self.redis.lpush("detail_us:start_urls", row["house_id"])
             if count % 10000 == 0:
                 print(count)
 

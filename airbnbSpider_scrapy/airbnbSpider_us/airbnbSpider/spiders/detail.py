@@ -18,7 +18,7 @@ class proxyPool:
     def __init__(self):
         self.proxyId = 0
         self.ip = ""
-        self.table = "`proxypool`"
+        self.table = "`proxypool_us`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
 
@@ -50,8 +50,8 @@ class calenderSpider(RedisSpider):
     day = localtime[2]
 
     name = "detail"
-    allowed_domains = ['www.airbnb.cn']
-    redis_key = 'detail:start_urls'
+    allowed_domains = ['www.airbnb.com']
+    redis_key = 'detail_us:start_urls'
 
     def __del__(self):
         pass
@@ -62,7 +62,7 @@ class calenderSpider(RedisSpider):
         headers = {
             ('User-Agent', 'Mozilla/5.0'),
             ('X-Airbnb-GraphQL-Platform-Client','apollo-niobe'),
-            ('X-CSRF-Token','V4$.airbnb.cn$wPXtlwZHCOo$axPFMN6Y-FIzrRCv6IQQXLdHUIV6r9b9VWqFPO791kA='),
+            ('X-CSRF-Token','V4$.airbnb.com$N08Lvly9so8$9FCbNS_kWV_D2v-DNX8_ErpCxUhGEOx_x6zCLNui514='),
             ('X-Airbnb-API-Key','d306zoyjsyarp7ifhu67rjxn52tv0t20')
         }
         return Request(  url = self.urlJoint(house_id),callback = self.detailParse,
@@ -70,12 +70,18 @@ class calenderSpider(RedisSpider):
                              headers=headers)
 
     def urlJoint(self, house_id):
-        url = "https://www.airbnb.cn/api/v3/StaysPdpSections?operationName=StaysPdpSections"
-        url += "&locale=zh&currency=CNY&_cb=8ak49r1n6bkuj&variables="
-        url += '{"id":"'
-        url += str(base64.b64encode(bytes('StayListing:'+str(house_id),"utf-8")))[2:-1]
-        url += '","pdpSectionsRequest":{"adults":"1","bypassTargetings":false,"causeId":null,"children":null,"disasterId":null,"discountedGuestFeeVersion":null,"displayExtensions":null,"federatedSearchId":null,"forceBoostPriorityMessageType":null,"infants":null,"interactionType":null,"invitationClaimed":false,"layouts":["SIDEBAR","SINGLE_COLUMN"],"pdpTypeOverride":null,"preview":false,"previousStateCheckIn":null,"previousStateCheckOut":null,"priceDropSource":null,"privateBooking":false,"promotionUuid":null,"searchId":null,"selectedCancellationPolicyId":null,"staysBookingMigrationEnabled":false,"translateUgc":false,"useNewSectionWrapperApi":false,"sectionIds":null,"checkIn":"2021-02-02","checkOut":"2021-02-03"}}'
-        url += '&extensions={"persistedQuery":{"version":1,"sha256Hash":"a4abad83208088c1b2a2df135e9e1f52ca42f170980338f1d12cee01e0584486"}}'
+        # '''
+        #     https://www.airbnb.com/api/v3/PdpPlatformSections?operationName=PdpPlatformSections
+        #     &locale=en&currency=USD&_cb=1ah2t61g65w4h&variables=
+        #     {"request":{"adults":"1","bypassTargetings":false,"id":"'+str(house_id)+'","layouts":["SIDEBAR","SINGLE_COLUMN"],"preview":false,"privateBooking":false,"staysBookingMigrationEnabled":false,"useNewSectionWrapperApi":false}}&extensions={"persistedQuery":{"version":1,"sha256Hash":"e0523d171b3b2b39361bbad765b0f08f6ac4a00c78323c5a4169e5cf5a6b93fa"}}
+        #     '''
+
+        url = "https://www.airbnb.com/api/v3/PdpPlatformSections?operationName=PdpPlatformSections"
+        url += "&locale=en&currency=USD&_cb=1ah2t61g65w4h&variables="
+        url += '{"request":{"adults":"1","bypassTargetings":false,"id":"'+str(house_id)+'","layouts":["SIDEBAR","SINGLE_COLUMN"],"preview":false,"privateBooking":false,"staysBookingMigrationEnabled":false,"useNewSectionWrapperApi":false}}&extensions={"persistedQuery":{"version":1,"sha256Hash":"e0523d171b3b2b39361bbad765b0f08f6ac4a00c78323c5a4169e5cf5a6b93fa"}}'
+        # url += str(base64.b64encode(bytes('StayListing:'+str(house_id),"utf-8")))[2:-1]
+        # url += '","pdpSectionsRequest":{"adults":"1","bypassTargetings":false,"causeId":null,"children":null,"disasterId":null,"discountedGuestFeeVersion":null,"displayExtensions":null,"federatedSearchId":null,"forceBoostPriorityMessageType":null,"infants":null,"interactionType":null,"invitationClaimed":false,"layouts":["SIDEBAR","SINGLE_COLUMN"],"pdpTypeOverride":null,"preview":false,"previousStateCheckIn":null,"previousStateCheckOut":null,"priceDropSource":null,"privateBooking":false,"promotionUuid":null,"searchId":null,"selectedCancellationPolicyId":null,"staysBookingMigrationEnabled":false,"translateUgc":false,"useNewSectionWrapperApi":false,"sectionIds":null,"checkIn":"2021-02-02","checkOut":"2021-02-03"}}'
+        # url += '&extensions={"persistedQuery":{"version":1,"sha256Hash":"a4abad83208088c1b2a2df135e9e1f52ca42f170980338f1d12cee01e0584486"}}'
         # print(url)
         return url
 
