@@ -82,7 +82,7 @@ class calenderSpider(RedisSpider):
 
     def calendarParse(self,response):
         item = calendarItem()
-        print('\n',response.request.headers,'\n',response.request.url,'\n',response.request.cookies)
+        # print('\n',response.request.headers,'\n',response.request.url,'\n',response.request.cookies)
         item['house_id'] = response.meta['house_id']
         item['response'] = response.body.decode('utf8')
         yield item
