@@ -1,4 +1,5 @@
 import pymysql
+import logging
 
 ENV_DEVELOP = "DEVELOP"
 ENV_PRODUCT = "PRODUCT"
@@ -29,6 +30,8 @@ MYSQL_CONFIG_PRODUCT = {
     "port": 3306,
     "db": "airbnb_scrapy"
 }
+
+# mysql -hrm-2zesd1dlom704lm0a125010.mysql.rds.aliyuncs.com -uairbnb_spider -p09wLjYSgWapXXD1f
 
 REDIS_URL_PRODUCT = 'redis://:{psw}@{host}:{port}/{db}'.format(
     host='r-2zeryyjl6mne2qqzhd.redis.rds.aliyuncs.com',
