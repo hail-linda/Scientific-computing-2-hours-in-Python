@@ -11,6 +11,7 @@ import dbSettings
 import scrapy
 import redis
 from dbSettings import REDIS_URL
+from monitor import Monitor
 
 
 
@@ -27,7 +28,7 @@ class calendarParse():
         localtime = time.localtime(time.time())
         self.mouth = localtime[1]
         self.year = localtime[0]
-        self.day = localtime[2] 
+        self.day = localtime[2]
         self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day)
 
         self.orderList = []
@@ -57,6 +58,8 @@ class calendarParse():
         for row in results:
             try:
                 self.sqlId = row["id"]
+                # if self.sqlId % 500 ==0 :
+                #     print(self.sqlId)
                 self.house_id = row["house_id"]
                 res = row["response"]
                 # res = row["response"].replace("''", "'")
@@ -86,6 +89,9 @@ class calendarParse():
             num = 0
             if "errors" in res:
                 errIdList.append(row["id"])
+                continue
+            if 'data' not in res:
+                print(self.sqlId,"have no data")
                 continue
 
             pdpAvailabilityCalendar = res['data']['merlin']['pdpAvailabilityCalendar']
@@ -164,7 +170,7 @@ def parseStart(bias):
         parse = calendarParse()
         return parse.getItem(bias)
     except Exception as e:
-        print(e)
+        print("ParseStart err",e)
 
 def dbInsertparselog(type,responseId,infor):
     # 数据库链接
@@ -189,12 +195,17 @@ def getMaxNumOfCalendarResponse(db,cursor):
 
 
 if __name__ == "__main__":
+    monitor = Monitor()
+    if not monitor.innerTask() :
+        print("calendarParsev3:do not start Parse")
+        quit()
+
+
     # 数据库链接
     db = dbSettings.db_connect()
     cursor = db.cursor()
 
     startResponseId = 0
-        
 
     # 结束responseId
     endResponseId = getMaxNumOfCalendarResponse(db,cursor)
@@ -212,7 +223,7 @@ if __name__ == "__main__":
         if(len(errResponseIdList)>100000):
             break
     # end parse
-    dbInsertparselog("end parse",responseId,"None")
+    dbInsertparselog("end parse",endResponseId,"None")
 
     # err report
     if len(errResponseIdList) > 100000:
