@@ -10,6 +10,7 @@ import dbSettings
 import scrapy
 import redis
 import demjson
+import traceback
 from dbSettings import REDIS_URL
 
 
@@ -18,6 +19,76 @@ class decodeDetail:
         self.meta = {}
 
     def decode(self,jsonData):
+        meta = self.meta
+        if "errors" in jsonData:
+            return meta
+        pdpSections = jsonData['data']['merlin']['pdpSections']['sections']
+        # print(len(pdpSections))
+        for pdpSection in pdpSections:
+            pdpSectionId = pdpSection['id']
+            if "OVERVIEW_DEFAULT" in pdpSectionId:
+                if "section" in pdpSection:
+
+                    # "detailItems"
+                    if "detailItems" in pdpSection["section"]:
+                        meta["titleDetails"] = [item["title"] for item in pdpSection["section"]["detailItems"]]
+                    
+                    # kicker is not found
+                    # previewTags is not found
+            if "HOST_PROFILE_DEFAULT" in pdpSectionId:
+                if "section" in pdpSection:
+                    try:
+                        meta["hostAbout"] = pdpSection["section"]["hostProfileDescription"]["htmlText"]
+                    except Exception as e:
+                        print(e)
+                    if "hostAvatar" in pdpSection["section"]:
+                        hostAvatar = pdpSection["section"]["hostAvatar"]
+                        meta["hostId"] = self.ifin(hostAvatar,"userId")
+                        meta["hostBadges"] = self.ifin(hostAvatar,"badge")
+                    meta["hostIntroTags"]  = self.dig2layers(pdpSection["section"],"hostTags","title")
+                    meta["hostName"] = pdpSection["section"]["title"][10:]
+
+            if "AMENITIES_DEFAULT" in pdpSectionId:
+                if "section" in pdpSection:
+                    if "previewAmenitiesGroups" in pdpSection["section"]:
+                        if "amenities" in pdpSection["section"]["previewAmenitiesGroups"][0]:
+                            meta["amenity"] = self.dig2layers(pdpSection["section"]["previewAmenitiesGroups"][0],"amenities","title")
+                    # print(meta["titleDetails"])
+            
+            if "REVIEWS_DEFAULT" in pdpSectionId:
+                if "section" in pdpSection:
+                    if "ratings" in pdpSection["section"]:
+                        if not pdpSection["section"]["ratings"] == None:
+                            meta["reviewSummary"] = self.map2layer(pdpSection["section"],"ratings","label","localizedRating")
+                    meta["reviewCount"] = int(self.ifin(pdpSection["section"],"overallCount"))
+                    meta["reviewScore"] = self.ifin(pdpSection["section"],"overallRating")
+
+        pdpMetadata = jsonData['data']['merlin']['pdpSections']['metadata']
+        if "loggingContext" in pdpMetadata:
+            if "eventDataLogging" in pdpMetadata["loggingContext"]:
+                eventDataLogging = pdpMetadata["loggingContext"]["eventDataLogging"]
+                meta["listingId"] = self.ifin(eventDataLogging,"listingId")# 'listingId': '45633636',
+                meta["Lat"] = self.ifin(eventDataLogging,"listingLat")# 'Lat': 30.68359,
+                meta["Lng"] = self.ifin(eventDataLogging,"listingLng")# 'Lng': 104.0718,
+        
+        if "seoFeatures" in pdpMetadata:
+            if "ogTags" in pdpMetadata["seoFeatures"]:
+                ogTags = pdpMetadata["seoFeatures"]["ogTags"]
+                meta["ogImage"] = ogTags["ogImage"]
+
+        pdpMetaData = jsonData["data"]["merlin"]["pdpSections"]["metadata"]
+        # title : Charming homestead with views, hot tub/fire pit
+        if "shareConfig" in pdpMetaData:
+            meta["title"] = self.ifin(pdpMetaData["shareConfig"],"title")
+
+        pprint(meta)
+        return meta
+
+#   ************************************************************
+#   ************************************************************
+#   ************************************************************
+
+    def decode_cn(self,jsonData):
         meta = self.meta
         StayPDPSections = jsonData['data']["presentation"]["stayProductDetailPage"]["sections"]["sections"]
         for StayPDPSection in StayPDPSections:
@@ -160,7 +231,7 @@ class detailParse:
     def __init__(self):
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.detailresponseTable = "`detailresponse`"
+        self.detailresponseTable = "`detailresponse_us`"
 
     def getItem(self,bias,landmark,amenity):
         sql = "SELECT * FROM " + self.detailresponseTable + \
@@ -172,60 +243,62 @@ class detailParse:
         numOfErr = 0
         for row in results:
             try:
+                print(row["id"])
                 res = row["response"]
-                # res = res.replace(':""""', ':"" ""')
-                res = res.replace('""', '"')
-                res = res.replace('\n', '')
-                res = res.replace('\r\n', '')
-                res = res.replace('\r', '')
-                # res = res.replace('" ', '')
-                res = res.replace(' ",', '",')
-                res = res.replace(' "}', '"}')
-                res = res.replace(' "', '')
-                res = res.replace(':""', ':" "')
-                res = res.replace('""', '"')
-                # res = res.replace("'", '')
+                # # res = res.replace(':""""', ':"" ""')
+                # res = res.replace('""', '"')
+                # res = res.replace('\n', '')
+                # res = res.replace('\r\n', '')
+                # res = res.replace('\r', '')
+                # # res = res.replace('" ', '')
+                # res = res.replace(' ",', '",')
+                # res = res.replace(' "}', '"}')
+                # res = res.replace(' "', '')
+                # res = res.replace(':""', ':" "')
+                # res = res.replace('""', '"')
+                # # res = res.replace("'", '')
             except:
                 print("replace err in ", row["id"])
                 errIdList.append(row["id"])
                 continue
-            try:
-                # print(row["id"])
-                decode = decodeDetail()
-                # meta = decode.decode(demjson.decode(res))
-                meta = decode.decode(json.loads(res,strict=False))
+            # try:
+            # print(row["id"])
+            decode = decodeDetail()
+            # meta = decode.decode(demjson.decode(res))
+            meta = decode.decode(json.loads(res,strict=False))
 
-                for key ,value in meta.items():
-                    if isinstance(value,str):
-                        meta[str(key)] = value.replace("'","''")
+            for key ,value in meta.items():
+                # print(key,value)
+                if isinstance(value,str):
+                    meta[str(key)] = value.replace("'","''")
 
-            except Exception as e: 
-                print("json load err in ", row["id"],e,row['house_id'])
-                # print(res)
-                # if row['id'] == 890 :
-                #     time.sleep(5)
-                numOfErr += 1
-                continue
+            # except Exception as e: 
+            #     print("json load err in ", row["id"],e,row['house_id'])
+            #     # print(res)
+            #     # if row['id'] == 890 :
+            #     #     time.sleep(5)
+            #     numOfErr += 1
+            #     continue
             
             
 
+            pprint(meta)
+
+            # database
+            # dt = meta
+            # tb = 'detail_us'
+            # # dt['repeat_flag'] = l.replace("'","")
+            # ls = [(k, v) for k, v in dt.items() if v is not None]
+            # sentence = 'INSERT IGNORE %s (`' % tb + '`,`'.join([i[0] for i in ls]) +\
+            #         '`) VALUES (' + ','.join(repr(i[1]) for i in ls) + ');'
 
 
-            # pprint(eval(l))
-            dt = meta
-            tb = 'detail'
-            # dt['repeat_flag'] = l.replace("'","")
-            ls = [(k, v) for k, v in dt.items() if v is not None]
-            sentence = 'INSERT IGNORE %s (`' % tb + '`,`'.join([i[0] for i in ls]) +\
-                    '`) VALUES (' + ','.join(repr(i[1]) for i in ls) + ');'
-
-            # print(sentence)
-            print(meta['listingId'])
-            try:
-                cursor.execute(sentence)
-                db.commit()
-            except:
-                continue
+            # print(meta['listingId'])
+            # try:
+            #     cursor.execute(sentence)
+            #     db.commit()
+            # except:
+            #     continue
 
         print(numOfErr,"\terrs")
         return landmark,amenity
@@ -234,7 +307,7 @@ class detailParse:
 
 
 def getMaxNumOfDetailResponse(db,cursor):
-    sql = "SELECT MAX(id) FROM `detailresponse` order by id desc limit 1"
+    sql = "SELECT MAX(id) FROM `detailresponse_us` order by id desc limit 1"
     cursor.execute(sql)
     db.commit()
     num = cursor.fetchall()[0]["MAX(id)"]
@@ -246,6 +319,7 @@ def startParse(bias,landmark,amenity):
         return parse.getItem(bias,landmark,amenity)
     except Exception as e:
         print(e)
+        traceback.print_exc()
 
 
 
