@@ -75,14 +75,17 @@ class proxyPool:
         return self.proxies
 
     def checkBalance(self):
-        url = "http://dps.kdlapi.com/api/getipbalance?orderid=941053123270010&signature=1nr5t7q6n55c6ycb9jh4rxpx1t5r3vvu"
+        orderid = "931589300651176"
+        url = "http://dps.kdlapi.com/api/getipbalance?orderid={}&signature=0s8l8934i0kp26l8ox8h4aalero7cxxj".format(orderid)
         proxies = {"http": None, "https": None}
         html = requests.get(url, timeout=5, proxies=proxies)
         res = json.loads(html.content)
+        print(res)
         return res['data']['balance']
 
     def get(self, num=20):
-        url = "http://dps.kdlapi.com/api/getdps/?orderid=941053123270010&num={}&pt=1&format=json&sep=1&dedup=1".format(str(num))
+        orderid = "931589300651176"
+        url = "http://dps.kdlapi.com/api/getdps/?orderid={}&num={}&pt=1&format=json&sep=1&dedup=1".format(orderid,str(num))
         print(url)
         proxies = {"http": None, "https": None}
         html = requests.get(url, timeout=5, proxies=proxies)
