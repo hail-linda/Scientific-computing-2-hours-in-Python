@@ -26,14 +26,14 @@ def dbCalendarInsert(house_id,response):
     db = dbSettings.db_connect()
     cursor = db.cursor()
     sql = "INSERT INTO "+ calendarResponseTable+" (id, house_id, response) VALUES " \
-                  "(NULL,'{}','{}')".format(house_id, response)
-    cursor.execute(sql)
+                  "(NULL,%s,%s)"
+    cursor.execute(sql,(house_id, response))
     db.commit()
     db.close()
 
 def dbDetailInsert(house_id,response):
     # response = response.replace("'", "''").replace('"', '""')
-    detailResponseTable = "`detailresponse`"
+    detailResponseTable = "`detailresponse_us`"
     db = dbSettings.db_connect()
     cursor = db.cursor()
     sql = "INSERT INTO "+ detailResponseTable+" (id, house_id, response) VALUES " \
@@ -51,7 +51,7 @@ class AirbnbspiderPipeline:
         self.table = "`proxypool_us`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
-        self.mapTable = "`map`"
+        self.mapTable = "`map_us`"
         self.listTable = "`houselist_us`"
         self.mapresponseTable = "`mapresponse_us`"
         self.calendarResponseTable = "`calendarresponse_us`"
