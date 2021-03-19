@@ -4,3 +4,4 @@ houselist_us.*
 airbnbSpider_scrapy/airbnbSpider/airbnbSpider/historyCode/*.json
 
 airbnbSpider_scrapy/airbnbSpider/airbnbSpider/historyCode/api.json
+airbnbSpider_scrapy/airbnbSpider/airbnbSpider/nohup.out
