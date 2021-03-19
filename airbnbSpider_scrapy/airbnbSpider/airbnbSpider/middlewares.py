@@ -32,13 +32,15 @@ class proxyPool:
         self.db.commit()
 
     def IP(self):
-        sql = "SELECT * from "+self.table+"WHERE `state` != 'del'"
+        # print("\tip start\t: ",time.time())
+        sql = "SELECT id,ip,cookies from "+self.table+"WHERE `state` != 'del' limit 30"
+        # print("\tip sql   \t: ",time.time())
         self.cursor.execute(sql)
+        # print("\tip cursor\t: ",time.time())
         self.db.commit()
+        # print("\tip commit\t: ",time.time())
         results = self.cursor.fetchall()
-        for row in results:
-            #print(row)
-            pass
+        # print("\tip result\t: ",time.time())
         if(len(results) < 5):
             pass
             # self.get()
@@ -47,9 +49,11 @@ class proxyPool:
         rand = random.randint(0, len(results)-1)
         print(results[rand]['id'],results[rand]['ip'])
         self.ip = results[rand]['ip']
+
         self.cookies = results[rand]['cookies']
         # print("self.ip",self.ip)
         self.proxyId = results[rand]['id']
+        # print("\tip end\t: ",time.time())
 
         # sql = "UPDATE "+self.table + \
         #     " SET `numused` = `numused` + 1 WHERE `id` = " + \
@@ -126,12 +130,16 @@ class proxyMiddleware:
 
     def process_request(self,request,spider):
         self.proxypool = proxyPool()
+        # print("\tstart make proxy: ",time.time())
         proxies = self.proxypool.proxies()
+        # print("\tproxies: ",time.time())
         # print("proxy: ",proxies)
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
         # request.headers['USER_AGENT']=random.choice(self.user_agent_list)
+        # print("\tcookies: ",time.time())
         request.headers['Cookies'] = self.proxypool.getCookies() 
+        # print("\tend make proxy: ",time.time())
         # print("using ip:"+str(proxies))
         # del proxypool
 

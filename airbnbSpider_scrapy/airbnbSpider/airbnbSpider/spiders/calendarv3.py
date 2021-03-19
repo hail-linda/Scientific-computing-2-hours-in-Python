@@ -13,6 +13,7 @@ import time
 import json
 import random
 import logging
+from scrapy.utils.project import get_project_settings
 
 class proxyPool:
     def __init__(self):
@@ -57,26 +58,32 @@ class calenderSpider(RedisSpider):
         pass
 
     def make_request_from_data(self, data):
+        # print("start make request: ",time.time())
         localtime = time.localtime(time.time())
         self.mouth = localtime[1]
         self.year = localtime[0]
         self.day = localtime[2]
         house_id = bytes_to_str(data, self.redis_encoding)
-        meta = {'house_id': house_id,'url':self.urlJoint(house_id),"handle_httpstatus_all": True}
+        url = self.urlJoint(house_id)
+        meta = {'house_id': house_id,'url':url,"handle_httpstatus_all": True}
         headers = {
             ('User-Agent', 'Mozilla/5.0'),
             ('X-Airbnb-GraphQL-Platform-Client','apollo-niobe'),
             ('X-CSRF-Token','V4$.airbnb.cn$JSx5MC3fSeY$XWneywabc-zi7HMETr7MBbheCqtpNUyYFce2xMZw8X0='),
             ('X-Airbnb-API-Key','d306zoyjsyarp7ifhu67rjxn52tv0t20')
         }
-        return Request(  url = self.urlJoint(house_id),callback = self.calendarParse,
+        # print("end make request: ",time.time())
+
+        # settings = get_project_settings()
+        # print ("Your CONCURRENT_REQUESTS is:\n%s" % (settings.get('CONCURRENT_REQUESTS')))
+        return  Request(      url = url,callback = self.calendarParse,
                             errback=self.calendarErrback,meta = meta, dont_filter=True,
                              headers=headers)
 
     def urlJoint(self, house_id):
         url = 'https://www.airbnb.cn/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=zh&currency=CNY&_cb=1itv6xpj49jx8&extensions={"persistedQuery":{"version":1,"sha256Hash":"b94ab2c7e743e30b3d0bc92981a55fff22a05b20bcc9bcc25ca075cc95b42aac"}}'
         url += '&variables={"request":{"count":3,"listingId":"'+str(house_id)+'","month":'+str(self.mouth)+',"year":'+str(self.year)+'}}'
-        print(url)
+        print("start:  ",house_id)
         return url
 
     def calendarParse(self,response):
