@@ -47,5 +47,5 @@ if __name__ == "__main__":
                 price = getPrice(row['house_id'],row['order_date'])
                 if price == None:
                     continue
-                f.write("{},{},{}\n".format(row['house_id'],row['order_date'],price))
+                f.write("{},{},{},{}\n".format(row['house_id'],row['fetch_date'],row['order_date'],price))
                 # print(row['house_id'],row['fetch_date'],row['order_date'],price)
