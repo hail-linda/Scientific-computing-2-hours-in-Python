@@ -139,6 +139,7 @@ class calendarParse():
         self.sql = "INSERT IGNORE INTO `order` (`house_id`, `fetch_date`, `order_date`, repeat_flag)\
                     VALUES (%s,%s,%s,%s);"
         for order in self.orderList:
+            # self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day-random.randint(0,1))###################################
             repeat_flag = "{}:{}".format(self.house_id, order)
             # print(self.house_id,self.dtToday,order,hash)
             self.vals.append((self.house_id, self.dtToday, order, repeat_flag))
@@ -151,6 +152,7 @@ class calendarParse():
         VALUES (%s,%s,%s,%s,%s);"
 
         for price in self.priceList:
+            # self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day-random.randint(0,1))###############################
             orderDate = price[0]
             price = price[1]
             repeat_flag = "{}:{}:{}".format(self.house_id, orderDate, price)
