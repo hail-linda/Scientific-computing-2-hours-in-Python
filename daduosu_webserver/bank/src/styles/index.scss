@@ -1,0 +1,29 @@
+html{
+  height: 100%;
+}
+
+body{
+  margin-top:0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  overflow-y:hidden;
+  .el-menu-item{
+    text-align: left;
+  }
+  .el-submenu{
+    text-align: left;
+  }
+  .el-divider--horizontal{
+    margin: 6px 0;
+  }
+  .el-input{
+    width: 180px;
+    display: flex;
+  }
+  .el-range-editor {
+    .el-range-separator{
+      width: 10%;
+    }
+  }
+}

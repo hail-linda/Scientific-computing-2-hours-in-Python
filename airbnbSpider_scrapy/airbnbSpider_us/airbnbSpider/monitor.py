@@ -4,11 +4,18 @@ import pymysql
 import dbSettings
 from SMTP import SMTP
 
+# deff of cn & com :
+# 1.name of table.
+# 2.length of parse watting time.
+# 3.SMTP infor.
+
 class Monitor():
     def __init__(self):
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
         self.listTable = "`houselist_us`"
+        self.responseTable = "calendarresponse_us"
+        self.responseLogTable = "calendarparselog_us"
         self.redis = redis.Redis.from_url(REDIS_URL)
         print(time.asctime( time.localtime(time.time()) ))
 
@@ -16,7 +23,7 @@ class Monitor():
         return self.redis.llen("calendar_us:start_urls")
     
     def checkMYSQLcalendarResponse(self):
-        sql = "SELECT MAX(id) FROM calendarresponse_us"
+        sql = "SELECT MAX(id) FROM " + self.responseTable
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
@@ -26,14 +33,14 @@ class Monitor():
         return len
     
     def parseState(self):
-        sql = "SELECT * FROM `calendarparselog_us` WHERE `type` = 'start parse' ORDER BY id desc limit 1 "
+        sql = "SELECT * FROM `"+ self.responseLogTable +"` WHERE `type` = 'start parse' ORDER BY id desc limit 1 "
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
         startParseId = results[0]["id"] 
         diffStartParseTime = (datetime.datetime.now() - results[0]["msg_time"]).seconds
 
-        sql = "SELECT * FROM `calendarparselog_us` WHERE `type` = 'end parse' ORDER BY id desc limit 1 "
+        sql = "SELECT * FROM `"+ self.responseLogTable +"` WHERE `type` = 'end parse' ORDER BY id desc limit 1 "
         self.cursor.execute(sql)
         self.db.commit()
         results = self.cursor.fetchall()
@@ -43,7 +50,7 @@ class Monitor():
 
         if endParseId > startParseId :
             return "waitting"
-        elif diffStartParseTime/3600 < 4:
+        elif diffStartParseTime/3600 < 6:
             return "parseing"
         else :
             return "err in  parseing"
@@ -80,14 +87,17 @@ class Monitor():
         if isRedisworking and isResponseworking:
             state.append("crawling")
         if (not isRedisRunOut) and (not isRedisworking):
-            SMTP("1282255404@qq.com","发信内容","未正常爬取","DaduosuMonitor")
+            SMTP("1282255404@qq.com","发信内容","com未正常爬取","DaduosuMonitor")
             state.append("err:notCrawling")
             return False
         if isRedisRunOut and (not isResponseRunOut) and (not isParseing):
             state.append("need Parse")
+            SMTP("1282255404@qq.com","发信内容","开始解析com：{}".format(responseLen2),"DaduosuMonitor")
             return True
 
         print("Monitor:",state,isParseing)
+        print("  isRedisRunOut:",isRedisRunOut,
+            "  isResponseRunOut:",isResponseRunOut,"  isRedisworking:",isRedisworking,"  isResponseRunOut:",isResponseRunOut,"  isParseing:",isParseing)
         return False
         
 

@@ -52,12 +52,14 @@ class calenderSpider(RedisSpider):
     name = "detail"
     allowed_domains = ['www.airbnb.com']
     redis_key = 'detail_us:start_urls'
+    print(redis_key)
 
     def __del__(self):
         pass
 
     def make_request_from_data(self, data):
         house_id = bytes_to_str(data, self.redis_encoding)
+        print(house_id)
         meta = {'house_id': house_id,"handle_httpstatus_all": True}
         headers = {
             ('User-Agent', 'Mozilla/5.0'),

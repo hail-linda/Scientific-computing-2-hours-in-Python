@@ -12,6 +12,7 @@ import scrapy
 import redis
 from dbSettings import REDIS_URL
 from monitor import Monitor
+from SMTP import SMTP
 
 
 
@@ -28,7 +29,7 @@ class calendarParse():
         localtime = time.localtime(time.time())
         self.mouth = localtime[1]
         self.year = localtime[0]
-        self.day = localtime[2] 
+        self.day = localtime[2]
         self.dtToday = "{}-{}-{}".format(self.year, self.mouth, self.day)
 
         self.orderList = []
@@ -85,9 +86,13 @@ class calendarParse():
             #     if not 'first_bookable_day' in res['metadata']:
             #         return
             num = 0
-            if "errors" in res:
+            if "not have permission" in json.dumps(res):
+                continue
+
+            if ("errors" in res) and not ("not have permission" in json.dumps(res)):
                 errIdList.append(row["id"])
                 continue
+
 
             pdpAvailabilityCalendar = res['data']['merlin']['pdpAvailabilityCalendar']
             for month in pdpAvailabilityCalendar["calendarMonths"]:
@@ -96,7 +101,7 @@ class calendarParse():
                     date = day["calendarDate"]
                     price = day["price"]["localPriceFormatted"]
 
-                    if self.dateCompare(self.dtToday, date) < 0:
+                    if self.dateCompare(self.dtToday, date) <= 0:
                         try:
                             self.priceList.append([date, price.replace(",","").replace("$","")])
                             # self.priceList.append([date, price])
@@ -192,10 +197,10 @@ def getMaxNumOfCalendarResponse(db,cursor):
 
 
 if __name__ == "__main__":
-    # monitor = Monitor()
-    # if not monitor.innerTask() :
-    #     print("calendarParsev3:do not start Parse")
-    #     quit()
+    monitor = Monitor()
+    if not monitor.innerTask() :
+       print("calendarParsev3:do not start Parse")
+       quit()
 
 
     # 数据库链接
@@ -229,6 +234,8 @@ if __name__ == "__main__":
         dbInsertparselog("err log",responseId,json.dumps(errResponseIdList))
 
     if len(errResponseIdList) < 100000:
+        if getMaxNumOfCalendarResponse(db,cursor) - endResponseId > 10000 :
+            SMTP("1282255404@qq.com","发信内容","calendar Parse com : response过长，不清表","DaduosuMonitor")
         sql = "TRUNCATE TABLE `calendarresponse_us`;"
         cursor.execute(sql)
         db.commit()

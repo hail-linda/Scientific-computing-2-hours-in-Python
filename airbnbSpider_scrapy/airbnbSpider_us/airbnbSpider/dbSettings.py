@@ -1,4 +1,5 @@
 import pymysql
+import logging
 
 ENV_DEVELOP = "DEVELOP"
 ENV_PRODUCT = "PRODUCT"

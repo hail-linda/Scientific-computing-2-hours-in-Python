@@ -1,0 +1,23 @@
+{
+    "place_id": 334916,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+    "osm_type": "node",
+    "osm_id": 150945473,
+    "lat": "48.9866884",
+    "lon": "-123.0667069",
+    "display_name": "Point Roberts, Whatcom County, Washington, 98281, United States",
+    "address": {
+        "town": "Point Roberts",
+        "county": "Whatcom County",
+        "state": "Washington",
+        "postcode": "98281",
+        "country": "United States",
+        "country_code": "us"
+    },
+    "boundingbox": [
+        "48.9466884",
+        "49.0266884",
+        "-123.1067069",
+        "-123.0267069"
+    ]
+}

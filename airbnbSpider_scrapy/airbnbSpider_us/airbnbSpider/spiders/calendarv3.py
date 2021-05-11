@@ -43,10 +43,7 @@ class calenderSpider(RedisSpider):
     html = ""
     starttime=time.time()
 
-    localtime = time.localtime(time.time())
-    mouth = localtime[1]
-    year = localtime[0]
-    day = localtime[2]
+
 
     name = "calendarv3"
     allowed_domains = ['www.airbnb.cn']
@@ -74,6 +71,10 @@ class calenderSpider(RedisSpider):
                              headers=headers)
 
     def urlJoint(self, house_id):
+        localtime = time.localtime(time.time())
+        self.mouth = localtime[1]
+        self.year = localtime[0]
+        self.day = localtime[2]
         # https://www.airbnb.com/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=en&currency=USDextensions={"persistedQuery":{"version":1,"sha256Hash":"dc360510dba53b5e2a32c7172d10cf31347d3c92263f40b38df331f0b363ec41"}}&_cb=1sm426g16se018
         url = 'https://www.airbnb.com/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=en&currency=USD&extensions={"persistedQuery":{"version":1,"sha256Hash":"dc360510dba53b5e2a32c7172d10cf31347d3c92263f40b38df331f0b363ec41"}}&_cb=1sm426g16se018'
         url += '&variables={"request":{"count":3,"listingId":"'+str(house_id)+'","month":'+str(self.mouth)+',"year":'+str(self.year)+'}}'

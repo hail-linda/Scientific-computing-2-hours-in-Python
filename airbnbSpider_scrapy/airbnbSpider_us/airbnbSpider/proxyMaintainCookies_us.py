@@ -92,26 +92,44 @@ class proxyPool:
             proxys = res['proxy_list']
         else:
             print("get proxy err in proxy_list")
-
+        rootCookies = self.getCookies("https://www.airbnb.com",proxys[0])
+        getCookiesSuccessCount = num
         for proxy in proxys:
-            pgPixelCookies = ""
-            rootCookies = self.getCookies("https://www.airbnb.com",proxy)
-            pgPixelCookies = self.getCookies("	https://www.airbnb.com/pg_pixel?r=&diff=161456879487007765102906913701",proxy,rootCookies)
-            self.dbInsert(proxy,pgPixelCookies)
+            try:
+                pgPixelCookies = ""
+                pgPixelCookies = self.getCookies("https://www.airbnb.com/pg_pixel?r=&diff=161728783672247040160844199774",proxy,rootCookies)
+                print(proxy)
+                self.dbInsert(proxy,pgPixelCookies)
+                getCookiesSuccessCount -= 1
+            except Exception as e:
+                print(proxy," get cookies err: " ,e)
+        if getCookiesSuccessCount > 5:
+            quit()# try after 3 or 5 minutes
 
     def updateCookies(self,row):
         proxy = row['ip']
         rootCookies = self.getCookies("https://www.airbnb.com",proxy)
-        pgPixelCookies = self.getCookies("	https://www.airbnb.com/pg_pixel?r=&diff=161456879487007765102906913701",proxy,rootCookies)
+        pgPixelCookies = self.getCookies("https://www.airbnb.com/pg_pixel?r=&diff=161728783672247040160844199774",proxy,rootCookies)
+        
         self.dbUpdateCookies(row,pgPixelCookies)
 
     def getCookies(self,url,proxy,srcCookies=""):
-        proxies = {"http": " http://{}".format(proxy), "https": "https://{}".format(proxy),}
+        username = "1282255404"
+        password = "123456"
+        proxies = {
+            "http": "http://%(user)s:%(pwd)s@%(proxy)s/" % {"user": username, "pwd": password, "proxy": proxy},
+            "https": "http://%(user)s:%(pwd)s@%(proxy)s/" % {"user": username, "pwd": password, "proxy": proxy}
+        }
+        # request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
         headers = {"cookies" : srcCookies}
-
-        res = requests.get(url,headers = headers)
+        s = requests.Session()
+        s.mount('http://', HTTPAdapter(max_retries=8))
+        s.mount('https://', HTTPAdapter(max_retries=8))
+        
+        res = s.get(url,headers = headers, timeout=7,proxies = proxies)
         # print(res.cookies)
         rootCookies = srcCookies
+        print(rootCookies)
         for key, value in res.cookies.items():
             # print(key + "=" + value)
             # print()

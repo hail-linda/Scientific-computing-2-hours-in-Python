@@ -21,6 +21,7 @@ class decodeDetail:
     def decode(self,jsonData):
         meta = self.meta
         if "errors" in jsonData:
+            # print("errors")
             return meta
         pdpSections = jsonData['data']['merlin']['pdpSections']['sections']
         # print(len(pdpSections))
@@ -32,7 +33,7 @@ class decodeDetail:
                     # "detailItems"
                     if "detailItems" in pdpSection["section"]:
                         meta["titleDetails"] = [item["title"] for item in pdpSection["section"]["detailItems"]]
-                    
+                       
                     # kicker is not found
                     # previewTags is not found
             if "HOST_PROFILE_DEFAULT" in pdpSectionId:
@@ -40,7 +41,8 @@ class decodeDetail:
                     try:
                         meta["hostAbout"] = pdpSection["section"]["hostProfileDescription"]["htmlText"]
                     except Exception as e:
-                        print(e)
+                        pass
+                        # print(e,"hostAbout")
                     if "hostAvatar" in pdpSection["section"]:
                         hostAvatar = pdpSection["section"]["hostAvatar"]
                         meta["hostId"] = self.ifin(hostAvatar,"userId")
@@ -53,7 +55,7 @@ class decodeDetail:
                     if "previewAmenitiesGroups" in pdpSection["section"]:
                         if "amenities" in pdpSection["section"]["previewAmenitiesGroups"][0]:
                             meta["amenity"] = self.dig2layers(pdpSection["section"]["previewAmenitiesGroups"][0],"amenities","title")
-                    # print(meta["titleDetails"])
+
             
             if "REVIEWS_DEFAULT" in pdpSectionId:
                 if "section" in pdpSection:
@@ -63,6 +65,30 @@ class decodeDetail:
                     meta["reviewCount"] = int(self.ifin(pdpSection["section"],"overallCount"))
                     meta["reviewScore"] = self.ifin(pdpSection["section"],"overallRating")
 
+            if "DESCRIPTION_DEFAULT" in pdpSectionId:
+                if "section" in pdpSection:
+                    if "htmlDescription" in pdpSection["section"]:
+                        meta["description"] = self.ifin(pdpSection["section"]["htmlDescription"],"htmlText")
+
+            if "LOCATION_DEFAULT" in pdpSectionId:
+                if "section" in pdpSection:
+                    if "subtitle" in pdpSection["section"] and "formatted_address" not in meta:
+                        if not pdpSection["section"]["subtitle"] == None:
+                            meta["formatted_address"] = self.ifin(pdpSection["section"],"subtitle")
+
+                    if "previewLocationDetails" in pdpSection["section"] and len(pdpSection["section"]["previewLocationDetails"])>0  and "formatted_address" not in meta:
+                        previewLocationDetails = pdpSection["section"]["previewLocationDetails"]
+                        meta["formatted_address"] = self.ifin(previewLocationDetails[0],"title")
+
+                    if "address" in pdpSection["section"] and "formatted_address" not in meta:
+                        if not pdpSection["section"]["address"] == None:
+                            meta["formatted_address"] = self.ifin(pdpSection["section"],"address")
+                            # print("\t\t\t\t\t\t address")
+
+                    
+                    # print(meta["formatted_address"])
+                    
+
         pdpMetadata = jsonData['data']['merlin']['pdpSections']['metadata']
         if "loggingContext" in pdpMetadata:
             if "eventDataLogging" in pdpMetadata["loggingContext"]:
@@ -70,7 +96,7 @@ class decodeDetail:
                 meta["listingId"] = self.ifin(eventDataLogging,"listingId")# 'listingId': '45633636',
                 meta["Lat"] = self.ifin(eventDataLogging,"listingLat")# 'Lat': 30.68359,
                 meta["Lng"] = self.ifin(eventDataLogging,"listingLng")# 'Lng': 104.0718,
-        
+
         if "seoFeatures" in pdpMetadata:
             if "ogTags" in pdpMetadata["seoFeatures"]:
                 ogTags = pdpMetadata["seoFeatures"]["ogTags"]
@@ -78,15 +104,31 @@ class decodeDetail:
 
         pdpMetaData = jsonData["data"]["merlin"]["pdpSections"]["metadata"]
         # title : Charming homestead with views, hot tub/fire pit
-        if "shareConfig" in pdpMetaData:
-            meta["title"] = self.ifin(pdpMetaData["shareConfig"],"title")
+        if "sharingConfig" in pdpMetaData:
+            # print(pdpMetaData["sharingConfig"])
+            meta["title"] = self.ifin(pdpMetaData["sharingConfig"],"title")
 
-        pprint(meta)
+        if "reviewSummary" in meta :
+            for k, v in meta['reviewSummary'].items():
+                # print(k,v)
+                meta["reviewSummary_"+str(k)]=float(v)
+            del meta['reviewSummary']
+
+        if "titleDetails" in meta :
+            for item in meta["titleDetails"]:
+                if "guests" in item : meta["titleDetails_GUESTS"] = item
+                if "bedroom" in item : meta["titleDetails_ROOM"] = item
+                if "beds" in item : meta["titleDetails_BED"] = item
+                if "bath" in item : meta["titleDetails_BATH"] = item
+            del meta["titleDetails"]
+
+        for item in ['amenity','hostIntroTags']:
+            if item in meta:
+                meta[item] = str(meta[item])
+
+        # pprint(meta)
         return meta
 
-#   ************************************************************
-#   ************************************************************
-#   ************************************************************
 
     def decode_cn(self,jsonData):
         meta = self.meta
@@ -214,9 +256,12 @@ class decodeDetail:
         return fruit
 
     def ifin(self,root,leaf):
-        if leaf in root :
-            return root[str(leaf)]
-        return None
+        try:
+            if leaf in root :
+                return root[str(leaf)]
+            return None
+        except Exception as e:
+            print(e,"ifin",root)
     
     def map2layer(self,root,leaf,key,value):
         if leaf in root:
@@ -243,58 +288,78 @@ class detailParse:
         numOfErr = 0
         for row in results:
             try:
-                print(row["id"])
+                # print(row["id"])
                 res = row["response"]
-                # # res = res.replace(':""""', ':"" ""')
-                # res = res.replace('""', '"')
-                # res = res.replace('\n', '')
-                # res = res.replace('\r\n', '')
-                # res = res.replace('\r', '')
-                # # res = res.replace('" ', '')
-                # res = res.replace(' ",', '",')
-                # res = res.replace(' "}', '"}')
-                # res = res.replace(' "', '')
-                # res = res.replace(':""', ':" "')
-                # res = res.replace('""', '"')
-                # # res = res.replace("'", '')
             except:
                 print("replace err in ", row["id"])
                 errIdList.append(row["id"])
                 continue
             # try:
             # print(row["id"])
+            meta = {}
             decode = decodeDetail()
             # meta = decode.decode(demjson.decode(res))
-            meta = decode.decode(json.loads(res,strict=False))
+            if "429 Too Many Requests" in res :
+                print(row["id"],"err : 429 Too Many Request")
+                numOfErr += 1
+            elif "<html>" in res or "<HTML>" in res:
+                print(row["id"],"err : <html>",res)
+                numOfErr += 1
+
+            else:
+                meta = decode.decode(json.loads(res,strict=False))
 
             for key ,value in meta.items():
                 # print(key,value)
                 if isinstance(value,str):
                     meta[str(key)] = value.replace("'","''")
 
-            # except Exception as e: 
-            #     print("json load err in ", row["id"],e,row['house_id'])
-            #     # print(res)
-            #     # if row['id'] == 890 :
-            #     #     time.sleep(5)
-            #     numOfErr += 1
-            #     continue
-            
+            # pprint(meta["formatted_address"])
+            # database location
+            # if "listingId" in meta:
+                
+                
+            #     # print(len(meta["formatted_address"].split(",")))
+            #     if len(meta["formatted_address"])> 3:
+            #         print(len(meta["formatted_address"]),"  ")
+            #         for item in meta["formatted_address"][::-1]:
+            #             print(item.strip(),end="-")
+            #         print(row["id"])
+            #     del meta["formatted_address"]
             
 
-            pprint(meta)
 
-            # database
+            if "listingId" in meta:
+                sentence = "INSERT IGNORE INTO `listing_location_us`(`listingid`, `lng`, `lat`, `formatted_address`, `country`, `state`,`city`)\
+            VALUE (%s,%s,%s,%s,%s,%s,%s)"
+                formatted_address = meta["formatted_address"]
+                meta["formatted_address"] = meta["formatted_address"].split(",")
+                if len(meta["formatted_address"]) == 3 :
+                    print(meta['listingId'],end = " ")
+                    vals = (meta["listingId"],meta["Lat"],meta["Lng"], formatted_address,meta["formatted_address"][2],meta["formatted_address"][1],meta["formatted_address"][0])
+                    cursor.execute(sentence,vals)
+                    db.commit()
+                else :
+                    sentence = "INSERT IGNORE INTO `listing_location_us`(`listingid`, `lng`, `lat`, `formatted_address`)\
+            VALUE (%s,%s,%s,%s)"
+                    vals = (meta["listingId"],meta["Lat"],meta["Lng"], formatted_address)
+                    cursor.execute(sentence,vals)
+                    db.commit()
+                del meta["formatted_address"]
+
+
+            # database detail_us
             # dt = meta
             # tb = 'detail_us'
             # # dt['repeat_flag'] = l.replace("'","")
             # ls = [(k, v) for k, v in dt.items() if v is not None]
-            # sentence = 'INSERT IGNORE %s (`' % tb + '`,`'.join([i[0] for i in ls]) +\
+            # sentence = 'INSERT  %s (`' % tb + '`,`'.join([i[0] for i in ls]) +\
             #         '`) VALUES (' + ','.join(repr(i[1]) for i in ls) + ');'
 
-
-            # print(meta['listingId'])
+            # if "listingId" in meta:
+            #     print(meta['listingId'],end = " ")
             # try:
+            #     # print(sentence)
             #     cursor.execute(sentence)
             #     db.commit()
             # except:

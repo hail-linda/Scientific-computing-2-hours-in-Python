@@ -123,6 +123,7 @@ class proxyMiddleware:
         ]
 
     def process_request(self,request,spider):
+        print(request)
         proxypool = proxyPool()
         proxies = proxypool.proxies()
         # print("proxy: ",proxies)

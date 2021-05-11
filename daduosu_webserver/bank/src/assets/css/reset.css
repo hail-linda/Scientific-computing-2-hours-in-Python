@@ -1,0 +1,178 @@
+@charset "utf-8";
+
+/*css Document*/
+/*初始化css*/
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 
+	不经常用到的标签  pre,code,fieldset 元素可将表单内的相关元素分组,egend 元素为 fieldset 元素定义标题,blockquote
+*/
+header,
+footer,
+section,
+article,
+aside,
+nav,
+hgroup,
+address,
+figure,
+figcaption,
+menu,
+details {
+  display: block;
+}
+
+/*html5新加结构标签*/
+body {
+  background: #fff;
+  font-size: 14px;
+  color: #666;
+}
+
+body,
+input,
+select,
+textarea {
+  font-family: "Microsoft Yahei", "PingFang SC", "Helvetica Neue", arial, serif;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+th,
+var,
+i {
+  font-style: normal;
+  font-weight: normal;
+}
+
+input {
+  border: 0;
+}
+
+button {
+  cursor: pointer;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+img {
+  border: 0;
+  vertical-align: top;
+}
+
+a {
+  text-decoration: none
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+/* 浮动 */
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix:after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0;
+  line-height: 0;
+  visibility: hidden;
+}
+
+/*.clearfix:after{content:'';clear:both;display: table;}*/
+.text_overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 单行 文字截取  */
+.rows_overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 多行 文字截取  */
+/*垂直居中*/
+.table {
+  display: table;
+}
+
+.tableCell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* 页面 */
+/* .wrap{width: 1000px;margin: 0 auto;} */
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #367fa9;
+}
