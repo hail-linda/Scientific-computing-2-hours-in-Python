@@ -6,14 +6,18 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-from airbnbSpider.items import listItem,calendarItem,detailItem
+from airbnbSpider.items import listItem, calendarItem, detailItem
 import pymysql
 
 from airbnbSpider import dbSettings
 import time
-import json, math
+import json
+import math
 from threading import Semaphore, Thread
-import threading,re,logging
+import threading
+import re
+import logging
+
 
 def filter_str(desstr, restr=''):
     # 过滤除中英文及数字以外的其他字符
@@ -21,33 +25,36 @@ def filter_str(desstr, restr=''):
     return res.sub(restr, desstr)
 
 
-def dbCalendarInsert(house_id,response):
+def dbCalendarInsert(house_id, response):
     calendarResponseTable = "`calendarresponse`"
     db = dbSettings.db_connect()
     cursor = db.cursor()
-    sql = "INSERT INTO "+ calendarResponseTable+" (id, house_id, response) VALUES " \
-                  "(NULL,'{}','{}')".format(house_id, response)
-    cursor.execute(sql)
-    db.commit()
+    sql = "INSERT INTO " + calendarResponseTable+" (id, house_id, response) VALUES " \
+        "(NULL,'{}','{}')".format(house_id, response)
+    # cursor.execute(sql)
+    # db.commit()
+    try:
+        cursor.execute(sql)
+        db.commit()
+    except Exception as e:
+        pass
     db.close()
 
-def dbDetailInsert(house_id,response):
+
+def dbDetailInsert(house_id, response):
     response = response.replace('""', '" "')
     detailResponseTable = "`detailresponse`"
     db = dbSettings.db_connect()
     cursor = db.cursor()
-    sql = "INSERT INTO "+ detailResponseTable+" (id, house_id, response) VALUES " \
-                  "(NULL,%s,%s)"
-    cursor.execute(sql,(house_id,response))
+    sql = "INSERT INTO " + detailResponseTable+" (id, house_id, response) VALUES " \
+        "(NULL,%s,%s)"
+    cursor.execute(sql, (house_id, response))
     db.commit()
     db.close()
 
 
-
 class AirbnbspiderPipeline:
-
     def process_item(self, item, spider):
-
         self.table = "`proxypool`"
         self.db = dbSettings.db_connect()
         self.cursor = self.db.cursor()
@@ -56,11 +63,12 @@ class AirbnbspiderPipeline:
         self.mapresponseTable = "`mapresponse`"
         self.calendarResponseTable = "`calendarresponse`"
 
-        if  item.__class__ == listItem:
+        if item.__class__ == listItem:
             st = time.time()
             res = item['response'].replace("'", "''")
             res = res.replace('"', '""')
-            sql = "INSERT INTO " + self.mapresponseTable + " VALUES (NULL ,'{}')".format(res)
+            sql = "INSERT INTO " + self.mapresponseTable + \
+                " VALUES (NULL ,'{}')".format(res)
             self.cursor.execute(sql)
             self.db.commit()
             # print("item time:"+str(int(1000*(time.time()-st)))+"ms")
@@ -84,17 +92,22 @@ class AirbnbspiderPipeline:
                                     time.localtime(time.time())))
 
                         print(" count;{}   共{}个，其中重复{}，新增{},{}".format(
-                             count, str(len(listings)), self.exist, self.insert, self.inDB))
+                            count, str(len(listings)), self.exist, self.insert, self.inDB))
             else:
                 print("房源list解码异常")
                 self.dbUpdateStates("done")
 
         elif item.__class__ == calendarItem:
+            
+            # for k,v in item.items():
+            #     if not k == "response":
+            #         print("\tkey:\t",k,"\tvalue:\t",v)
             dbCalendarInsert(item['house_id'], item['response'])
             # th = threading.Thread(target=dbCalendarInsert, args=(item['house_id'], item['response']))
             # th.start()
-            print("house id: ",item['house_id'],"len of response: ",len(item['response']))
-  
+            print("house id: ", item['house_id'],
+                  "len of response: ", len(item['response']))
+
             # sql = "INSERT IGNORE INTO "+self.calendarResponseTable+" (id, house_id, response) VALUES " \
             #       "(NULL,'{}','{}')".format(item['house_id'], item['response'])
             # self.cursor.execute(sql)
@@ -124,7 +137,7 @@ class AirbnbspiderPipeline:
 
     def dbHouseInsert(self, price, description, house_id):
         sql = "INSERT INTO " + self.listTable + " VALUES (NULL ,'{}','{}','{}','{}')".format(
-            price, description, house_id,123)
+            price, description, house_id, 123)
         # print(sql)
         self.cursor.execute(sql)
         self.db.commit()
@@ -144,5 +157,3 @@ class AirbnbspiderPipeline:
             self.dbHouseInsert(price, description, house_id)
             self.insert += 1
             self.inDB += "&"
-    
-

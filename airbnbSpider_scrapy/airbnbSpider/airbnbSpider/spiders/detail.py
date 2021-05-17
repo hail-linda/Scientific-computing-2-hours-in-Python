@@ -75,7 +75,7 @@ class calenderSpider(RedisSpider):
         url += '{"id":"'
         url += str(base64.b64encode(bytes('StayListing:'+str(house_id),"utf-8")))[2:-1]
         url += '","pdpSectionsRequest":{"adults":"1","bypassTargetings":false,"causeId":null,"children":null,"disasterId":null,"discountedGuestFeeVersion":null,"displayExtensions":null,"federatedSearchId":null,"forceBoostPriorityMessageType":null,"infants":null,"interactionType":null,"invitationClaimed":false,"layouts":["SIDEBAR","SINGLE_COLUMN"],"pdpTypeOverride":null,"preview":false,"previousStateCheckIn":null,"previousStateCheckOut":null,"priceDropSource":null,"privateBooking":false,"promotionUuid":null,"searchId":null,"selectedCancellationPolicyId":null,"staysBookingMigrationEnabled":false,"translateUgc":false,"useNewSectionWrapperApi":false,"sectionIds":null,"checkIn":"2021-02-02","checkOut":"2021-02-03"}}'
-        url += '&extensions={"persistedQuery":{"version":1,"sha256Hash":"a4abad83208088c1b2a2df135e9e1f52ca42f170980338f1d12cee01e0584486"}}'
+        url += '&extensions={"persistedQuery":{"version":1,"sha256Hash":"dc360510dba53b5e2a32c7172d10cf31347d3c92263f40b38df331f0b363ec41"}}'
         # print(url)
         return url
 

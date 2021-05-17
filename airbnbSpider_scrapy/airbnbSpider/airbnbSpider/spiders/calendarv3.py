@@ -10,7 +10,7 @@ import base64
 import pymysql
 from airbnbSpider import dbSettings
 import time
-import json
+import json, re
 import random
 import logging
 from scrapy.utils.project import get_project_settings
@@ -67,9 +67,12 @@ class calenderSpider(RedisSpider):
         url = self.urlJoint(house_id)
         meta = {'house_id': house_id,'url':url,"handle_httpstatus_all": True}
         headers = {
-            ('User-Agent', 'Mozilla/5.0'),
-            ('X-Airbnb-GraphQL-Platform-Client','apollo-niobe'),
-            ('X-CSRF-Token','V4$.airbnb.cn$JSx5MC3fSeY$XWneywabc-zi7HMETr7MBbheCqtpNUyYFce2xMZw8X0='),
+            # ('Host', 'www.airbnb.cn'),
+            # ('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0'),
+            # ('X-Airbnb-Supports-Airlock-V2','true'),
+            # ('X-Airbnb-GraphQL-Platform-Client','apollo-niobe'),
+            # ('Accept-Languaget','zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2'),
+            # ('Accept','*/*'),
             ('X-Airbnb-API-Key','d306zoyjsyarp7ifhu67rjxn52tv0t20')
         }
         # print("end make request: ",time.time())
@@ -81,15 +84,35 @@ class calenderSpider(RedisSpider):
                              headers=headers)
 
     def urlJoint(self, house_id):
-        url = 'https://www.airbnb.cn/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=zh&currency=CNY&_cb=1itv6xpj49jx8&extensions={"persistedQuery":{"version":1,"sha256Hash":"b94ab2c7e743e30b3d0bc92981a55fff22a05b20bcc9bcc25ca075cc95b42aac"}}'
+        url = 'https://www.airbnb.cn/api/v3/PdpAvailabilityCalendar?operationName=PdpAvailabilityCalendar&locale=zh&currency=CNY&_cb=1k8iij1dsnj90&extensions={"persistedQuery":{"version":1,"sha256Hash":"dc360510dba53b5e2a32c7172d10cf31347d3c92263f40b38df331f0b363ec41"}}'
         url += '&variables={"request":{"count":3,"listingId":"'+str(house_id)+'","month":'+str(self.mouth)+',"year":'+str(self.year)+'}}'
         print("start:  ",house_id)
+        print(url)
         return url
 
     def calendarParse(self,response):
         item = calendarItem()
+        # print("response['meta']:\t",response.meta)
         item['house_id'] = response.meta['house_id']
         item['response'] = response.body.decode('utf8')
+        if len(item['response']) == 17221 and "arg2" in response.meta :
+            print("********************")
+        if len(item['response']) == 17221:
+            headers = {
+            ('X-Airbnb-API-Key','d306zoyjsyarp7ifhu67rjxn52tv0t20')
+            }
+            arg1 = re.search("arg1='([^']+)'", item['response']).group(1)
+            # print(arg1)
+            _0x23a392 = unsbox(arg1)
+            arg2 = 'acw_sc__v2=' + hexXor(_0x23a392) + ";"
+            meta = {'house_id': response.meta['house_id'],'url':response.meta['url'],"handle_httpstatus_all": True,"arg2":arg2,"last_proxy":response.meta['proxy']}
+            # print("errMeta:",meta,response.meta)
+            yield  Request(url =response.meta['url'],callback = self.calendarParse,
+                            errback=self.calendarErrback,meta = meta, dont_filter=True,
+                             headers=headers)
+        
+        # with open("/{}.html".format(response.meta['house_id']),"w") as f :
+        #     f.write(response.body.decode('utf8'))
         yield item
 
     def calendarErrback(self,failure):
@@ -108,3 +131,25 @@ class calenderSpider(RedisSpider):
         del proxypool
 
         yield failure.request
+
+
+def unsbox(arg1):
+    box = [0xf, 0x23, 0x1d, 0x18, 0x21, 0x10, 0x1, 0x26, 0xa, 0x9, 0x13, 0x1f, 0x28, 0x1b, 0x16, 0x17, 0x19, 0xd, 0x6, 0xb, 0x27, 0x12, 0x14, 0x8, 0xe, 0x15, 0x20, 0x1a, 0x2, 0x1e, 0x7, 0x4, 0x11, 0x5, 0x3, 0x1c, 0x22, 0x25, 0xc, 0x24]
+    res = list(range(0, len(arg1)))
+    for i in range(0, len(arg1)):
+        j = arg1[i]
+        for k in range(0, 40):
+            if box[k] == i+1:
+                res[k] = j
+    res = "".join(res)
+    return res
+
+def hexXor(arg2):
+    box = "3000176000856006061501533003690027800375"
+    res = ""
+    for i in range(0, 40, 2):
+        arg_H = int(arg2[i:i+2], 16)
+        box_H = int(box[i:i+2], 16)
+        res += hex(arg_H ^ box_H)[2:].zfill(2)
+    # print(res)
+    return res

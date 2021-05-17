@@ -32,18 +32,12 @@ class proxyPool:
         self.db.commit()
 
     def IP(self):
-        # print("\tip start\t: ",time.time())
         sql = "SELECT id,ip,cookies from "+self.table+"WHERE `state` != 'del' limit 30"
-        # print("\tip sql   \t: ",time.time())
         self.cursor.execute(sql)
-        # print("\tip cursor\t: ",time.time())
         self.db.commit()
-        # print("\tip commit\t: ",time.time())
         results = self.cursor.fetchall()
-        # print("\tip result\t: ",time.time())
         if(len(results) < 5):
             pass
-            # self.get()
             time.sleep(2)
             return self.IP()
         rand = random.randint(0, len(results)-1)
@@ -51,8 +45,10 @@ class proxyPool:
         self.ip = results[rand]['ip']
 
         self.cookies = results[rand]['cookies']
+        print("results[rand]['cookies']:\t",results[rand]['cookies'])
         # print("self.ip",self.ip)
         self.proxyId = results[rand]['id']
+        print(" results[rand]['id']:\t", results[rand]['id'])
         # print("\tip end\t: ",time.time())
 
         # sql = "UPDATE "+self.table + \
@@ -136,9 +132,22 @@ class proxyMiddleware:
         # print("proxy: ",proxies)
         request.meta['proxy'] = proxies
         request.headers['Proxy-Authorization'] = "Basic MTI4MjI1NTQwNDoxMjM0NTY="
+        # print("request.headers:\t",request.headers)
         # request.headers['USER_AGENT']=random.choice(self.user_agent_list)
         # print("\tcookies: ",time.time())
+        # print("self.proxypool.getCookies():\t",self.proxypool.getCookies())
         request.headers['Cookies'] = self.proxypool.getCookies() 
+        # request.headers['Cookies'] ="acw_sc__v2=60a26bd0387363bd7ba2b6b6514d856eb3445cd7; "
+        print("request.headers['Cookies'123]",request.headers['Cookies'])
+        # print("request.headers:\t",request.headers)
+        print("request.meta:\t",request.meta)
+        if "arg2" in request.meta:
+            print("proxyCompare:\t",request.meta['proxy'],request.meta['last_proxy'])
+            request.meta['proxy'] = request.meta['last_proxy']
+            print("proxyCompare:\t",request.meta['proxy'],request.meta['last_proxy'])
+            print("arg2:\t", request.meta['arg2'])
+            request.headers['Cookies'] = 'acw_sc__v2=' +request.meta['arg2'][11:-1] + ";"
+            print("request.headers['Cookies'456]",request.headers['Cookies'])
         # print("\tend make proxy: ",time.time())
         # print("using ip:"+str(proxies))
         # del proxypool
